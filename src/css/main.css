@@ -1,40 +1,75 @@
 .header {
     background-image: linear-gradient(#555,#222);
     color: #FFF;
+    position: fixed;
+    width: 100%;
     padding: 20px;
     margin: 0px;
     font-size: 24px;
     font-weight: 400;
 }
 
-ul.navbar li {
-    display: inline;
-    list-style-type: none;
-    margin: 0;
+ul.navbar {
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: 140px; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #e7e7e7; /* Black */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+    margin-top: 69px;
+    box-shadow:inset -5px -5px 15px -5px #969696;
 }
 
-ul.navbar {
-    background-color: #111;
-    padding: 0;
+ul.navbar li {
+    text-align: left;
+    padding-bottom: 30px;
+    margin-left: -20px;
+    text-shadow: 1px 1px #fff;
 }
+
 
 ul.navbar li a {
-    color: #FFF;
-    font-weight: bold;
     text-decoration: none;
-    padding: 20px;
+    font-size: 18px;
+    color: #222;
     display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
 }
+
+ul.navbar li a:hover {
+    color: #888;
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 22px;  /* Preferred icon size */
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    padding-right: 5px;
+  }
+
 .content {
-    background-color: #2f2f2f;
+    background-color: #fff;
     padding: 20px;
+    margin-left: 180px;
 }
 
 .content h2 {
     padding: 0;
-    margin: 0;
 }
 
-.content li {
-    margin-bottom: 10px;
+.content a {
+    color: #000;
 }
