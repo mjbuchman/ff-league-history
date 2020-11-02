@@ -8,6 +8,10 @@ body {
 h1, h2 {
   font-family: 'Roboto', sans-serif;
 }
+
+h3 {
+  font-family: 'Open Sans', sans-serif;
+}
   
 p, ul, li {
   font-family: 'Open Sans', sans-serif;
