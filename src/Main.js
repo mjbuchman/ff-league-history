@@ -17,10 +17,10 @@ class Main extends Component {
             <div>
                 <h1 className="header">Wallerstein Fantasy Football Database</h1>
                 <ul className="navbar">
-                    <li><NavLink to="/"><i class="material-icons">dashboard</i>Overview</NavLink></li>
-                    <li><NavLink to="/h2h"><i class="material-icons">face</i>Head to Head</NavLink></li>
-                    <li><NavLink to="/standings"><i class="material-icons">assessment</i>Standings</NavLink></li>
-                    <li><NavLink to="/records"><i class="material-icons">bookmark_border</i>Records</NavLink></li>
+                    <li><NavLink to="/"><i className="material-icons">dashboard</i>Overview</NavLink></li>
+                    <li><NavLink to="/h2h"><i className="material-icons">face</i>Head to Head</NavLink></li>
+                    <li><NavLink to="/standings"><i className="material-icons">assessment</i>Standings</NavLink></li>
+                    <li><NavLink to="/records"><i className="material-icons">bookmark_border</i>Records</NavLink></li>
                 </ul>
                 <div className="content">
                     <Route exact path="/" component={Overview}/>
