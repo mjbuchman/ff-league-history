@@ -11,4 +11,6 @@ h1, h2 {
   
 p, ul, li {
   font-family: 'Open Sans', sans-serif;
+  list-style-type: none;
+  font-weight: 400;
 }
