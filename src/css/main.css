@@ -1,0 +1,40 @@
+.header {
+    background-image: linear-gradient(#555,#222);
+    color: #FFF;
+    padding: 20px;
+    margin: 0px;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+ul.navbar li {
+    display: inline;
+    list-style-type: none;
+    margin: 0;
+}
+
+ul.navbar {
+    background-color: #111;
+    padding: 0;
+}
+
+ul.navbar li a {
+    color: #FFF;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 20px;
+    display: inline-block;
+}
+.content {
+    background-color: #2f2f2f;
+    padding: 20px;
+}
+
+.content h2 {
+    padding: 0;
+    margin: 0;
+}
+
+.content li {
+    margin-bottom: 10px;
+}

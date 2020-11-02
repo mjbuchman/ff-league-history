@@ -8,14 +8,15 @@ import {
   import HeadToHead from "./HeadToHead";
   import Standings from "./Standings";
   import Records from "./Records";
- 
+  import "./css/main.css";
+
 class Main extends Component {
   render() {
     return (
         <HashRouter>
             <div>
-                <h1>Simple SPA</h1>
-                <ul className="header">
+                <h1 className="header">Wallerstein Fantasy Football Database</h1>
+                <ul className="navbar">
                     <li><NavLink to="/">Overview</NavLink></li>
                     <li><NavLink to="/h2h">Head to Head</NavLink></li>
                     <li><NavLink to="/standings">Standings</NavLink></li>
