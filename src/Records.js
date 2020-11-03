@@ -4,7 +4,7 @@ class Records extends Component {
   render() {
     return (
       <div>
-        <h2>Records here</h2>
+        <h3>Records here</h3>
       </div>
     );
   }
