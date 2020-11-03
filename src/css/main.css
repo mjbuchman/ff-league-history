@@ -11,20 +11,23 @@
 }
 
 ul.navbar {
-    height: 100%;
+    height: auto;
     width: 180px; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
-    background-color: #e7e7e7; /* Black */
+    background-color: #e7e7e7; 
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
+    padding-bottom: 100%;
     margin-top: 69px;
     box-shadow:inset -5px -5px 15px -5px #969696;
+
 }
 
 ul.navbar li {
+    display: block;
     text-align: left;
     padding-bottom: 30px;
     text-shadow: 1px 1px #fff;
@@ -36,8 +39,7 @@ ul.navbar li a {
     text-decoration: none;
     font-size: 18px;
     color: #222;
-    display: inline-block;
-    line-height: 1;
+    line-height: 1
 }
 
 ul.navbar li a:hover {
