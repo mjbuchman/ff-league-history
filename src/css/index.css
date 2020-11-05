@@ -5,16 +5,139 @@ body {
   margin: 0;
 }
 
-h1, h2 h5 {
+h1 {
   font-family: 'Roboto', sans-serif;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-size: 28px;
 }
 
-h3, h4{
-  font-family: 'Open Sans', sans-serif;
+h2 {
+  font-family: 'Roboto', sans-serif;
+  color: #fff;
+  font-weight: 400;
+  font-size: 20px;
 }
-  
+
+h3 {
+  color: #888;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 100;
+  font-size: 14px;
+  text-shadow: 1px 1px #000;
+  letter-spacing: 2px;
+}
+
+h4 {
+  height: 60px;
+  background-color: #f7f7f7;
+  border-style: solid;
+  border-color: #DFDFDF;
+  border-width: 1px;
+  border-radius: 7px 7px 0 0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  padding-left: 20px;
+  padding-top: 20px;
+}
+
+h5 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  color: #777;
+}
+
+h6 {
+  font-size: 14px;
+  font-weight: 700;
+  background-color: #e9e9e9;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+h7 {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-size: 48px;
+  font-weight: 500;
+  text-shadow: 1px 1px #999;
+}
+
 p, ul, li {
   font-family: 'Open Sans', sans-serif;
   list-style-type: none;
   font-weight: 400;
+  color: #fff;
+  font-size: 13px;
 }
+
+#black {
+  color: #000;
+  font-size: 14px;
+  padding-top: -20px;
+}
+
+#drop-shadow {
+  text-shadow: 1px 1px #000;
+}
+
+.col-sm-3 {
+  text-align: center;
+}
+
+.col-sm-4 {
+  text-align: center;
+}
+
+.col-sm-5  {
+  margin-top: 100px;
+}
+
+.col-sm-7  {
+  margin-top: 100px;
+}
+
+#box {
+  width: 100%;
+  border-left: 1px solid #DFDFDF;
+  border-right: 1px solid #DFDFDF;
+  border-bottom: 1px solid #DFDFDF;
+  margin-top: -8px;
+  margin-bottom: 20px;
+  margin-left: 0px;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+#gray-box {
+  background-color: #333;
+  box-shadow:inset 0 0 20px 3px #111;
+  border-radius: 0 0 10px 10px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+select {
+  padding: 10px;
+  height: 60px;
+  width: 100%;
+  background-color: #999;
+  color: #000;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  text-shadow: 1px 1px #cdcdcd;
+}
+
+table {
+  width: 100%;
+  border: 1px solid #DFDFDF;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #DFDFDF;
+  padding: 15px;
+}
+
