@@ -5,6 +5,13 @@ body {
   margin: 0;
 }
 
+h0 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 28px;
+  text-shadow: 1px 1px #999;
+  margin-left: 15px;
+}
+
 h1 {
   font-family: 'Roboto', sans-serif;
   padding-top: 20px;
@@ -29,7 +36,6 @@ h3 {
 }
 
 h4 {
-  height: 60px;
   background-color: #f7f7f7;
   border-style: solid;
   border-color: #DFDFDF;
@@ -37,8 +43,7 @@ h4 {
   border-radius: 7px 7px 0 0;
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
-  padding-left: 20px;
-  padding-top: 20px;
+  padding: 20px;
 }
 
 h5 {
@@ -90,11 +95,20 @@ p, ul, li {
 }
 
 .col-sm-5  {
-  margin-top: 100px;
+
 }
 
 .col-sm-7  {
-  margin-top: 100px;
+
+}
+
+.col-sm-12  {
+
+}
+
+#first-row {
+  margin-top: 60px;
+  margin-bottom: 10px;
 }
 
 #box {
@@ -118,7 +132,8 @@ p, ul, li {
   padding-bottom: 30px;
 }
 
-select {
+/* Select Dropdown for Owners*/
+#owners {
   padding: 10px;
   height: 60px;
   width: 100%;
@@ -130,14 +145,39 @@ select {
   text-shadow: 1px 1px #cdcdcd;
 }
 
-table {
+/* Select Dropdown for Date Ranges*/
+#date-range {
+  padding: 10px;
+  height: 40px;
+  width: 100%;
+  color: #000;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  margin-top: 10px;
+  border-color: #DFDFDF;
+  border-radius: 7px 7px 7px 7px;
+}
+
+#base-table {
   width: 100%;
   border: 1px solid #DFDFDF;
   margin-bottom: 20px;
 }
 
-th, td {
+#base-table th, #base-table td {
   border: 1px solid #DFDFDF;
   padding: 15px;
+}
+
+input {
+  margin-right: 3px;
+}
+
+label {
+  margin-right: 15px;
+}
+
+.fa {
+  margin-left: 10px;
 }
 

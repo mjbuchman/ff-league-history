@@ -1,0 +1,26 @@
+.standings-table {
+    width: 100%;
+    border: 3px solid #bbb;
+    margin-bottom: 20px;
+}
+
+.standings-th {
+    background-color: #304c89;
+    padding: 15px;
+    color: white;
+    text-shadow: 1px 1px #000;
+}
+.standings-td {
+    font-weight: 500;
+    text-shadow: 1px 1px #999;
+    padding: 15px;
+}
+
+.standings-tr {
+    background-color: #e9e9e9;
+}
+
+.standings-tr:nth-child(even) {
+    background-color: #bbbbbb;
+}
+
