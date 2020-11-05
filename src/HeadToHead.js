@@ -118,7 +118,7 @@ class HeadToHead extends Component {
                 <div className="col-sm-5">
                     <h4>Gamelogs</h4>
                     <div id="box">
-                        <table>
+                        <table id="base-table">
                             <tr>
                                 <th>Date</th>
                                 <th>Game</th>
