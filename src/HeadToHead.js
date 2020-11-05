@@ -5,7 +5,7 @@ class HeadToHead extends Component {
     return (
         <div className="container">
             <div className="row">
-                <div className="col-sm-8">
+                <div className="col-sm-7">
                     <select id="owners">
                         <option value="Michael Buchman">Michael Buchman</option>
                         <option value="Joe Perry">Joe Perry</option>
@@ -17,7 +17,7 @@ class HeadToHead extends Component {
                         <option value="James Earley">James Earley</option>
                     </select>
                 </div>
-                <div className="col-sm-4">
+                <div className="col-sm-5">
                     <h4>Gamelogs</h4>
                     <div id="box">
                         <p>SAMPLE</p>
