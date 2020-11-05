@@ -3,18 +3,28 @@ import React, { Component } from "react";
 class HeadToHead extends Component {
   render() {
     return (
-      <div>
-        <h2>HeadToHead</h2>
-        <p>Mauris sem velit, vehicula eget sodales vitae,
-        rhoncus eget sapien:</p>
-        <ol>
-          <li>Nulla pulvinar diam</li>
-          <li>Facilisis bibendum</li>
-          <li>Vestibulum vulputate</li>
-          <li>Eget erat</li>
-          <li>Id porttitor</li>
-        </ol>
-      </div>
+        <div className="container">
+            <div className="row">
+                <div className="col-sm-7">
+                    <select id="owners">
+                        <option value="Michael Buchman">Michael Buchman</option>
+                        <option value="Joe Perry">Joe Perry</option>
+                        <option value="James Earley">James Earley</option>
+                    </select>
+                    <select id="owners">
+                        <option value="Michael Buchman">Michael Buchman</option>
+                        <option value="Joe Perry">Joe Perry</option>
+                        <option value="James Earley">James Earley</option>
+                    </select>
+                </div>
+                <div className="col-sm-5">
+                    <h4>Gamelogs</h4>
+                    <div id="box">
+                        <p>SAMPLE</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     );
   }
 }
