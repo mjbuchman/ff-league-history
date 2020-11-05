@@ -29,7 +29,7 @@ class HeadToHead extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="row" style={{margin:"0px"}}>
                         <div className="col-sm-12">
                             <div className="h2h-field">
                                 <div className="h2h-item1">
