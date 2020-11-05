@@ -56,7 +56,7 @@ class Overview extends Component {
                         <option value="Joe Perry">Joe Perry</option>
                         <option value="James Earley">James Earley</option>
                     </select>
-                    <div className="team-overview">
+                    <div className="team-overview" id="gray-box">
                         <div className="item1">
                             <h3>Owner</h3>
                             <h2>Insert Value</h2>
