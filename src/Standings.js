@@ -18,8 +18,9 @@ class Standings extends Component {
                             <option value="2020 Season">2020 Season</option>
                         </select>
                     </h4>
-
-
+                    <div id="box">
+                        
+                    </div>
                 </div>
             </div>
         </div>

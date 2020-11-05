@@ -154,6 +154,8 @@ p, ul, li {
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
   margin-top: 10px;
+  border-color: #DFDFDF;
+  border-radius: 7px 7px 7px 7px;
 }
 
 table {
