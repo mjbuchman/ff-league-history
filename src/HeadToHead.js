@@ -30,7 +30,7 @@ class HeadToHead extends Component {
                         </div>
                     </div>
                     <div className="row" style={{margin:"0px"}}>
-                        <div className="col-sm-12">
+                        <div className="col-sm-12" id="gray-box">
                             <div className="h2h-field">
                                 <div className="h2h-item1">
                                     <h3>Total Points</h3>
@@ -115,7 +115,16 @@ class HeadToHead extends Component {
                 <div className="col-sm-5">
                     <h4>Gamelogs</h4>
                     <div id="box">
-                        <p id="black">SAMPLE</p>
+                        <table>
+                            <tr>
+                                <th>Date</th>
+                                <th>Game</th>
+                            </tr>
+                            <tr>
+                                <td>Season X, Week Y</td>
+                                <td>TEAM A <b>SCORE A</b>, TEAM B <b>SCORE B</b></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
