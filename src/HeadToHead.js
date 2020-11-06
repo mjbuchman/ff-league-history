@@ -6,7 +6,7 @@ class HeadToHead extends Component {
     return (
         <div className=".container">
             <div className="row" id="first-row">
-                <h0>Head To Head Stats</h0>
+                <h0>Head To Head</h0>
             </div>
             <div className="row">
                 <div className="col-sm-7">

@@ -45,6 +45,7 @@ class Standings extends Component {
                             tableClassName="standings-table"
                             trClassName="standings-tr"
                             headerVisible={false}
+                            pagersVisible={false}
 		                />
                     </div>
                 </div>

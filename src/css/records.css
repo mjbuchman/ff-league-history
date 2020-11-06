@@ -1,13 +1,24 @@
-.standings-table {
+.table-title {
     width: 100%;
-    border: 3px solid #bbb;
-    margin-bottom: 20px;
-    box-shadow: 5px 5px 10px 1px #696969;
+    text-align: center;
+    padding-top: 40px;
+    margin-bottom: -80px;
+    z-index: 0;
 }
 
-.standings-th {
+.standings-table-header {
+    width: 100%;
+    border: 3px solid #bbb;
+    margin-top: -80px;
+    margin-bottom: 20px;
+    box-shadow: 5px 10px 10px 1px #696969;
+    z-index: -1;
+}
+
+.standings-th-header {
     background-color: #304c89;
     padding: 15px;
+    padding-top: 100px;
     color: white;
     text-shadow: 1px 1px #000;
 }
@@ -24,4 +35,3 @@
 .standings-tr:nth-child(even) {
     background-color: #bbbbbb;
 }
-
