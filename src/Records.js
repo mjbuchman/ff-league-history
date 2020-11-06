@@ -146,7 +146,7 @@ class Records extends Component {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-sm-6" style={{margin:"0"}}>
+                            <div className="col-sm-6">
                                 <div className="table-title">
                                     <h8>Highest Scores in a Loss</h8>
                                 </div>
