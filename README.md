@@ -2,6 +2,8 @@
 
 This project is a React Web App database for records related to an ESPN Fantasy Football League
 
+View current progress at https://ff-league-history-i5tr90zp4.vercel.app/#/
+
 ## Available Scripts
 
 In the project directory, you can run:
