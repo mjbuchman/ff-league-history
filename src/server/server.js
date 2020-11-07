@@ -1,7 +1,9 @@
 const express = require('express');
 const mysql = require('mysql');
+var bodyParser = require('body-parser')
 
 const app = express();
+var jsonParser = bodyParser.json()
 const port = 8000;
 
 const pool = mysql.createPool({
@@ -15,8 +17,9 @@ app.listen(port, () => {
     console.log(`App server now listening to port ${port}`);
 });
 
-app.get('/api/db', (req, res) => {
-    pool.query(`select * from Owners`, (err, rows) => {
+app.post('/api/db', jsonParser, (req, res) => {
+    var query = req.body.query;
+    pool.query(query, (err, rows) => {
         if (err) {
             res.send(err);
         } else {

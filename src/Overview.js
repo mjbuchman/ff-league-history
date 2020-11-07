@@ -55,13 +55,30 @@ class Overview extends Component {
     }
 
     componentDidMount() {
-        fetch(`/api/db`)
-            .then((response) => response.json())
-            .then(rows => {
-                this.setState({owners: rows});
-                console.log(rows)
-            }
-        );
+        // fetch(`/api/db`)
+        //     .then((response) => response.json())
+        //     .then(rows => {
+        //         this.setState({owners: rows});
+        //         console.log(rows)
+        //     }
+        // );
+
+        fetch("/api/db", {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            //make sure to serialize your JSON body
+            body: JSON.stringify({
+                query: 'select * from Owners'
+            })
+        })
+        .then((response) => response.json())
+        .then(rows => {
+            this.setState({owners: rows});
+            console.log(rows)
+        })
     }
 
     handleOwnerChange = val => event => {
