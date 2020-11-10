@@ -154,26 +154,32 @@ class Overview extends Component {
                             <div className="col-sm-6" id="top-padded">
                                 <h3>Highest Score</h3>
                                 <h2>Insert Value</h2>
+                                <p>Subtitle</p>
                             </div>
                             <div className="col-sm-6" id="top-padded">
                                 <h3>Lowest Score</h3>
                                 <h2>Insert Value</h2>
+                                <p>Subtitle</p>
                             </div>
                             <div className="col-sm-6" id="top-padded">
                                 <h3>Biggest Win Margin</h3>
                                 <h2>Insert Value</h2>
+                                <p>Subtitle</p>
                             </div>
                             <div className="col-sm-6" id="top-padded">
                                 <h3>Smallest Win Margin</h3>
                                 <h2>Insert Value</h2>
+                                <p>Subtitle</p>
                             </div>
                             <div className="col-sm-6" id="top-padded">
                                 <h3>Biggest Loss Margin</h3>
                                 <h2>Insert Value</h2>
+                                <p>Subtitle</p>
                             </div>
                             <div className="col-sm-6" id="top-padded">
                                 <h3>Smallest Loss Margin</h3>
                                 <h2>Insert Value</h2>
+                                <p>Subtitle</p>
                             </div> 
                         </div>    
                     </div>
