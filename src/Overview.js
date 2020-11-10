@@ -2,6 +2,30 @@ import React, { Component } from "react";
 import "./css/overview.css"
 import ReactSpeedometer from "react-d3-speedometer"
 import {Line} from 'react-chartjs-2';
+import LogoMB from "./logos/Michael Buchman.jpg";
+import LogoGD from "./logos/Grant Dakovich.jpg";
+import LogoBZ from "./logos/Brenden Zarrinnam.jpg";
+import LogoJP from "./logos/Joe Perry.jpg";
+import LogoJE from "./logos/James Earley.jpg";
+import LogoJS from "./logos/Jon Setzke.jpg";
+import LogoRR from "./logos/Ryan Rasmussen.jpg";
+import LogoTB from "./logos/Tyler Brown.jpg";
+import LogoNE from "./logos/Nick Eufrasio.jpg";
+import LogoCD from "./logos/Connor DeYoung.jpg";
+
+
+const img = {
+    "Michael Buchman": LogoMB,
+    "Grant Dakovich": LogoGD,
+    "Brenden Zarrinnam": LogoBZ,
+    "Joe Perry": LogoJP,
+    "James Earley": LogoJE,
+    "Jon Setzke": LogoJS,
+    "Ryan Rasmussen": LogoRR,
+    "Tyler Brown": LogoTB,
+    "Nick Eufrasio": LogoNE,
+    "Connor DeYoung": LogoCD
+}
 
 const data = {
     labels: ['2017', '2018', '2019', '2020'],
@@ -55,13 +79,30 @@ class Overview extends Component {
     }
 
     componentDidMount() {
-        fetch(`/api/db`)
-            .then((response) => response.json())
-            .then(rows => {
-                this.setState({owners: rows});
-                console.log(rows)
-            }
-        );
+        // fetch(`/api/db`)
+        //     .then((response) => response.json())
+        //     .then(rows => {
+        //         this.setState({owners: rows});
+        //         console.log(rows)
+        //     }
+        // );
+
+        fetch("/api/db", {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            //make sure to serialize your JSON body
+            body: JSON.stringify({
+                query: 'select * from Owners'
+            })
+        })
+        .then((response) => response.json())
+        .then(rows => {
+            this.setState({owners: rows});
+            console.log(rows)
+        })
     }
 
     handleOwnerChange = val => event => {
@@ -84,6 +125,7 @@ class Overview extends Component {
                         </select>
                         <div className="team-overview" id="gray-box">
                             <div className="item1">
+                                <img src={img[this.state.currOwner]}></img>
                                 <h3>Owner</h3>
                                 <h2>{this.state.currOwner}</h2>
                             </div>
