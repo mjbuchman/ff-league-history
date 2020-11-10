@@ -177,6 +177,14 @@ p, ul, li {
   padding: 15px;
 }
 
+img {
+    width: 100px;
+    border-radius: 100%;
+    border: 2px solid #fff;
+    box-shadow: 3px 3px 10px 1px #000000;
+    margin-bottom: 20px;
+}
+
 input {
   margin-right: 3px;
 }
