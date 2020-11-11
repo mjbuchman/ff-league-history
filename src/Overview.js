@@ -2,6 +2,30 @@ import React, { Component } from "react";
 import "./css/overview.css"
 import ReactSpeedometer from "react-d3-speedometer"
 import {Line} from 'react-chartjs-2';
+import LogoMB from "./logos/Michael Buchman.jpg";
+import LogoGD from "./logos/Grant Dakovich.jpg";
+import LogoBZ from "./logos/Brenden Zarrinnam.jpg";
+import LogoJP from "./logos/Joe Perry.jpg";
+import LogoJE from "./logos/James Earley.jpg";
+import LogoJS from "./logos/Jon Setzke.jpg";
+import LogoRR from "./logos/Ryan Rasmussen.jpg";
+import LogoTB from "./logos/Tyler Brown.jpg";
+import LogoNE from "./logos/Nick Eufrasio.jpg";
+import LogoCD from "./logos/Connor DeYoung.jpg";
+
+
+const img = {
+    "Michael Buchman": LogoMB,
+    "Grant Dakovich": LogoGD,
+    "Brenden Zarrinnam": LogoBZ,
+    "Joe Perry": LogoJP,
+    "James Earley": LogoJE,
+    "Jon Setzke": LogoJS,
+    "Ryan Rasmussen": LogoRR,
+    "Tyler Brown": LogoTB,
+    "Nick Eufrasio": LogoNE,
+    "Connor DeYoung": LogoCD
+}
 
 const data = {
     labels: ['2017', '2018', '2019', '2020'],
@@ -55,17 +79,24 @@ class Overview extends Component {
     }
 
     componentDidMount() {
-        fetch(`/api/db`)
-            .then((response) => response.json())
-            .then(rows => {
-                this.setState({owners: rows});
-                console.log(rows)
-            }
-        );
+        fetch("/api/db", {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            //make sure to serialize your JSON body
+            body: JSON.stringify({
+                query: 'select * from Owners'
+            })
+        })
+        .then((response) => response.json())
+        .then(rows => {
+            this.setState({owners: rows});
+        })
     }
 
     handleOwnerChange = val => event => {
-        console.log(event.target.value);
         this.setState({ currOwner: event.target.value });
     }
 
@@ -73,80 +104,81 @@ class Overview extends Component {
         return (
             <div className=".container">
                 <div className="row"  id="first-row">
-                    <h0>Team Overview</h0>
+                    <header>Team Overview</header>
                 </div>
                 <div className="row">
-                    <div className="col-sm-5">
-                        <select id="owners" onChange={this.handleOwnerChange()}>
-                            {this.state.owners.map((owner) => (
-                                <option value={owner.Owner}>{owner.Owner}</option>
-                            ))}
-                        </select>
-                        <div className="team-overview" id="gray-box">
-                            <div className="item1">
+                    <div className="col-sm-5" style={{paddingLeft: "35px"}}>
+                        <div className="row">
+                            <select id="owners" onChange={this.handleOwnerChange()}>
+                                {this.state.owners.map(function(owner,i) {
+                                    return <option value={owner.Owner} key={i}>{owner.Owner}</option>
+                                })}
+                            </select>
+                        </div>
+                        <div className="row" id="gray-box">
+                            <div className="col-sm-12">
+                                <img id="overview-logo" src={img[this.state.currOwner]} alt={this.state.currOwner}></img>
                                 <h3>Owner</h3>
-                                <h2>{this.state.currOwner}</h2>
+                                <h2 id="owner">{this.state.currOwner}</h2>
                             </div>
-                                <div className="item2">
+                            <div className="col-sm-4" id="top-padded">
                                 <h3>Seasons Played</h3>
                                 <h2>Insert Value</h2>
                             </div>
-                                <div className="item3">
+                            <div className="col-sm-4" id="top-padded">
                                 <h3>Games Played</h3>
                                 <h2>Insert Value</h2>
                             </div>
-                                <div className="item4">
+                            <div className="col-sm-4" id="top-padded">
                                 <h3>Record</h3>
                                 <h2>Insert Value</h2>
                             </div>
-                                <div className="item5">
+                            <div className="col-sm-6" id="top-padded">
                                 <h3>Total Points For</h3>
                                 <h2>Insert Value</h2>
                             </div>
-                                <div className="item6">
+                            <div className="col-sm-6" id="top-padded">
                                 <h3>Total Points Against</h3>
                                 <h2>Insert Value</h2>
-                            </div>
-                            <div className="item7">
+                            </div>        
+                            <div className="col-sm-6" id="top-padded">
                                 <h3>Average Points For</h3>
                                 <h2>Insert Value</h2>
-                                <p>Subtitle</p>
                             </div>
-                            <div className="item8">
+                            <div className="col-sm-6" id="top-padded">
                                 <h3>Average Points Against</h3>
                                 <h2>Insert Value</h2>
-                                <p>Subtitle</p>
                             </div>
-                            <div className="item9">
+                            <div className="col-sm-6" id="top-padded">
                                 <h3>Highest Score</h3>
                                 <h2>Insert Value</h2>
                                 <p>Subtitle</p>
                             </div>
-                            <div className="item10">
+                            <div className="col-sm-6" id="top-padded">
                                 <h3>Lowest Score</h3>
                                 <h2>Insert Value</h2>
                                 <p>Subtitle</p>
                             </div>
-                            <div className="item11">
+                            <div className="col-sm-6" id="top-padded">
                                 <h3>Biggest Win Margin</h3>
                                 <h2>Insert Value</h2>
                                 <p>Subtitle</p>
                             </div>
-                            <div className="item12">
+                            <div className="col-sm-6" id="top-padded">
                                 <h3>Smallest Win Margin</h3>
                                 <h2>Insert Value</h2>
                                 <p>Subtitle</p>
                             </div>
-                            <div className="item13">
+                            <div className="col-sm-6" id="top-padded">
                                 <h3>Biggest Loss Margin</h3>
                                 <h2>Insert Value</h2>
                                 <p>Subtitle</p>
                             </div>
-                            <div className="item14">
+                            <div className="col-sm-6" id="top-padded">
                                 <h3>Smallest Loss Margin</h3>
                                 <h2>Insert Value</h2>
                                 <p>Subtitle</p>
-                            </div>
+                            </div> 
                         </div>    
                     </div>
                     <div className="col-sm-7">
@@ -204,6 +236,35 @@ class Overview extends Component {
                                 <div className="col-sm-4">
                                     <div className="stats-box">
                                         <h6>Best Placement</h6>
+                                        <div id="box">
+                                            <h1 id="small-mar">VAL</h1>
+                                            <p id="black">Subtitle</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-4">
+                                    <div className="stats-box">
+                                        <h6>Season High Scorer</h6>
+                                        <div id="box">
+                                            <h1 id="small-mar">VAL</h1>
+                                            <p id="black">Subtitle</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-4">
+                                    <div className="stats-box">
+                                        <h6>Weekly High Scorer</h6>
+                                        <div id="box">
+                                            <h1 id="small-mar">VAL</h1>
+                                            <p id="black">Subtitle</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-4">
+                                    <div className="stats-box">
+                                        <h6>Weekly Low Scorer</h6>
                                         <div id="box">
                                             <h1 id="small-mar">VAL</h1>
                                             <p id="black">Subtitle</p>

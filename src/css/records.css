@@ -35,3 +35,10 @@
 .standings-tr:nth-child(even) {
     background-color: #bbbbbb;
 }
+
+#table-head {
+    color: #fff;
+    font-size: 36px;
+    font-weight: 200;
+    text-shadow: 1px 1px #000;
+}
