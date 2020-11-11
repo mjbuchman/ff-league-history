@@ -93,12 +93,10 @@ class Overview extends Component {
         .then((response) => response.json())
         .then(rows => {
             this.setState({owners: rows});
-            console.log(rows)
         })
     }
 
     handleOwnerChange = val => event => {
-        console.log(event.target.value);
         this.setState({ currOwner: event.target.value });
     }
 
@@ -106,20 +104,20 @@ class Overview extends Component {
         return (
             <div className=".container">
                 <div className="row"  id="first-row">
-                    <h0>Team Overview</h0>
+                    <header>Team Overview</header>
                 </div>
                 <div className="row">
                     <div className="col-sm-5" style={{paddingLeft: "35px"}}>
                         <div className="row">
                             <select id="owners" onChange={this.handleOwnerChange()}>
-                                {this.state.owners.map((owner) => (
-                                    <option value={owner.Owner}>{owner.Owner}</option>
-                                ))}
+                                {this.state.owners.map(function(owner,i) {
+                                    return <option value={owner.Owner} key={i}>{owner.Owner}</option>
+                                })}
                             </select>
                         </div>
                         <div className="row" id="gray-box">
                             <div className="col-sm-12">
-                                <img src={img[this.state.currOwner]}></img>
+                                <img id="overview-logo" src={img[this.state.currOwner]} alt={this.state.currOwner}></img>
                                 <h3>Owner</h3>
                                 <h2 id="owner">{this.state.currOwner}</h2>
                             </div>

@@ -24,13 +24,13 @@ class Standings extends Component {
     return (
         <div className=".container">
             <div className="row" id="first-row">
-                <h0>Standings</h0>
+                <header>Standings</header>
             </div>
             <div className="row">
                 <div className="col-sm-12">
                     <h4>
-                        <input type="checkbox" id="regular-season" name="regular-season" value="reg"></input><label for="regular-season">Regular Season</label>
-                        <input type="checkbox" id="playoffs" name="playoffs" value="pf"></input><label for="playoffs">Playoffs</label>
+                        <input type="checkbox" id="regular-season" name="regular-season" value="reg"></input><label htmlFor="regular-season">Regular Season</label>
+                        <input type="checkbox" id="playoffs" name="playoffs" value="pf"></input><label htmlFor="playoffs">Playoffs</label>
                         <select id="date-range">
                             <option value="All-Time">All-Time</option>
                             <option value="2020 Season">2020 Season</option>

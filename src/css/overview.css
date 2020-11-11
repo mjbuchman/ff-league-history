@@ -10,3 +10,11 @@
 #owner {
     font-size: 28px;
 }
+
+#overview-logo {
+    width: 100px;
+    border-radius: 100%;
+    border: 2px solid #fff;
+    box-shadow: 3px 3px 10px 1px #000000;
+    margin-bottom: 20px;
+}
