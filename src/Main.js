@@ -9,18 +9,19 @@ import {
   import Standings from "./Standings";
   import Records from "./Records";
   import "./css/main.css";
+  import Logo from "./logos/Wallerstein.png";
 
 class Main extends Component {
   render() {
     return (
         <HashRouter>
             <div>
-                <h1 className="header">Wallerstein Fantasy Football Database</h1>
+                <h1 className="header"><img id="mini" src={Logo} alt="WFFL Logo"></img>Wallerstein Fantasy Football League Database</h1>
                 <ul className="navbar">
-                    <li><NavLink to="/"><i className="material-icons">dashboard</i>Overview</NavLink></li>
-                    <li><NavLink to="/h2h"><i className="material-icons">face</i>Head to Head</NavLink></li>
-                    <li><NavLink to="/standings"><i className="material-icons">assessment</i>Standings</NavLink></li>
-                    <li><NavLink to="/records"><i className="material-icons">bookmark_border</i>Records</NavLink></li>
+                    <li><NavLink to="/" replace><i className="material-icons">dashboard</i>Overview</NavLink></li>
+                    <li><NavLink to="/h2h" replace><i className="material-icons">face</i>Head to Head</NavLink></li>
+                    <li><NavLink to="/standings" replace><i className="material-icons">assessment</i>Standings</NavLink></li>
+                    <li><NavLink to="/records" replace><i className="material-icons">bookmark_border</i>Records</NavLink></li>
                 </ul>
                 <div className="content">
                     <Route exact path="/" component={Overview}/>

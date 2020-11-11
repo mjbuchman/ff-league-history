@@ -5,9 +5,17 @@
     width: 100%;
     padding: 20px;
     margin-bottom: 1000px;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 400;
     z-index: 99;
+}
+
+#mini {
+    margin-top: -5px;
+    width: 40px;
+    border: 0;
+    border-radius: 0;
+    margin-right: 10px;
 }
 
 ul.navbar {
@@ -21,7 +29,7 @@ ul.navbar {
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
     padding-bottom: 100%;
-    margin-top: 69px;
+    margin-top: 76px;
     box-shadow:inset -5px -5px 15px -5px #969696;
 
 }

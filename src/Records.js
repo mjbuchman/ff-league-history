@@ -35,7 +35,7 @@ class Records extends Component {
     return (
         <div className=".container">
             <div className="row" id="first-row">
-                <h0>Records</h0>
+                <header>Records</header>
             </div>
             <div className="row">
                 <div className="col-sm-12">
@@ -52,7 +52,7 @@ class Records extends Component {
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="table-title">
-                                    <h8>Highest Scores</h8>
+                                    <h3 id="table-head">Highest Scores</h3>
                                 </div>
                                 <FilterableTable
                                     namespace="People"
@@ -67,7 +67,7 @@ class Records extends Component {
                             </div>
                             <div className="col-sm-6">
                                 <div className="table-title">
-                                    <h8>Lowest Scores</h8>
+                                    <h3 id="table-head">Lowest Scores</h3>
                                 </div>
                                 <FilterableTable
                                     namespace="People"
@@ -84,7 +84,7 @@ class Records extends Component {
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="table-title">
-                                    <h8>Highest Victory Margins</h8>
+                                    <h3 id="table-head">Highest Victory Margins</h3>
                                 </div>
                                 <FilterableTable
                                     namespace="People"
@@ -99,39 +99,7 @@ class Records extends Component {
                             </div>
                             <div className="col-sm-6">
                                 <div className="table-title">
-                                    <h8>Lowest Victory Margins</h8>
-                                </div>
-                                <FilterableTable
-                                    namespace="People"
-                                    initialSort="rank"
-                                    data={data2}
-                                    fields={fields2}
-                                    tableClassName="standings-table-header"
-                                    trClassName="standings-tr"
-                                    headerVisible={false}
-                                    pagersVisible={false}
-                                />
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="table-title">
-                                    <h8>Most Combined Points</h8>
-                                </div>
-                                <FilterableTable
-                                    namespace="People"
-                                    initialSort="rank"
-                                    data={data2}
-                                    fields={fields2}
-                                    tableClassName="standings-table-header"
-                                    trClassName="standings-tr"
-                                    headerVisible={false}
-                                    pagersVisible={false}
-                                />
-                            </div>
-                            <div className="col-sm-6">
-                                <div className="table-title">
-                                    <h8>Fewest Combined Points</h8>
+                                    <h3 id="table-head">Lowest Victory Margins</h3>
                                 </div>
                                 <FilterableTable
                                     namespace="People"
@@ -148,7 +116,7 @@ class Records extends Component {
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="table-title">
-                                    <h8>Highest Scores in a Loss</h8>
+                                    <h3 id="table-head">Most Combined Points</h3>
                                 </div>
                                 <FilterableTable
                                     namespace="People"
@@ -163,7 +131,39 @@ class Records extends Component {
                             </div>
                             <div className="col-sm-6">
                                 <div className="table-title">
-                                    <h8>Lowest Scores in a Win</h8>
+                                    <h3 id="table-head">Fewest Combined Points</h3>
+                                </div>
+                                <FilterableTable
+                                    namespace="People"
+                                    initialSort="rank"
+                                    data={data2}
+                                    fields={fields2}
+                                    tableClassName="standings-table-header"
+                                    trClassName="standings-tr"
+                                    headerVisible={false}
+                                    pagersVisible={false}
+                                />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="table-title">
+                                    <h3 id="table-head">Highest Scores in a Loss</h3>
+                                </div>
+                                <FilterableTable
+                                    namespace="People"
+                                    initialSort="rank"
+                                    data={data2}
+                                    fields={fields2}
+                                    tableClassName="standings-table-header"
+                                    trClassName="standings-tr"
+                                    headerVisible={false}
+                                    pagersVisible={false}
+                                />
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="table-title">
+                                    <h3 id="table-head">Lowest Scores in a Win</h3>
                                 </div>
                                 <FilterableTable
                                     namespace="People"

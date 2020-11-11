@@ -5,7 +5,7 @@ body {
   margin: 0;
 }
 
-h0 {
+header {
   font-family: 'Roboto', sans-serif;
   font-size: 28px;
   text-shadow: 1px 1px #999;
@@ -33,6 +33,7 @@ h3 {
   font-size: 14px;
   text-shadow: 1px 1px #000;
   letter-spacing: 2px;
+  margin-bottom: 20px;
 }
 
 h4 {
@@ -58,22 +59,6 @@ h6 {
     background-color: #e9e9e9;
     padding-top: 15px;
     padding-bottom: 15px;
-}
-
-h7 {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 48px;
-    font-weight: 500;
-    text-shadow: 1px 1px #999;
-}
-
-h8 {
-    font-family: 'Open Sans', sans-serif;
-    color: #fff;
-    font-size: 36px;
-    font-weight: 200;
-    text-shadow: 1px 1px #000;
 }
 
 p, ul, li {
@@ -102,18 +87,6 @@ p, ul, li {
   text-align: center;
 }
 
-.col-sm-5  {
-
-}
-
-.col-sm-7  {
-
-}
-
-.col-sm-12  {
-
-}
-
 #first-row {
   margin-top: 60px;
   margin-bottom: 10px;
@@ -137,14 +110,28 @@ p, ul, li {
   box-shadow:inset 0 0 20px 3px #111;
   border-radius: 0 0 10px 10px;
   padding-top: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 45px;
+  text-align: center;
 }
 
 /* Select Dropdown for Owners*/
 #owners {
+    padding: 10px;
+    height: 60px;
+    width: 100%;
+    background-color: #999;
+    color: #000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    text-shadow: 1px 1px #cdcdcd;
+}
+
+/* Select Dropdown for Owners w/ attached logo*/
+#owners-logo {
   padding: 10px;
   height: 60px;
-  width: 100%;
+  width: calc(100% - 59px);
   background-color: #999;
   color: #000;
   font-family: 'Roboto', sans-serif;
@@ -177,12 +164,12 @@ p, ul, li {
   padding: 15px;
 }
 
-img {
-    width: 100px;
-    border-radius: 100%;
-    border: 2px solid #fff;
-    box-shadow: 3px 3px 10px 1px #000000;
-    margin-bottom: 20px;
+#bar-logo {
+    width: 59px;
+    margin-top: -7px;
+    border-left: 1px solid #777;
+    border-top: 1px solid #777;
+    border-bottom: 1px solid #777;
 }
 
 input {
