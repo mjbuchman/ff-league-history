@@ -75,6 +75,15 @@ p, ul, li {
   padding-top: -20px;
 }
 
+#black-table {
+  color: #000;
+  font-size: 16px;
+  font-weight: 600;
+  text-shadow: 1px 1px #999;
+  margin-left: 15px;
+  float: left;
+}
+
 #drop-shadow {
   text-shadow: 1px 1px #000;
 }

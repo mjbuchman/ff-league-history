@@ -2,10 +2,72 @@ import React, { Component } from "react";
 import "./css/standings.css";
 import FilterableTable from "react-filterable-table";
 import ReactTooltip from "react-tooltip";
+import LogoMB from "./logos/Michael Buchman.jpg";
+import LogoGD from "./logos/Grant Dakovich.jpg";
+import LogoBZ from "./logos/Brenden Zarrinnam.jpg";
+import LogoJP from "./logos/Joe Perry.jpg";
+import LogoJE from "./logos/James Earley.jpg";
+import LogoJS from "./logos/Jon Setzke.jpg";
+import LogoRR from "./logos/Ryan Rasmussen.jpg";
+import LogoTB from "./logos/Tyler Brown.jpg";
+import LogoNE from "./logos/Nick Eufrasio.jpg";
+import LogoCD from "./logos/Connor DeYoung.jpg";
+import LogoDef from "./logos/Wallerstein.jpg";
+import fPlace from "./logos/trophy_first.svg";
+import sPlace from "./logos/trophy_second.svg";
+import tPlace from "./logos/trophy_third.svg";
+
+const img = {
+    "Michael Buchman": LogoMB,
+    "Grant Dakovich": LogoGD,
+    "Brenden Zarrinnam": LogoBZ,
+    "Joe Perry": LogoJP,
+    "James Earley": LogoJE,
+    "Jon Setzke": LogoJS,
+    "Ryan Rasmussen": LogoRR,
+    "Tyler Brown": LogoTB,
+    "Nick Eufrasio": LogoNE,
+    "Connor DeYoung": LogoCD,
+    "Zach Way": LogoDef,
+    "Sal DiVita": LogoDef,
+    1: fPlace,
+    2: sPlace,
+    3: tPlace
+}
+
+const renderTrophy = (props) => {
+    return (
+        <span>
+            <p id="black-table">{props.record.placement}</p>
+            <img src={img[props.record.placement]} style={{width:"30px", marginTop:"5px", marginLeft: "5px", borderRadius: "100%", float: "left"}}></img>
+        </span>
+    );
+};
+
+const renderLogo = (props) => {
+    return (
+        <span>
+            <img src={img[props.record.owner]} style={{width:"40px", borderRadius: "100%", float: "left"}}></img>
+            <p id="black-table">{props.record.owner}</p>
+        </span>
+    );
+};
 
 let fields = [
-	{ name: 'placement', displayName: "Place", thClassName: "standings-th", tdClassName: "standings-td" },
-	{ name: 'owner', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td" },
+	{ name: 'placement', displayName: "Place", thClassName: "standings-th", tdClassName: "standings-td"},
+	{ name: 'owner', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td", render: renderLogo},
+	{ name: 'gp', displayName: "Games Played", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
+	{ name: 'win', displayName: "Wins", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
+	{ name: 'loss', displayName: "Losses", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
+	{ name: 'tie', displayName: "Ties", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
+	{ name: 'pct', displayName: "Win %", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
+	{ name: 'pf', displayName: "PF", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
+	{ name: 'pa', displayName: "PA", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true }
+];
+
+let fields2 = [
+	{ name: 'placement', displayName: "Place", thClassName: "standings-th", tdClassName: "standings-td", render: renderTrophy},
+	{ name: 'owner', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td", render: renderLogo},
 	{ name: 'gp', displayName: "Games Played", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'win', displayName: "Wins", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'loss', displayName: "Losses", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
@@ -32,6 +94,7 @@ class Standings extends Component {
         this.getFinalStandings = this.getFinalStandings.bind(this);
         this.handleButtonClick = this.handleButtonClick.bind(this);
         this.updateTableData = this.updateTableData.bind(this);
+        this.chooseTableType = this.chooseTableType.bind(this);
     }
     
     componentDidMount() {
@@ -86,7 +149,6 @@ class Standings extends Component {
     }
     
     updateTableData() {
-        console.log(this.state)
         let dateClause = ""
         let exclude = `where firstJoin.owner != "Sal DiVita" AND firstJoin.owner != "Zach Way"`
         if (this.state.currDate !== "All-Time") {
@@ -123,6 +185,7 @@ class Standings extends Component {
             .then(rows => {
                 rows.forEach(row => row.pct = row.pct.toFixed(3) )
                 if (this.state.currDate !== "All-Time" && this.state.currDate != new Date().getFullYear()) {
+                    console.log("in here")
                     rows.forEach(row =>
                         this.state.finalStandings.forEach(rowStandings => { 
                             if(rowStandings.Owner === row.owner && rowStandings.Year == this.state.currDate) row.placement = rowStandings.Place;
@@ -131,9 +194,45 @@ class Standings extends Component {
                 } else {
                     rows.forEach(function (row,i) { row.placement =  i+1})
                 }
-                    this.setState({data: rows});
+                this.setState({data: rows});
             })
         }   
+    }
+
+    chooseTableType() {
+        if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate == new Date().getFullYear()) {
+            return (
+                <div id="box">
+                    <FilterableTable
+                        namespace="People"
+                        initialSort="placement"
+                        initialSortDir={true}
+                        data={this.state.data}
+                        fields={fields}
+                        tableClassName="standings-table"
+                        trClassName="standings-tr"
+                        headerVisible={false}
+                        pagersVisible={false}
+                    />
+                </div>
+            )
+        } else {
+            return (
+                <div id="box">
+                    <FilterableTable
+                        namespace="People"
+                        initialSort="placement"
+                        initialSortDir={true}
+                        data={this.state.data}
+                        fields={fields2}
+                        tableClassName="standings-table"
+                        trClassName="standings-tr"
+                        headerVisible={false}
+                        pagersVisible={false}
+                    />
+                </div>
+            )
+        }
     }
 
     render() {
@@ -159,19 +258,7 @@ class Standings extends Component {
                                 })}
                             </select>
                         </h4>
-                        <div id="box">
-                            <FilterableTable
-                                namespace="People"
-                                initialSort="placement"
-                                initialSortDir={true}
-                                data={this.state.data}
-                                fields={fields}
-                                tableClassName="standings-table"
-                                trClassName="standings-tr"
-                                headerVisible={false}
-                                pagersVisible={false}
-                            />
-                        </div>
+                        {this.chooseTableType()}
                     </div>
                 </div>
             </div>
