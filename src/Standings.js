@@ -24,17 +24,20 @@ class Standings extends Component {
             timePeriod: "All-Time",
             data: [],
             currDate: "All-Time",
-            seasons: []
+            seasons: [],
+            finalStandings:[]
         };
 
         this.getSeasons = this.getSeasons.bind(this);
+        this.getFinalStandings = this.getFinalStandings.bind(this);
         this.handleButtonClick = this.handleButtonClick.bind(this);
         this.updateTableData = this.updateTableData.bind(this);
     }
     
     componentDidMount() {
-       this.updateTableData();
-       this.getSeasons();
+        this.getFinalStandings();
+        this.getSeasons();
+        this.updateTableData();
     }
 
     getSeasons() {
@@ -55,6 +58,24 @@ class Standings extends Component {
         })
     }
 
+    getFinalStandings() {
+        fetch("/api/db", {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            //make sure to serialize your JSON body
+            body: JSON.stringify({
+                query: `select * from Final_Standings`
+            })
+        })
+        .then((response) => response.json())
+        .then(rows => {
+            this.setState({finalStandings: rows});
+        })
+    }
+
     handleDateChange = val => event => {
         this.setState({ currDate: event.target.value }, this.updateTableData);
     }
@@ -65,6 +86,7 @@ class Standings extends Component {
     }
     
     updateTableData() {
+        console.log(this.state)
         let dateClause = ""
         let exclude = `where firstJoin.owner != "Sal DiVita" AND firstJoin.owner != "Zach Way"`
         if (this.state.currDate !== "All-Time") {
@@ -100,8 +122,16 @@ class Standings extends Component {
             .then((response) => response.json())
             .then(rows => {
                 rows.forEach(row => row.pct = row.pct.toFixed(3) )
-                rows.forEach(function (row,i) { row.placement =  i+1})
-                this.setState({data: rows});
+                if (this.state.currDate !== "All-Time" && this.state.currDate != new Date().getFullYear()) {
+                    rows.forEach(row =>
+                        this.state.finalStandings.forEach(rowStandings => { 
+                            if(rowStandings.Owner === row.owner && rowStandings.Year == this.state.currDate) row.placement = rowStandings.Place;
+                        })
+                    )
+                } else {
+                    rows.forEach(function (row,i) { row.placement =  i+1})
+                }
+                    this.setState({data: rows});
             })
         }   
     }
@@ -119,6 +149,7 @@ class Standings extends Component {
                             <button id={this.state.playoff.id} onClick={() => this.handleButtonClick("playoff")}>Playoffs</button>
                             <a data-tip data-for='info'><i className="material-icons">help_outline</i></a>
                             <ReactTooltip id='info'place="right" type="dark" effect="solid" multiline={true}> 
+                                <p>When viewing individual seasons:</p>
                                 <p>If 'Playoffs' is selected, 'Place' will display final placements;<br/> otherwise, 'Place' will show regular season placements</p>
                             </ReactTooltip>   
                             <select id="date-range" onChange={this.handleDateChange()}>
