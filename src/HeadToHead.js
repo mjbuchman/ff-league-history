@@ -194,7 +194,8 @@ class HeadToHead extends Component {
             }
         }
         );
-        this.setState({[field]: max.toFixed(2)})
+        if(max === Number.MIN_VALUE) max = false
+        this.setState({[field]: max ? max.toFixed(2) : "N/A"})
     }
 
     lowMargin(owner, field) {
@@ -208,7 +209,8 @@ class HeadToHead extends Component {
             }
         }
         );
-        this.setState({[field]: min.toFixed(2)})
+        if(min === Number.MAX_VALUE) min = false
+        this.setState({[field]: min ? min.toFixed(2) : "N/A"})
     }
 
     handleOwnerChange1 = val => event => {
@@ -317,12 +319,12 @@ class HeadToHead extends Component {
                                             <h3>Highest Score - Double Week</h3>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.hsdw1.score}</h2>
+                                            <h2 id="drop-shadow">{this.state.hsdw1.score ? this.state.hsdw1.score : "N/A"}</h2>
                                             <p>(Week {this.state.hsdw1.Week}, {this.state.hsdw1.Year})</p>
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.hsdw2.score}</h2>
+                                            <h2 id="drop-shadow">{this.state.hsdw2.score ? this.state.hsdw2.score : "N/A"}</h2>
                                             <p>(Week {this.state.hsdw2.Week}, {this.state.hsdw2.Year})</p>
                                             <hr></hr>
                                         </div>
@@ -332,12 +334,12 @@ class HeadToHead extends Component {
                                             <h3>Lowest Score - Double Week</h3>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.lsdw1.score}</h2>
+                                            <h2 id="drop-shadow">{this.state.lsdw1.score ? this.state.lsdw1.score : "N/A"}</h2>
                                             <p>(Week {this.state.lsdw1.Week}, {this.state.lsdw1.Year})</p>
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.lsdw2.score}</h2>
+                                            <h2 id="drop-shadow">{this.state.lsdw2.score ? this.state.lsdw2.score : "N/A"}</h2>
                                             <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
                                             <hr></hr>
                                         </div>

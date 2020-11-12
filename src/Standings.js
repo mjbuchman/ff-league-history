@@ -9,8 +9,7 @@ let data = [
 ];
 
 let fields = [
-	{ name: 'rank', displayName: "Rank", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, sortable: true },
-	{ name: 'owner', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
+	{ name: 'owner', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td" },
 	{ name: 'win', displayName: "Wins", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'loss', displayName: "Losses", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'tie', displayName: "Ties", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
@@ -20,39 +19,68 @@ let fields = [
 ];
 
 class Standings extends Component {
-  render() {
-    return (
-        <div className=".container">
-            <div className="row" id="first-row">
-                <header>Standings</header>
-            </div>
-            <div className="row">
-                <div className="col-sm-12">
-                    <h4>
-                        <input type="checkbox" id="regular-season" name="regular-season" value="reg"></input><label htmlFor="regular-season">Regular Season</label>
-                        <input type="checkbox" id="playoffs" name="playoffs" value="pf"></input><label htmlFor="playoffs">Playoffs</label>
-                        <select id="date-range">
-                            <option value="All-Time">All-Time</option>
-                            <option value="2020 Season">2020 Season</option>
-                        </select>
-                    </h4>
-                    <div id="box">
-                        <FilterableTable
-                            namespace="People"
-                            initialSort="rank"
-                            data={data}
-                            fields={fields}
-                            tableClassName="standings-table"
-                            trClassName="standings-tr"
-                            headerVisible={false}
-                            pagersVisible={false}
-		                />
+    constructor(props) {
+        super(props);
+        this.state = {
+            regSeason: true,
+            playoff: false,
+            timePeriod: "All-Time",
+            data: []
+        };
+    }
+
+    componentDidMount() {
+        fetch("/api/db", {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            //make sure to serialize your JSON body
+            body: JSON.stringify({
+                query: 'select distinct home_team as owner from Matchups'
+            })
+        })
+        .then((response) => response.json())
+        .then(rows => {
+            console.log(rows)
+            this.setState({data: rows});
+        })
+    }
+
+    render() {
+        return (
+            <div className=".container">
+                <div className="row" id="first-row">
+                    <header>Standings</header>
+                </div>
+                <div className="row">
+                    <div className="col-sm-12">
+                        <h4>
+                            <input type="checkbox" id="regular-season" name="regular-season" value="reg"></input><label htmlFor="regular-season">Regular Season</label>
+                            <input type="checkbox" id="playoffs" name="playoffs" value="pf"></input><label htmlFor="playoffs">Playoffs</label>
+                            <select id="date-range">
+                                <option value="All-Time">All-Time</option>
+                                <option value="2020 Season">2020 Season</option>
+                            </select>
+                        </h4>
+                        <div id="box">
+                            <FilterableTable
+                                namespace="People"
+                                initialSort="rank"
+                                data={this.state.data}
+                                fields={fields}
+                                tableClassName="standings-table"
+                                trClassName="standings-tr"
+                                headerVisible={false}
+                                pagersVisible={false}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
-  }
+        );
+    }
 }
  
 export default Standings;
