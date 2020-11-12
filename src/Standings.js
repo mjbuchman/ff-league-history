@@ -1,15 +1,10 @@
 import React, { Component } from "react";
 import "./css/standings.css";
 import FilterableTable from "react-filterable-table";
- 
-let data = [
-	{ rank: 1, owner: "Michael Buchman", win: 27, loss: 10, tie: 0, pct: .639, pf: 2000, pa: 1800,},
-	{ rank: 2, owner: "Joe Perry", win: 21, loss: 16, tie: 0, pct: .577, pf: 2400, pa: 2600,},
-	{ rank: 3, owner: "James Earley", win: 18, loss: 19, tie: 0, pct: .466, pf: 1800, pa: 2700,}
-];
+import ReactTooltip from "react-tooltip";
 
 let fields = [
-	{ name: 'rank', displayName: "Rank", thClassName: "standings-th", tdClassName: "standings-td" },
+	{ name: 'placement', displayName: "Place", thClassName: "standings-th", tdClassName: "standings-td" },
 	{ name: 'owner', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td" },
 	{ name: 'gp', displayName: "Games Played", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'win', displayName: "Wins", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
@@ -24,14 +19,25 @@ class Standings extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            regSeason: true,
-            playoff: false,
+            regSeason: { val: true, id: "clicked"},
+            playoff: { val: true, id: "clicked" },
             timePeriod: "All-Time",
-            data: []
+            data: [],
+            currDate: "All-Time",
+            seasons: []
         };
+
+        this.getSeasons = this.getSeasons.bind(this);
+        this.handleButtonClick = this.handleButtonClick.bind(this);
+        this.updateTableData = this.updateTableData.bind(this);
+    }
+    
+    componentDidMount() {
+       this.updateTableData();
+       this.getSeasons();
     }
 
-    componentDidMount() {
+    getSeasons() {
         fetch("/api/db", {
             method: "post",
             headers: {
@@ -40,29 +46,64 @@ class Standings extends Component {
             },
             //make sure to serialize your JSON body
             body: JSON.stringify({
-                //query: `SELECT owner, SUM(pf)as pf, SUM(pa) as pa FROM (SELECt home_team as owner, SUM(home_score) as pf, SUM(away_score) as pa FROM Matchups GROUp BY Owner UNION ALL SELECt away_team as Owner, SUM(away_score) as pf, SUM(home_score) as pa FROM Matchups GROUP BY Owner)as x GROUP BY Owner Order BY pf DESC`
-                query: `select firstJoin.owner, win+loss as gp, win, loss, 0 as tie, win/(win+loss) as pct, pf, pa from
-
-                (select outerPoints.owner, win, pf, pa  from
-                (SELECT owner, SUM(pf)as pf, SUM(pa) as pa FROM (SELECT home_team as owner, SUM(home_score) as pf, SUM(away_score) as pa FROM Matchups GROUp BY Owner UNION ALL SELECt away_team as Owner, SUM(away_score) as pf, SUM(home_score) as pa FROM Matchups GROUP BY Owner) as innerPoints group by owner) outerPoints
-                inner join
-                (SELECT owner, COUNT(*) as win FROM (Select home_team as owner from Matchups WHERE home_score > away_score UNION ALL Select away_team as owner from Matchups WHERE away_score > home_score) as innerWins GROUP By owner) outerWins
-                on (outerPoints.owner = outerWins.owner)) firstJoin 
-                
-                inner join
-                
-                (SELECT owner, COUNT(*) as loss FROM (Select home_team as owner from Matchups WHERE home_score < away_score UNION ALL Select away_team as owner from Matchups WHERE away_score < home_score) as innerLosses GROUP By owner) outerLosses
-                
-                on (firstJoin.owner = outerLosses.owner) where firstJoin.owner != "Sal DiVita" AND firstJoin.owner != "Zach Way" order by win desc
-                
-                `
+                query: `select distinct Year from Matchups order by Year desc`
             })
         })
         .then((response) => response.json())
         .then(rows => {
-            console.log(rows)
-            this.setState({data: rows});
+            this.setState({seasons: rows});
         })
+    }
+
+    handleDateChange = val => event => {
+        this.setState({ currDate: event.target.value }, this.updateTableData);
+    }
+
+    handleButtonClick(field) {
+        if(this.state[field].id === "clicked") this.setState({ [field]: {val: false, id: "unclicked"}}, this.updateTableData);
+        else this.setState({ [field]: {val: true, id: "clicked"}}, this.updateTableData);
+    }
+    
+    updateTableData() {
+        let dateClause = ""
+        let exclude = `where firstJoin.owner != "Sal DiVita" AND firstJoin.owner != "Zach Way"`
+        if (this.state.currDate !== "All-Time") {
+            dateClause = ` AND Year = ${this.state.currDate}`
+            exclude = ""
+        }
+
+        let clause = `Regular_Season = "${this.state.regSeason.val}" AND Playoff = "${this.state.playoff.val}"${dateClause}`
+        if (this.state.regSeason.val && this.state.playoff.val) clause = `true${dateClause}`;
+
+        if (!this.state.regSeason.val && !this.state.playoff.val) this.setState({data: []});
+        else {
+            fetch("/api/db", {
+                method: "post",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                //make sure to serialize your JSON body
+                body: JSON.stringify({
+                    query: `select 0 as placement, firstJoin.owner, win+loss AS gp, win, loss, 0 AS tie, win/(win+loss) AS pct, pf, pa FROM
+                                (SELECT outerPoints.owner, win, pf, pa  FROM
+                                (SELECT owner, SUM(pf) AS pf, SUM(pa) AS pa FROM (SELECT home_team AS owner, SUM(home_score) AS pf, SUM(away_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner UNION ALL SELECT away_team AS Owner, SUM(away_score) AS pf, SUM(home_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner) AS innerPoints GROUP BY owner) outerPoints
+                                INNER JOIN
+                                (SELECT owner, COUNT(*) AS win FROM (SELECT home_team AS owner FROM Matchups WHERE home_score > away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score > home_score AND (${clause})) AS innerWins GROUP BY owner) outerWins
+                                on (outerPoints.owner = outerWins.owner)) firstJoin 
+                                INNER JOIN
+                                (SELECT owner, COUNT(*) AS loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score < away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score < home_score AND (${clause})) AS innerLosses GROUP BY owner) outerLosses
+                                on (firstJoin.owner = outerLosses.owner) ${exclude} ORDER BY pct desc, pf desc
+                            `
+                })
+            })
+            .then((response) => response.json())
+            .then(rows => {
+                rows.forEach(row => row.pct = row.pct.toFixed(3) )
+                rows.forEach(function (row,i) { row.placement =  i+1})
+                this.setState({data: rows});
+            })
+        }   
     }
 
     render() {
@@ -74,17 +115,24 @@ class Standings extends Component {
                 <div className="row">
                     <div className="col-sm-12">
                         <h4>
-                            <input type="checkbox" id="regular-season" name="regular-season" value="reg"></input><label htmlFor="regular-season">Regular Season</label>
-                            <input type="checkbox" id="playoffs" name="playoffs" value="pf"></input><label htmlFor="playoffs">Playoffs</label>
-                            <select id="date-range">
+                            <button id={this.state.regSeason.id} onClick={() => this.handleButtonClick("regSeason")}>Regular Season</button>
+                            <button id={this.state.playoff.id} onClick={() => this.handleButtonClick("playoff")}>Playoffs</button>
+                            <a data-tip data-for='info'><i className="material-icons">help_outline</i></a>
+                            <ReactTooltip id='info'place="right" type="dark" effect="solid" multiline={true}> 
+                                <p>If 'Playoffs' is selected, 'Place' will display final placements;<br/> otherwise, 'Place' will show regular season placements</p>
+                            </ReactTooltip>   
+                            <select id="date-range" onChange={this.handleDateChange()}>
                                 <option value="All-Time">All-Time</option>
-                                <option value="2020 Season">2020 Season</option>
+                                {this.state.seasons.map(function(season,i) {
+                                    return <option value={season.Year} key={i}>{season.Year}</option>
+                                })}
                             </select>
                         </h4>
                         <div id="box">
                             <FilterableTable
                                 namespace="People"
-                                initialSort="pct"
+                                initialSort="placement"
+                                initialSortDir={true}
                                 data={this.state.data}
                                 fields={fields}
                                 tableClassName="standings-table"
