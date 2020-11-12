@@ -194,7 +194,7 @@ class HeadToHead extends Component {
             }
         }
         );
-        if(max == Number.MIN_VALUE) max = false
+        if(max === Number.MIN_VALUE) max = false
         this.setState({[field]: max ? max.toFixed(2) : "N/A"})
     }
 
@@ -209,7 +209,7 @@ class HeadToHead extends Component {
             }
         }
         );
-        if(min == Number.MAX_VALUE) min = false
+        if(min === Number.MAX_VALUE) min = false
         this.setState({[field]: min ? min.toFixed(2) : "N/A"})
     }
 
