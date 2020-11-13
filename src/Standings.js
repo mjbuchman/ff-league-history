@@ -36,26 +36,33 @@ const img = {
 }
 
 const renderTrophy = (props) => {
-    return (
-        <span>
-            <p id="black-table">{props.record.placement}</p>
-            <img src={img[props.record.placement]} style={{width:"30px", marginTop:"5px", marginLeft: "5px", borderRadius: "100%", float: "left"}}></img>
-        </span>
-    );
+    if (props.record.placement > 3) {
+        return (
+            <span>
+                {props.record.placement}
+            </span>
+        );
+    } else {
+            return (
+                <span>
+                    <img src={img[props.record.placement]} style={{width:"30px", borderRadius: "100%"}}></img>
+                </span>
+            );
+    }
 };
 
 const renderLogo = (props) => {
     return (
         <span>
-            <img src={img[props.record.owner]} style={{width:"40px", borderRadius: "100%", float: "left"}}></img>
-            <p id="black-table">{props.record.owner}</p>
+            <img src={img[props.record.owner]} style={{width:"40px", borderRadius: "100%"}}></img>
         </span>
     );
 };
 
 let fields = [
-	{ name: 'placement', displayName: "Place", thClassName: "standings-th", tdClassName: "standings-td"},
-	{ name: 'owner', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td", render: renderLogo},
+	{ name: 'placement', displayName: "Place", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
+	{ name: 'logo', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td", render: renderLogo},
+	{ name: 'owner', displayName: "", thClassName: "standings-th", tdClassName: "standings-td"},
 	{ name: 'gp', displayName: "Games Played", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'win', displayName: "Wins", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'loss', displayName: "Losses", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
@@ -66,8 +73,9 @@ let fields = [
 ];
 
 let fields2 = [
-	{ name: 'placement', displayName: "Place", thClassName: "standings-th", tdClassName: "standings-td", render: renderTrophy},
-	{ name: 'owner', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td", render: renderLogo},
+	{ name: 'placement', displayName: "Place", thClassName: "standings-th", tdClassName: "standings-td", render: renderTrophy, inputFilterable: true, exactFilterable: true, sortable: true },
+	{ name: 'logo', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td", render: renderLogo},
+	{ name: 'owner', displayName: "", thClassName: "standings-th", tdClassName: "standings-td"},
 	{ name: 'gp', displayName: "Games Played", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'win', displayName: "Wins", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'loss', displayName: "Losses", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
@@ -150,7 +158,7 @@ class Standings extends Component {
     
     updateTableData() {
         let dateClause = ""
-        let exclude = `where firstJoin.owner != "Sal DiVita" AND firstJoin.owner != "Zach Way"`
+        let exclude = `where Points.owner != "Sal DiVita" AND Points.owner != "Zach Way"`
         if (this.state.currDate !== "All-Time") {
             dateClause = ` AND Year = ${this.state.currDate}`
             exclude = ""
@@ -169,32 +177,35 @@ class Standings extends Component {
                 },
                 //make sure to serialize your JSON body
                 body: JSON.stringify({
-                    query: `select 0 as placement, firstJoin.owner, win+loss AS gp, win, loss, 0 AS tie, win/(win+loss) AS pct, pf, pa FROM
-                                (SELECT outerPoints.owner, win, pf, pa  FROM
-                                (SELECT owner, SUM(pf) AS pf, SUM(pa) AS pa FROM (SELECT home_team AS owner, SUM(home_score) AS pf, SUM(away_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner UNION ALL SELECT away_team AS Owner, SUM(away_score) AS pf, SUM(home_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner) AS innerPoints GROUP BY owner) outerPoints
-                                INNER JOIN
-                                (SELECT owner, COUNT(*) AS win FROM (SELECT home_team AS owner FROM Matchups WHERE home_score > away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score > home_score AND (${clause})) AS innerWins GROUP BY owner) outerWins
-                                on (outerPoints.owner = outerWins.owner)) firstJoin 
-                                INNER JOIN
-                                (SELECT owner, COUNT(*) AS loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score < away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score < home_score AND (${clause})) AS innerLosses GROUP BY owner) outerLosses
-                                on (firstJoin.owner = outerLosses.owner) ${exclude} ORDER BY pct desc, pf desc
+                    query: `drop temporary table if exists WinLoss;
+                                drop temporary table if exists Points;
+
+                                create temporary table WinLoss
+                                    select owner, sum(win) as win, sum(loss) as loss from (
+                                    (SELECT owner, COUNT(*) AS win, 0 as loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score > away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score > home_score AND (${clause})) AS innerWins GROUP BY owner
+                                    UNION ALL
+                                    SELECT owner, 0 as win, COUNT(*) AS loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score < away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score < home_score AND (${clause})) AS innerLosses GROUP BY owner)) as WL group by owner;
+                                    
+                                    create temporary table Points
+                                    Select * from (SELECT owner, SUM(pf) AS pf, SUM(pa) AS pa FROM (SELECT home_team AS owner, SUM(home_score) AS pf, SUM(away_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner UNION ALL SELECT away_team AS Owner, SUM(away_score) AS pf, SUM(home_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner) AS innerPoints GROUP BY owner) as OuterPoints;
+                                    
+                                    select 0 as placement, Points.owner as owner, win+loss AS gp, win, loss, 0 AS tie, win/(win+loss) AS pct, pf, pa from WinLoss inner join Points on (WinLoss.owner = Points.owner) ${exclude} order by pct desc, pf desc;
                             `
                 })
             })
             .then((response) => response.json())
             .then(rows => {
-                rows.forEach(row => row.pct = row.pct.toFixed(3) )
-                if (this.state.currDate !== "All-Time" && this.state.currDate != new Date().getFullYear()) {
-                    console.log("in here")
-                    rows.forEach(row =>
+                rows[4].forEach(row => row.pct = row.pct.toFixed(3) )
+                if (this.state.currDate !== "All-Time" && this.state.currDate != new Date().getFullYear() && this.state.playoff.val) {
+                    rows[4].forEach(row =>
                         this.state.finalStandings.forEach(rowStandings => { 
                             if(rowStandings.Owner === row.owner && rowStandings.Year == this.state.currDate) row.placement = rowStandings.Place;
                         })
                     )
                 } else {
-                    rows.forEach(function (row,i) { row.placement =  i+1})
+                    rows[4].forEach(function (row,i) { row.placement =  i+1})
                 }
-                this.setState({data: rows});
+                this.setState({data: rows[4]});
             })
         }   
     }
