@@ -22,6 +22,7 @@
     "react-native-semi-circular-gauge": "^2.0.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
+    "react-tooltip": "^4.2.10",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

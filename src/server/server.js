@@ -10,7 +10,8 @@ const pool = mysql.createPool({
     host: "rds-mysql-wallersteinffl.cpvy0zo2vtvt.us-east-1.rds.amazonaws.com",
     user: "masterUsername",
     password: "wallersteinFFLdb",
-    database: "WallersteinFFL"
+    database: "WallersteinFFL",
+    multipleStatements: true
 });
 
 app.listen(port, () => {

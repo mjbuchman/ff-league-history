@@ -75,6 +75,14 @@ p, ul, li {
   padding-top: -20px;
 }
 
+#black-table {
+  color: #000;
+  font-size: 16px;
+  font-weight: 600;
+  text-shadow: 1px 1px #999;
+  margin-left: 15px;
+}
+
 #drop-shadow {
   text-shadow: 1px 1px #000;
 }
@@ -180,20 +188,24 @@ label {
   margin-right: 15px;
 }
 
-button {
+#unclicked{
     padding: 10px;
     margin-right: 15px;
     border: 1px solid #DFDFDF;
     border-radius: 5px;
 }
 
-button:hover{
-    background-color: #e9e9e9;
-}
-
-button:focus{
+#clicked{
+    padding: 10px;
+    margin-right: 15px;
     background-color: #304c89;
     color: #FFF;
+    border: 1px solid #DFDFDF;
+    border-radius: 5px;
+}
+
+button:hover{
+    background-color: #e9e9e9;
 }
 
 .fa {
