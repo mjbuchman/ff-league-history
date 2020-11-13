@@ -18,7 +18,7 @@ app.listen(port, () => {
     console.log(`App server now listening to port ${port}`);
 });
 
-app.post('/api/db', jsonParser, (req, res) => {
+app.post('ff-league-history.vercel.app/api/db', jsonParser, (req, res) => {
     var query = req.body.query;
     pool.query(query, (err, rows) => {
         if (err) {
