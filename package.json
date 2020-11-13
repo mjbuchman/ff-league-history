@@ -32,7 +32,8 @@
     "eject": "react-scripts eject",
     "server": "nodemon -r dotenv/config ./src/server/server.js",
     "client": "react-scripts start",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "now-build": "react-scripts build && mv build dist"
   },
   "eslintConfig": {
     "extends": [
