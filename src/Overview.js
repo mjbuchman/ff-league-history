@@ -71,6 +71,7 @@ class Overview extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            refreshing: false,
             owners: [],
             currOwner: "Michael Buchman",
             ownerVals: [],
@@ -122,6 +123,7 @@ class Overview extends Component {
         .then(rows => {
             if (field === "owners") this.setState({[field]: rows}, this.updateValues);
             if (field === "games") this.setState({[field]: rows}, this.getRecordData);
+            if (field === "weekLS") this.setState({[field]: rows}, this.setState({refreshing: false}));
             else this.setState({[field]: rows});
         })
     }
@@ -284,7 +286,7 @@ class Overview extends Component {
     }
 
     handleOwnerChange = val => event => {
-        this.setState({ currOwner: event.target.value }, this.updateValues);
+        this.setState({ currOwner: event.target.value, refreshing: true }, this.updateValues);
     }
 
     render() {
@@ -302,7 +304,7 @@ class Overview extends Component {
                                 })}
                             </select>
                         </div>
-                        <div className="row" id="gray-box">
+                        {!this.state.refreshing && <div className="row" id="gray-box">
                             <div className="col-sm-12">
                                 <img id="overview-logo" src={img[this.state.currOwner]} alt={this.state.currOwner}></img>
                                 <h3>Owner</h3>
@@ -366,11 +368,11 @@ class Overview extends Component {
                                 <h2>{this.state.slm[0].Margin}</h2>
                                 <p>(Week {this.state.slm[0].Week}, {this.state.slm[0].Year})</p>
                             </div> 
-                        </div>    
+                        </div> }  
                     </div>
                     <div className="col-sm-7">
                         <h4>Regular Season Performance</h4>
-                        <div id="box">
+                        {!this.state.refreshing && <div id="box">
                             <div className="row">
                                 <div className="col-sm-3">
                                     <h5>Win Rate</h5>
@@ -453,9 +455,9 @@ class Overview extends Component {
                                     </div>
                                 </div>
                             </div>
-                        </div>  
+                        </div>} 
                         <h4>Playoff Performance</h4>
-                        <div id="box">
+                        {!this.state.refreshing && <div id="box">
                             <div className="row">
                                 <div className="col-sm-3">
                                     <h5>Win Rate</h5>
@@ -520,15 +522,15 @@ class Overview extends Component {
                                     </div>
                                 </div>
                             </div>
-                        </div>  
+                        </div>}  
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-sm-12">
                         <h4>Yearly Performance</h4>
-                        <div id="box">
+                        {!this.state.refreshing && <div id="box">
                             <Line data={this.state.graphData} height={100} options={options}/>
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </div>
