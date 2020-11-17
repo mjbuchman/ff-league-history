@@ -87,6 +87,8 @@ class Overview extends Component {
             blm: [{Year: 0, Week: 0, Score: 0}],
             slm: [{Year: 0, Week: 0, Score: 0}],
             pApp: [{count: 0}],
+            weekHS: [{},{},{},{},[{count: 0}]],
+            weekLS: [{},{},{},{},[{count: 0}]],
             graphData: {labels: ['2017','2018','2019','2020']}
         };
 
@@ -141,6 +143,7 @@ class Overview extends Component {
     updateValues() {
         this.setOwnerVals();
         this.getMainTables();
+        this.getWeeklyData();
     }
 
     getMainTables() {
@@ -242,6 +245,42 @@ class Overview extends Component {
             pLosses: pLosses
         }}, this.getGraphData)
 
+    }
+
+    getWeeklyData() {
+        this.queryDB("weekHS", 
+        ` drop temporary table if exists results;
+        drop temporary table if exists results2;
+        
+        Create temporary table results
+        select year, week, home_team as owner, home_score as score from Matchups where Home_Score > Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score < Away_Score;
+        
+        Create temporary table results2 select * from results;
+        
+        select count(*) as count from 
+        (select a.year, a.week, a.score, a.owner
+        from results a
+        inner join
+        (select year, week, max(score) as score from results2 group by year, week) b
+        on a.year = b.year AND a.week = b.week AND a.score = b.score) as res where owner = "${this.state.currOwner}"
+        `)
+
+        this.queryDB("weekLS", 
+        `drop temporary table if exists results;
+        drop temporary table if exists results2;
+        
+        Create temporary table results
+        select year, week, home_team as owner, home_score as score from Matchups where Home_Score < Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score > Away_Score;
+        
+        Create temporary table results2 select * from results;
+        
+        select count(*) as count from 
+        (select a.year, a.week, a.score, a.owner
+        from results a
+        inner join
+        (select year, week, min(score) as score from results2 group by year, week) b
+        on a.year = b.year AND a.week = b.week AND a.score = b.score) as res where owner = "${this.state.currOwner}"
+        `)
     }
 
     handleOwnerChange = val => event => {
@@ -401,7 +440,7 @@ class Overview extends Component {
                                     <div className="stats-box">
                                         <h6>Weekly High Scorer</h6>
                                         <div id="box">
-                                            <h1 id="small-mar">VAL</h1>
+                                            <h1 id="small-mar">{this.state.weekHS[4][0].count}</h1>
                                         </div>
                                     </div>
                                 </div>
@@ -409,7 +448,7 @@ class Overview extends Component {
                                     <div className="stats-box">
                                         <h6>Weekly Low Scorer</h6>
                                         <div id="box">
-                                            <h1 id="small-mar">VAL</h1>
+                                            <h1 id="small-mar">{this.state.weekLS[4][0].count}</h1>
                                         </div>
                                     </div>
                                 </div>
