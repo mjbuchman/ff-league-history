@@ -103,6 +103,9 @@ class Records extends Component {
         })
         .then((response) => response.json())
         .then(rows => {
+            if(field !== "seasons") {
+                rows.forEach(function (row,i) { row.placement =  i+1})
+            }
             this.setState({[field]: rows});
         })
     }
