@@ -40,44 +40,31 @@ const dict = {
     10: "10th"
 }
 
-const data = {
-    labels: ['2017', '2018', '2019', '2020'],
-    datasets: [
-        {
-            label: 'Wins By Year',
-            fill: true,
-            lineTension: 0.1,
-            backgroundColor: 'rgba(75,192,192,0.4)',
-            borderColor: 'rgba(75,192,192,1)',
-            borderCapStyle: 'butt',
-            borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(75,192,192,1)',
-        pointBackgroundColor: '#fff',
-        pointBorderWidth: 1,
-        pointHoverRadius: 10,
-        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-        pointHoverBorderColor: 'rgba(220,220,220,1)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data: [9,4,7,6],
-      }
-    ]
-};
-
 const options = {
     scales: {
         yAxes: [
             {   
+                type: 'linear',
+                id:'y-axis-1',
+                display: true,
+                position: 'left',
                 ticks: {
                     min: 0,
-                    max: 14,
+                    max: 16,
                 },
             },
-        ],
-    },
+            {   
+                type: 'linear',
+                id:'y-axis-2',
+                display: true,
+                position: 'right',
+                ticks: {
+                    min: 1200,
+                    max: 2800,
+                },
+            }
+        ]
+    }
 }
 
 class Overview extends Component {
@@ -99,7 +86,8 @@ class Overview extends Component {
             swm: [{Year: 0, Week: 0, Score: 0}],
             blm: [{Year: 0, Week: 0, Score: 0}],
             slm: [{Year: 0, Week: 0, Score: 0}],
-            pApp: [{count: 0}]
+            pApp: [{count: 0}],
+            graphData: {labels: ['2017','2018','2019','2020']}
         };
 
         this.queryDB = this.queryDB.bind(this);
@@ -107,6 +95,7 @@ class Overview extends Component {
         this.setOwnerVals = this.setOwnerVals.bind(this);
         this.updateValues = this.updateValues.bind(this);
         this.getMainTables = this.getMainTables.bind(this);
+        this.getGraphData = this.getGraphData.bind(this);
         this.getRecordDate = this.getRecordData.bind(this);
         this.handleOwnerChange = this.handleOwnerChange.bind(this);
     }
@@ -152,7 +141,6 @@ class Overview extends Component {
     updateValues() {
         this.setOwnerVals();
         this.getMainTables();
-        console.log(this.state)
     }
 
     getMainTables() {
@@ -168,6 +156,54 @@ class Overview extends Component {
         this.queryDB("blm", `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${this.state.currOwner}" AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${this.state.currOwner}" AND Away_Score < Home_Score) as margins order by Margin asc limit 1`)
         this.queryDB("slm", `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${this.state.currOwner}" AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${this.state.currOwner}" AND Away_Score < Home_Score) as margins order by Margin desc limit 1`)
         this.queryDB("pApp", `select count(distinct year) as count from Matchups where (home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}") AND Playoff = "TRUE"`)
+    }
+
+    getGraphData() {
+        var currOwner = this.state.currOwner
+        var index = 0;
+        var wins = [];
+        var points = [];
+        this.state.games.forEach(function (game, i) { 
+            if(i%14 == 0) {
+                if(i != 0) {
+                    points[index] = points[index].toFixed(2);
+                    index++;
+                }
+                wins.push(0);
+                points.push(0);
+            } 
+
+            if(game.Home_Team === currOwner) {
+                points[index] += game.Home_Score;
+                if(game.Home_Score > game.Away_Score) wins[index]++;
+            } else {
+                points[index] += game.Away_Score;
+                if(game.Home_Score < game.Away_Score) wins[index]++;
+            }
+
+        });
+
+        this.setState({graphData: {datasets: [
+            {
+                label: 'Wins',
+                data: wins,
+                fill: false,
+                lineTension: 0,
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgba(255, 99, 132)',
+                yAxisID: 'y-axis-1',
+            },
+            {
+                label: 'Points For',
+                data: points,
+                fill: false,
+                lineTension: 0,
+                backgroundColor: 'rgb(54, 162, 235)',
+                borderColor: 'rgba(54, 162, 235)',
+                yAxisID: 'y-axis-2',
+            },
+          ],
+        }}, console.log(this.state))
     }
 
     getRecordData() {
@@ -204,7 +240,7 @@ class Overview extends Component {
             rsLosses: rsLosses,
             pWins: pWins,
             pLosses: pLosses
-        }})
+        }}, this.getGraphData)
 
     }
 
@@ -452,7 +488,7 @@ class Overview extends Component {
                     <div className="col-sm-12">
                         <h4>Yearly Performance</h4>
                         <div id="box">
-                            <Line data={data} height={100} options={options}/>
+                            <Line data={this.state.graphData} height={100} options={options}/>
                         </div>
                     </div>
                 </div>
