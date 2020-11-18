@@ -100,6 +100,7 @@ class Standings extends Component {
 
         this.getSeasons = this.getSeasons.bind(this);
         this.getFinalStandings = this.getFinalStandings.bind(this);
+        this.handleDateChange = this.handleDateChange.bind(this);
         this.handleButtonClick = this.handleButtonClick.bind(this);
         this.updateTableData = this.updateTableData.bind(this);
         this.chooseTableType = this.chooseTableType.bind(this);
