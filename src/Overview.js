@@ -27,18 +27,7 @@ const img = {
     "Connor DeYoung": LogoCD
 }
 
-const dict = {
-    1: "1st",
-    2: "2nd",
-    3: "3rd",
-    4: "4th",
-    5: "5th",
-    6: "6th",
-    7: "7th",
-    8: "8th",
-    9: "9th",
-    10: "10th"
-}
+const dict = {1: "1st", 2: "2nd", 3: "3rd", 4: "4th", 5: "5th", 6: "6th", 7: "7th", 8: "8th", 9: "9th", 10: "10th"}
 
 const options = {
     scales: {
@@ -188,7 +177,7 @@ class Overview extends Component {
 
         });
 
-        this.setState({graphData: {datasets: [
+        this.setState({graphData: {labels: ['2017','2018','2019','2020'], datasets: [
             {
                 label: 'Wins',
                 data: wins,
@@ -208,7 +197,7 @@ class Overview extends Component {
                 yAxisID: 'y-axis-2',
             },
           ],
-        }}, console.log(this.state))
+        }})
     }
 
     getRecordData() {
