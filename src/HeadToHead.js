@@ -48,10 +48,10 @@ class HeadToHead extends Component {
             hsdw2: [],
             lsdw1: [],
             lsdw2: [],
-            maxMarg1: null,
-            maxMarg2: null,
-            minMarg1: null,
-            minMarg2: null
+            maxMarg1: {val: null, year: null, week: null},
+            maxMarg2: {val: null, year: null, week: null},
+            minMarg1: {val: null, year: null, week: null},
+            minMarg2: {val: null, year: null, week: null}
         };
 
         this.handleOwnerChange1 = this.handleOwnerChange1.bind(this);
@@ -185,32 +185,50 @@ class HeadToHead extends Component {
 
     highMargin(owner, field) {
         var max = Number.MIN_VALUE;
+        var year, week
 
         this.state.matchups.forEach(matchup => {
             if (matchup.Home_Score > matchup.Away_Score) {
-                if (matchup.Home_Team === owner && matchup.Home_Score-matchup.Away_Score > max) max = matchup.Home_Score-matchup.Away_Score;
+                if (matchup.Home_Team === owner && matchup.Home_Score-matchup.Away_Score > max) {
+                    max = matchup.Home_Score-matchup.Away_Score;
+                    year = matchup.Year;
+                    week = matchup.Week;
+                }
             } else {
-                if (matchup.Away_Team === owner && matchup.Away_Score-matchup.Home_Score > max ) max = matchup.Away_Score-matchup.Home_Score;
+                if (matchup.Away_Team === owner && matchup.Away_Score-matchup.Home_Score > max ) {
+                    max = matchup.Away_Score-matchup.Home_Score;
+                    year = matchup.Year;
+                    week = matchup.Week;
+                }
             }
         }
         );
         if(max === Number.MIN_VALUE) max = false
-        this.setState({[field]: max ? max.toFixed(2) : "N/A"})
+        this.setState({[field]: {val: max ? max.toFixed(2) : "N/A", year: max ? year : "", week: max ? week : ""}})
     }
-
+    
     lowMargin(owner, field) {
         var min = Number.MAX_VALUE;
+        var year, week;
 
         this.state.matchups.forEach(matchup => {
             if (matchup.Home_Score > matchup.Away_Score) {
-                if (matchup.Home_Team === owner && matchup.Home_Score-matchup.Away_Score < min) min = matchup.Home_Score-matchup.Away_Score;
+                if (matchup.Home_Team === owner && matchup.Home_Score-matchup.Away_Score < min) {
+                    min = matchup.Home_Score-matchup.Away_Score;
+                    year = matchup.Year;
+                    week = matchup.Week;
+                }
             } else {
-                if (matchup.Away_Team === owner && matchup.Away_Score-matchup.Home_Score < min ) min = matchup.Away_Score-matchup.Home_Score;
+                if (matchup.Away_Team === owner && matchup.Away_Score-matchup.Home_Score < min ) {
+                    min = matchup.Away_Score-matchup.Home_Score;
+                    year = matchup.Year;
+                    week = matchup.Week;
+                }
             }
         }
         );
         if(min === Number.MAX_VALUE) min = false
-        this.setState({[field]: min ? min.toFixed(2) : "N/A"})
+        this.setState({[field]: {val: min ? min.toFixed(2) : "N/A", year: min ? year : "", week: min ? week : ""}})
     }
 
     handleOwnerChange1 = val => event => {
@@ -320,12 +338,12 @@ class HeadToHead extends Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <h2 id="drop-shadow">{this.state.hsdw1.score ? this.state.hsdw1.score : "N/A"}</h2>
-                                            <p>(Week {this.state.hsdw1.Week}, {this.state.hsdw1.Year})</p>
+                                            {this.state.hsdw1.score && <p>(Week {this.state.hsdw1.Week}, {this.state.hsdw1.Year})</p>}
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
                                             <h2 id="drop-shadow">{this.state.hsdw2.score ? this.state.hsdw2.score : "N/A"}</h2>
-                                            <p>(Week {this.state.hsdw2.Week}, {this.state.hsdw2.Year})</p>
+                                            {this.state.hsdw2.score && <p>(Week {this.state.hsdw2.Week}, {this.state.hsdw2.Year})</p>}
                                             <hr></hr>
                                         </div>
                                     </div>
@@ -335,12 +353,12 @@ class HeadToHead extends Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <h2 id="drop-shadow">{this.state.lsdw1.score ? this.state.lsdw1.score : "N/A"}</h2>
-                                            <p>(Week {this.state.lsdw1.Week}, {this.state.lsdw1.Year})</p>
+                                            {this.state.lsdw1.score && <p>(Week {this.state.lsdw1.Week}, {this.state.lsdw1.Year})</p>}
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
                                             <h2 id="drop-shadow">{this.state.lsdw2.score ? this.state.lsdw2.score : "N/A"}</h2>
-                                            <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
+                                            {this.state.lsdw2.score && <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>}
                                             <hr></hr>
                                         </div>
                                     </div>
@@ -349,13 +367,13 @@ class HeadToHead extends Component {
                                             <h3>Biggest Win Margin</h3>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.maxMarg1}</h2>
-                                            <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
+                                            <h2 id="drop-shadow">{this.state.maxMarg1.val}</h2>
+                                            {this.state.maxMarg1.val != 'N/A' && <p>(Week {this.state.maxMarg1.week}, {this.state.maxMarg1.year})</p>}
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.maxMarg2}</h2>
-                                            <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
+                                            <h2 id="drop-shadow">{this.state.maxMarg2.val}</h2>
+                                            {this.state.maxMarg2.val != 'N/A' && <p>(Week {this.state.maxMarg2.week}, {this.state.maxMarg2.year})</p>}
                                             <hr></hr>
                                         </div>
                                     </div>
@@ -364,13 +382,13 @@ class HeadToHead extends Component {
                                             <h3>Smallest Win Margin</h3>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.minMarg1}</h2>
-                                            <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
+                                            <h2 id="drop-shadow">{this.state.minMarg1.val}</h2>
+                                            {this.state.minMarg1.val != 'N/A' && <p>(Week {this.state.minMarg1.week}, {this.state.minMarg1.year})</p>}
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.minMarg2}</h2>
-                                            <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
+                                            <h2 id="drop-shadow">{this.state.minMarg2.val}</h2>
+                                            {this.state.minMarg2.val != 'N/A' && <p>(Week {this.state.minMarg2.week}, {this.state.minMarg2.year})</p>}
                                             <hr></hr>
                                         </div>
                                     </div>
