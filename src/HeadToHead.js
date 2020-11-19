@@ -40,14 +40,14 @@ class HeadToHead extends Component {
             o2Points: null,
             o1Avg: null,
             o2Avg: null,
-            hssw1: [],
-            hssw2: [],
-            lssw1: [],
-            lssw2: [],
-            hsdw1: [],
-            hsdw2: [],
-            lsdw1: [],
-            lsdw2: [],
+            hssw1: [{year: null, week: null, score: null}],
+            hssw2: [{year: null, week: null, score: null}],
+            lssw1: [{year: null, week: null, score: null}],
+            lssw2: [{year: null, week: null, score: null}],
+            hsdw1: [{year: null, week: null, score: null}],
+            hsdw2: [{year: null, week: null, score: null}],
+            lsdw1: [{year: null, week: null, score: null}],
+            lsdw2: [{year: null, week: null, score: null}],
             maxMarg1: {val: null, year: null, week: null},
             maxMarg2: {val: null, year: null, week: null},
             minMarg1: {val: null, year: null, week: null},
@@ -56,12 +56,18 @@ class HeadToHead extends Component {
 
         this.handleOwnerChange1 = this.handleOwnerChange1.bind(this);
         this.handleOwnerChange2 = this.handleOwnerChange2.bind(this);
+        this.queryDB = this.queryDB.bind(this);
+        this.updateValues = this.updateValues.bind(this);
         this.hlScore = this.hlScore.bind(this);
         this.highMargin = this.highMargin.bind(this);
         this.lowMargin = this.lowMargin.bind(this);
     }
 
     componentDidMount() {
+        this.queryDB("owners", `select * from Owners`, false)
+    }
+
+    queryDB(field, query, singleVal) {
         fetch("/api/db", {
             method: "post",
             headers: {
@@ -70,32 +76,38 @@ class HeadToHead extends Component {
             },
             //make sure to serialize your JSON body
             body: JSON.stringify({
-                query: 'select * from Owners'
+                query: query
             })
         })
         .then((response) => response.json())
         .then(rows => {
-            this.setState({owners: rows});
+            if(field === "matchups") this.setState({[field]: rows}, this.updateValues);
+            else if(singleVal) this.setState({[field]: rows[4]}, console.log(this.state));
+            else this.setState({[field]: rows});
         })
     }
 
+    updateValues() {
+        this.countWins();
+        this.countPoints();
+        this.hlScore("hssw1", true,"FALSE", this.state.currOwner1, this.state.currOwner2);
+        this.hlScore("hssw2", true,"FALSE", this.state.currOwner2, this.state.currOwner1);
+        this.hlScore("lssw1", false,"FALSE", this.state.currOwner1, this.state.currOwner2);
+        this.hlScore("lssw2", false,"FALSE", this.state.currOwner2, this.state.currOwner1);
+        this.hlScore("hsdw1", true,"TRUE", this.state.currOwner1, this.state.currOwner2);
+        this.hlScore("hsdw2", true,"TRUE", this.state.currOwner2, this.state.currOwner1);
+        this.hlScore("lsdw1", false,"TRUE", this.state.currOwner1, this.state.currOwner2);
+        this.hlScore("lsdw2", false,"TRUE", this.state.currOwner2, this.state.currOwner1);
+        this.highMargin(this.state.currOwner1, "maxMarg1");
+        this.highMargin(this.state.currOwner2, "maxMarg2");
+        this.lowMargin(this.state.currOwner1, "minMarg1");
+        this.lowMargin(this.state.currOwner2, "minMarg2");
+    }
+    
     usersSelected() {
         if(this.state.currOwner1 !== "" && this.state.currOwner2 !== "") {
-            fetch("/api/db", {
-                method: "post",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                //make sure to serialize your JSON body
-                body: JSON.stringify({
-                    query: `select * from Matchups where (home_team = "${this.state.currOwner1}" OR home_team = "${this.state.currOwner2}") AND (away_team = "${this.state.currOwner1}" OR away_team = "${this.state.currOwner2}") `
-                })
-            })
-            .then((response) => response.json())
-            .then(rows => {
-                this.setState({matchups: rows}, this.countWins);
-            })
+            var query =  `select * from Matchups where (home_team = "${this.state.currOwner1}" OR home_team = "${this.state.currOwner2}") AND (away_team = "${this.state.currOwner1}" OR away_team = "${this.state.currOwner2}") `
+            this.queryDB("matchups", query, false)
         }
     }
 
@@ -115,7 +127,7 @@ class HeadToHead extends Component {
                 }
             }
             );
-            this.setState({o1Wins: winCount, o2Wins: this.state.matchups.length - winCount}, this.countPoints);
+            this.setState({o1Wins: winCount, o2Wins: this.state.matchups.length - winCount});
         }
     }
 
@@ -132,23 +144,7 @@ class HeadToHead extends Component {
             }
         }
         );
-        this.setState({o1Points: o1Count.toFixed(2), o2Points: o2Count.toFixed(2), o1Avg: (o1Count/this.state.matchups.length).toFixed(2), o2Avg: (o2Count/this.state.matchups.length).toFixed(2)},
-            () => {
-                this.hlScore("hssw1", true,"FALSE", this.state.currOwner1, this.state.currOwner2);
-                this.hlScore("hssw2", true,"FALSE", this.state.currOwner2, this.state.currOwner1);
-                this.hlScore("lssw1", false,"FALSE", this.state.currOwner1, this.state.currOwner2);
-                this.hlScore("lssw2", false,"FALSE", this.state.currOwner2, this.state.currOwner1);
-                this.hlScore("hsdw1", true,"TRUE", this.state.currOwner1, this.state.currOwner2);
-                this.hlScore("hsdw2", true,"TRUE", this.state.currOwner2, this.state.currOwner1);
-                this.hlScore("lsdw1", false,"TRUE", this.state.currOwner1, this.state.currOwner2);
-                this.hlScore("lsdw2", false,"TRUE", this.state.currOwner2, this.state.currOwner1);
-                this.highMargin(this.state.currOwner1, "maxMarg1");
-                this.highMargin(this.state.currOwner2, "maxMarg2");
-                this.lowMargin(this.state.currOwner1, "minMarg1");
-                this.lowMargin(this.state.currOwner2, "minMarg2");
-            }
-        
-        );
+        this.setState({o1Points: o1Count.toFixed(2), o2Points: o2Count.toFixed(2), o1Avg: (o1Count/this.state.matchups.length).toFixed(2), o2Avg: (o2Count/this.state.matchups.length).toFixed(2)});
     }
 
     hlScore(field, high, double, owner1, owner2) {
@@ -156,30 +152,25 @@ class HeadToHead extends Component {
         if(high) type = "max"
         
         if(this.state.currOwner1 !== "" && this.state.currOwner2 !== "") {
-            fetch("/api/db", {
-                method: "post",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                //make sure to serialize your JSON body
-                body: JSON.stringify({
-                    query: `select Year, Week, ${type}(score) as score from (
+            var query = `drop temporary table if exists h2h;
+                            drop temporary table if exists h2h2;
+                            create temporary table h2h
                                 Select Year, Week, Home_Score as score from (
                                     select * from Matchups where home_team = "${owner1}" AND away_team = "${owner2}" AND Two_Week = "${double}"
                                 ) as x
                                 UNION
                                 Select Year, Week, Away_Score as score from (
                                     select * from Matchups where away_team = "${owner1}" AND home_team = "${owner2}" AND Two_Week = "${double}"
-                                ) as y
-                            ) as z
-                    `
-                })
-            })
-            .then((response) => response.json())
-            .then(rows => {
-                this.setState({[field]: rows[0]});
-            })
+                                ) as y;
+                                
+                            create temporary table h2h2 select * from h2h;
+                            
+                            select a.year, a.week, a.score
+                            from h2h a
+                            inner join
+                            (select year, week, ${type}(score) as score from h2h2) b
+                            on a.score = b.score;`
+            this.queryDB(field, query, true)
         }
     }
 
@@ -307,13 +298,13 @@ class HeadToHead extends Component {
                                             <h3>Highest Score - Single Week</h3>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.hssw1.score}</h2>
-                                            <p>(Week {this.state.hssw1.Week}, {this.state.hssw1.Year})</p>
+                                            <h2 id="drop-shadow">{this.state.hssw1[0].score}</h2>
+                                            <p>(Week {this.state.hssw1[0].week}, {this.state.hssw1[0].year})</p>
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.hssw2.score}</h2>
-                                            <p>(Week {this.state.hssw2.Week}, {this.state.hssw2.Year})</p>
+                                            <h2 id="drop-shadow">{this.state.hssw2[0].score}</h2>
+                                            <p>(Week {this.state.hssw2[0].week}, {this.state.hssw2[0].year})</p>
                                             <hr></hr>
                                         </div>
                                     </div>
@@ -322,13 +313,13 @@ class HeadToHead extends Component {
                                             <h3>Lowest Score - Single Week</h3>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.lssw1.score}</h2>
-                                            <p>(Week {this.state.lssw1.Week}, {this.state.lssw1.Year})</p>
+                                            <h2 id="drop-shadow">{this.state.lssw1[0].score}</h2>
+                                            <p>(Week {this.state.lssw1[0].week}, {this.state.lssw1[0].year})</p>
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.lssw2.score}</h2>
-                                            <p>(Week {this.state.lssw2.Week}, {this.state.lssw2.Year})</p>
+                                            <h2 id="drop-shadow">{this.state.lssw2[0].score}</h2>
+                                            <p>(Week {this.state.lssw2[0].week}, {this.state.lssw2[0].year})</p>
                                             <hr></hr>
                                         </div>
                                     </div>
@@ -337,13 +328,13 @@ class HeadToHead extends Component {
                                             <h3>Highest Score - Double Week</h3>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.hsdw1.score ? this.state.hsdw1.score : "N/A"}</h2>
-                                            {this.state.hsdw1.score && <p>(Week {this.state.hsdw1.Week}, {this.state.hsdw1.Year})</p>}
+                                            <h2 id="drop-shadow">{this.state.hsdw1[0].score ? this.state.hsdw1[0].score : "N/A"}</h2>
+                                            {this.state.hsdw1[0].score && <p>(Week {this.state.hsdw1[0].week}, {this.state.hsdw1[0].year})</p>}
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.hsdw2.score ? this.state.hsdw2.score : "N/A"}</h2>
-                                            {this.state.hsdw2.score && <p>(Week {this.state.hsdw2.Week}, {this.state.hsdw2.Year})</p>}
+                                            <h2 id="drop-shadow">{this.state.hsdw2[0].score ? this.state.hsdw2[0].score : "N/A"}</h2>
+                                            {this.state.hsdw2[0].score && <p>(Week {this.state.hsdw2[0].week}, {this.state.hsdw2[0].year})</p>}
                                             <hr></hr>
                                         </div>
                                     </div>
@@ -352,13 +343,13 @@ class HeadToHead extends Component {
                                             <h3>Lowest Score - Double Week</h3>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.lsdw1.score ? this.state.lsdw1.score : "N/A"}</h2>
-                                            {this.state.lsdw1.score && <p>(Week {this.state.lsdw1.Week}, {this.state.lsdw1.Year})</p>}
+                                            <h2 id="drop-shadow">{this.state.lsdw1[0].score ? this.state.lsdw1[0].score : "N/A"}</h2>
+                                            {this.state.lsdw1[0].score && <p>(Week {this.state.lsdw1[0].week}, {this.state.lsdw1[0].year})</p>}
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.lsdw2.score ? this.state.lsdw2.score : "N/A"}</h2>
-                                            {this.state.lsdw2.score && <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>}
+                                            <h2 id="drop-shadow">{this.state.lsdw2[0].score ? this.state.lsdw2[0].score : "N/A"}</h2>
+                                            {this.state.lsdw2[0].score && <p>(Week {this.state.lsdw2[0].week}, {this.state.lsdw2[0].year})</p>}
                                             <hr></hr>
                                         </div>
                                     </div>
