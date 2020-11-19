@@ -235,8 +235,8 @@ class HeadToHead extends Component {
 
     render() {
         return (
-            <div className=".container">
-                <div className="row" id="first-row">
+            <div className="container-fluid">
+                <div className="row">
                     <header>Head To Head</header>
                 </div>
                 <div className="row">

@@ -280,86 +280,104 @@ class Overview extends Component {
 
     render() {
         return (
-            <div className=".container">
-                <div className="row"  id="first-row">
+            <div className="container-fluid">
+                <div className="row">
                     <header>Team Overview</header>
                 </div>
                 <div className="row">
-                    <div className="col-sm-5" style={{paddingLeft: "35px"}}>
+                    <div className="col-md-12 col-lg-5">
                         <div className="row">
-                            <select id="owners" onChange={this.handleOwnerChange()}>
-                                {this.state.owners.map(function(owner,i) {
-                                    return <option value={owner.Owner} key={i}>{owner.Owner}</option>
-                                })}
-                            </select>
-                        </div>
-                        {!this.state.refreshing && <div className="row" id="gray-box">
                             <div className="col-sm-12">
-                                <img id="overview-logo" src={img[this.state.currOwner]} alt={this.state.currOwner}></img>
-                                <h3>Owner</h3>
-                                <h2 id="owner">{this.state.currOwner}</h2>
+                                <select id="owners" onChange={this.handleOwnerChange()}>
+                                    {this.state.owners.map(function(owner,i) {
+                                        return <option value={owner.Owner} key={i}>{owner.Owner}</option>
+                                    })}
+                                </select>
                             </div>
-                            <div className="col-sm-4" id="top-padded">
-                                <h3>Seasons Played</h3>
-                                <h2>{this.state.seasons[0].count}</h2>
-                            </div>
-                            <div className="col-sm-4" id="top-padded">
-                                <h3>Games Played</h3>
-                                <h2>{this.state.gp[0].count}</h2>
-                            </div>
-                            <div className="col-sm-4" id="top-padded">
-                                <h3>Record</h3>
-                                <h2>{`${this.state.recordData.totalWins}-${this.state.recordData.totalLosses}-0`}</h2>
-                            </div>
-                            <div className="col-sm-6" id="top-padded">
-                                <h3>Total Points For</h3>
-                                <h2>{this.state.tpf[0].tpf}</h2>
-                            </div>
-                            <div className="col-sm-6" id="top-padded">
-                                <h3>Total Points Against</h3>
-                                <h2>{this.state.tpa[0].tpa}</h2>
-                            </div>        
-                            <div className="col-sm-6" id="top-padded">
-                                <h3>Average Points For</h3>
-                                <h2>{(this.state.tpf[0].tpf/this.state.gp[0].count).toFixed(2)}</h2>
-                            </div>
-                            <div className="col-sm-6" id="top-padded">
-                                <h3>Average Points Against</h3>
-                                <h2>{(this.state.tpa[0].tpa/this.state.gp[0].count).toFixed(2)}</h2>
-                            </div>
-                            <div className="col-sm-6" id="top-padded">
-                                <h3>Highest Score - Regular Season</h3>
-                                <h2>{this.state.highScore[0].Score}</h2>
-                                <p>(Week {this.state.highScore[0].Week}, {this.state.highScore[0].Year})</p>
-                            </div>
-                            <div className="col-sm-6" id="top-padded">
-                                <h3>Lowest Score - Regular Season</h3>
-                                <h2>{this.state.lowScore[0].Score}</h2>
-                                <p>(Week {this.state.lowScore[0].Week}, {this.state.lowScore[0].Year})</p>
-                            </div>
-                            <div className="col-sm-6" id="top-padded">
-                                <h3>Biggest Win Margin</h3>
-                                <h2>{this.state.bwm[0].Margin}</h2>
-                                <p>(Week {this.state.bwm[0].Week}, {this.state.bwm[0].Year})</p>
-                            </div>
-                            <div className="col-sm-6" id="top-padded">
-                                <h3>Smallest Win Margin</h3>
-                                <h2>{this.state.swm[0].Margin}</h2>
-                                <p>(Week {this.state.swm[0].Week}, {this.state.swm[0].Year})</p>
-                            </div>
-                            <div className="col-sm-6" id="top-padded">
-                                <h3>Biggest Loss Margin</h3>
-                                <h2>{this.state.blm[0].Margin}</h2>
-                                <p>(Week {this.state.blm[0].Week}, {this.state.blm[0].Year})</p>
-                            </div>
-                            <div className="col-sm-6" id="top-padded">
-                                <h3>Smallest Loss Margin</h3>
-                                <h2>{this.state.slm[0].Margin}</h2>
-                                <p>(Week {this.state.slm[0].Week}, {this.state.slm[0].Year})</p>
-                            </div> 
+                        </div>
+                        {!this.state.refreshing && <div className="row" id="gray-box" style={{margin:"0px"}}>
+                            <div className="col-sm-12">
+                                <div className="row">           
+                                    <div className="col-sm-12">
+                                        <img id="overview-logo" src={img[this.state.currOwner]} alt={this.state.currOwner}></img>
+                                        <h3>Owner</h3>
+                                        <h2 id="owner">{this.state.currOwner}</h2>
+                                    </div>
+                                </div>
+                                <div className="row">           
+                                    <div className="col-sm-4" id="top-padded">
+                                        <h3>Seasons Played</h3>
+                                        <h2>{this.state.seasons[0].count}</h2>
+                                    </div>
+                                    <div className="col-sm-4" id="top-padded">
+                                        <h3>Games Played</h3>
+                                        <h2>{this.state.gp[0].count}</h2>
+                                    </div>
+                                    <div className="col-sm-4" id="top-padded">
+                                        <h3>Record</h3>
+                                        <h2>{`${this.state.recordData.totalWins}-${this.state.recordData.totalLosses}-0`}</h2>
+                                    </div>
+                                </div>
+                                <div className="row">           
+                                    <div className="col-sm-6" id="top-padded">
+                                        <h3>Total Points For</h3>
+                                        <h2>{this.state.tpf[0].tpf}</h2>
+                                    </div>
+                                    <div className="col-sm-6" id="top-padded">
+                                        <h3>Total Points Against</h3>
+                                        <h2>{this.state.tpa[0].tpa}</h2>
+                                    </div> 
+                                </div>
+                                <div className="row">        
+                                    <div className="col-sm-6" id="top-padded">
+                                        <h3>Average Points For</h3>
+                                        <h2>{(this.state.tpf[0].tpf/this.state.gp[0].count).toFixed(2)}</h2>
+                                    </div>
+                                    <div className="col-sm-6" id="top-padded">
+                                        <h3>Average Points Against</h3>
+                                        <h2>{(this.state.tpa[0].tpa/this.state.gp[0].count).toFixed(2)}</h2>
+                                    </div>
+                                </div>
+                                <div className="row"> 
+                                    <div className="col-sm-6" id="top-padded">
+                                        <h3>Highest Score - Regular Season</h3>
+                                        <h2>{this.state.highScore[0].Score}</h2>
+                                        <p>(Week {this.state.highScore[0].Week}, {this.state.highScore[0].Year})</p>
+                                    </div>
+                                    <div className="col-sm-6" id="top-padded">
+                                        <h3>Lowest Score - Regular Season</h3>
+                                        <h2>{this.state.lowScore[0].Score}</h2>
+                                        <p>(Week {this.state.lowScore[0].Week}, {this.state.lowScore[0].Year})</p>
+                                    </div>
+                                </div>
+                                <div className="row"> 
+                                    <div className="col-sm-6" id="top-padded">
+                                        <h3>Biggest Win Margin</h3>
+                                        <h2>{this.state.bwm[0].Margin}</h2>
+                                        <p>(Week {this.state.bwm[0].Week}, {this.state.bwm[0].Year})</p>
+                                    </div>
+                                    <div className="col-sm-6" id="top-padded">
+                                        <h3>Smallest Win Margin</h3>
+                                        <h2>{this.state.swm[0].Margin}</h2>
+                                        <p>(Week {this.state.swm[0].Week}, {this.state.swm[0].Year})</p>
+                                    </div>
+                                </div>
+                                <div className="row"> 
+                                    <div className="col-sm-6" id="top-padded">
+                                        <h3>Biggest Loss Margin</h3>
+                                        <h2>{this.state.blm[0].Margin}</h2>
+                                        <p>(Week {this.state.blm[0].Week}, {this.state.blm[0].Year})</p>
+                                    </div>
+                                    <div className="col-sm-6" id="top-padded">
+                                        <h3>Smallest Loss Margin</h3>
+                                        <h2>{this.state.slm[0].Margin}</h2>
+                                        <p>(Week {this.state.slm[0].Week}, {this.state.slm[0].Year})</p>
+                                    </div> 
+                                </div>
+                            </div>   
                         </div> }  
                     </div>
-                    <div className="col-sm-7">
+                    <div className="col-md-12 col-lg-7">
                         <h4>Regular Season Performance</h4>
                         {!this.state.refreshing && <div id="box">
                             <div className="row">
@@ -515,7 +533,7 @@ class Overview extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-sm-12">
+                    <div className="col-lg-12">
                         <h4>Yearly Performance</h4>
                         {!this.state.refreshing && <div id="box">
                             <Line data={this.state.graphData} height={100} options={options}/>

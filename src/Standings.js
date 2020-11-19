@@ -249,7 +249,7 @@ class Standings extends Component {
 
     render() {
         return (
-            <div className=".container">
+            <div className="container-fluid">
                 <div className="row" id="first-row">
                     <header>Standings</header>
                 </div>

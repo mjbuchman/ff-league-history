@@ -10,6 +10,7 @@ header {
   font-size: 28px;
   text-shadow: 1px 1px #999;
   margin-left: 15px;
+  margin-bottom: 5px;
 }
 
 h1 {
@@ -93,11 +94,6 @@ p, ul, li {
 
 .col-sm-4 {
   text-align: center;
-}
-
-#first-row {
-  margin-top: 60px;
-  margin-bottom: 10px;
 }
 
 #box {
