@@ -82,7 +82,10 @@ class HeadToHead extends Component {
         .then((response) => response.json())
         .then(rows => {
             if(field === "matchups") this.setState({[field]: rows}, this.updateValues);
-            else if(singleVal) this.setState({[field]: rows[4]}, console.log(this.state));
+            else if(singleVal) {
+                if(rows[4].length === 0) this.setState({[field]: [{year: null, week: null, score: null}]});
+                else this.setState({[field]: rows[4]});
+            }
             else this.setState({[field]: rows});
         })
     }
@@ -359,12 +362,12 @@ class HeadToHead extends Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <h2 id="drop-shadow">{this.state.maxMarg1.val}</h2>
-                                            {this.state.maxMarg1.val != 'N/A' && <p>(Week {this.state.maxMarg1.week}, {this.state.maxMarg1.year})</p>}
+                                            {this.state.maxMarg1.val !== 'N/A' && <p>(Week {this.state.maxMarg1.week}, {this.state.maxMarg1.year})</p>}
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
                                             <h2 id="drop-shadow">{this.state.maxMarg2.val}</h2>
-                                            {this.state.maxMarg2.val != 'N/A' && <p>(Week {this.state.maxMarg2.week}, {this.state.maxMarg2.year})</p>}
+                                            {this.state.maxMarg2.val !== 'N/A' && <p>(Week {this.state.maxMarg2.week}, {this.state.maxMarg2.year})</p>}
                                             <hr></hr>
                                         </div>
                                     </div>
@@ -374,12 +377,12 @@ class HeadToHead extends Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <h2 id="drop-shadow">{this.state.minMarg1.val}</h2>
-                                            {this.state.minMarg1.val != 'N/A' && <p>(Week {this.state.minMarg1.week}, {this.state.minMarg1.year})</p>}
+                                            {this.state.minMarg1.val !== 'N/A' && <p>(Week {this.state.minMarg1.week}, {this.state.minMarg1.year})</p>}
                                             <hr></hr>
                                         </div>
                                         <div className="col-sm-6">
                                             <h2 id="drop-shadow">{this.state.minMarg2.val}</h2>
-                                            {this.state.minMarg2.val != 'N/A' && <p>(Week {this.state.minMarg2.week}, {this.state.minMarg2.year})</p>}
+                                            {this.state.minMarg2.val !== 'N/A' && <p>(Week {this.state.minMarg2.week}, {this.state.minMarg2.year})</p>}
                                             <hr></hr>
                                         </div>
                                     </div>
