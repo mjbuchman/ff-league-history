@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import "./css/overview.css"
-import ReactSpeedometer from "react-d3-speedometer"
+import "./css/overview.css";
+import {Container, Row, Col} from 'react-bootstrap';
+import ReactSpeedometer from "react-d3-speedometer";
 import {Line} from 'react-chartjs-2';
 import LogoMB from "./logos/Michael Buchman.jpg";
 import LogoGD from "./logos/Grant Dakovich.jpg";

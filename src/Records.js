@@ -234,7 +234,7 @@ class Records extends Component {
                         </h4>
                         <div id="box-scrollable">
                             <div className="row">
-                                <div className="col-sm-6">
+                                <div className="col-lg-12">
                                     <div className="table-title">
                                         <h3 id="table-head">Highest Scores</h3>
                                     </div>
@@ -249,7 +249,7 @@ class Records extends Component {
                                         pagersVisible={false}
                                     />
                                 </div>
-                                <div className="col-sm-6">
+                                <div className="col-lg-12">
                                     <div className="table-title">
                                         <h3 id="table-head">Lowest Scores</h3>
                                     </div>
@@ -266,7 +266,7 @@ class Records extends Component {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-sm-6">
+                                <div className="col-sm-12">
                                     <div className="table-title">
                                         <h3 id="table-head">Highest Victory Margins</h3>
                                     </div>
@@ -281,7 +281,7 @@ class Records extends Component {
                                         pagersVisible={false}
                                     />
                                 </div>
-                                <div className="col-sm-6">
+                                <div className="col-sm-12">
                                     <div className="table-title">
                                         <h3 id="table-head">Lowest Victory Margins</h3>
                                     </div>
@@ -298,7 +298,7 @@ class Records extends Component {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-sm-6">
+                                <div className="col-sm-12">
                                     <div className="table-title">
                                         <h3 id="table-head">Most Combined Points</h3>
                                     </div>
@@ -313,7 +313,7 @@ class Records extends Component {
                                         pagersVisible={false}
                                     />
                                 </div>
-                                <div className="col-sm-6">
+                                <div className="col-sm-12">
                                     <div className="table-title">
                                         <h3 id="table-head">Fewest Combined Points</h3>
                                     </div>
@@ -330,7 +330,7 @@ class Records extends Component {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-sm-6">
+                                <div className="col-sm-12">
                                     <div className="table-title">
                                         <h3 id="table-head">Highest Scores in a Loss</h3>
                                     </div>
@@ -345,7 +345,7 @@ class Records extends Component {
                                         pagersVisible={false}
                                     />
                                 </div>
-                                <div className="col-sm-6">
+                                <div className="col-sm-12">
                                     <div className="table-title">
                                         <h3 id="table-head">Lowest Scores in a Win</h3>
                                     </div>
