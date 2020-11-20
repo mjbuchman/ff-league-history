@@ -45,7 +45,7 @@ const renderTrophy = (props) => {
     } else {
             return (
                 <span>
-                    <img src={img[props.record.placement]} style={{width:"30px", borderRadius: "100%"}}></img>
+                    <img src={img[props.record.placement]} alt="table-trophy" style={{width:"30px", borderRadius: "100%"}}></img>
                 </span>
             );
     }
@@ -54,7 +54,7 @@ const renderTrophy = (props) => {
 const renderLogo = (props) => {
     return (
         <span>
-            <img src={img[props.record.owner]} style={{width:"40px", borderRadius: "100%"}}></img>
+            <img src={img[props.record.owner]} alt="table-logo" style={{width:"40px", borderRadius: "100%"}}></img>
         </span>
     );
 };
@@ -197,10 +197,10 @@ class Standings extends Component {
             .then((response) => response.json())
             .then(rows => {
                 rows[4].forEach(row => row.pct = row.pct.toFixed(3) )
-                if (this.state.currDate !== "All-Time" && this.state.currDate != new Date().getFullYear() && this.state.playoff.val) {
+                if (this.state.currDate !== "All-Time" && this.state.currDate !== new Date().getFullYear() && this.state.playoff.val) {
                     rows[4].forEach(row =>
                         this.state.finalStandings.forEach(rowStandings => { 
-                            if(rowStandings.Owner === row.owner && rowStandings.Year == this.state.currDate) row.placement = rowStandings.Place;
+                            if(rowStandings.Owner === row.owner && rowStandings.Year === this.state.currDate) row.placement = rowStandings.Place;
                         })
                     )
                 } else {
@@ -212,7 +212,7 @@ class Standings extends Component {
     }
 
     chooseTableType() {
-        if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate == new Date().getFullYear()) {
+        if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate === new Date().getFullYear()) {
             return (
                 <div id="box">
                     <FilterableTable

@@ -31,7 +31,7 @@ const img = {
 const renderLogo = (props) => {
     return (
         <span>
-            <img src={img[props.record.owner]} style={{width:"30px", borderRadius: "100%"}}></img>
+            <img src={img[props.record.owner]} alt="search-bar-logo" style={{width:"30px", borderRadius: "100%"}}></img>
         </span>
     );
 };
@@ -129,6 +129,8 @@ class Records extends Component {
             case "fullSeason":
                 temp.push("playoffS", "regSeason", "playoffD")
                 break;
+            default:
+                break;
         }
 
         if(this.state[field].id === "unclicked") {
@@ -145,11 +147,11 @@ class Records extends Component {
 
     updateTables()  {
         var whereClause;
-        if(this.state.regSeason.val == true) {
+        if(this.state.regSeason.val === true) {
             whereClause = "where Regular_Season = \"TRUE\"";
-        } else if(this.state.playoffS.val == true ) {
+        } else if(this.state.playoffS.val === true ) {
             whereClause = "where Playoff = \"TRUE\" AND Two_Week = \"FALSE\"";
-        } else if(this.state.playoffD.val == true) {
+        } else if(this.state.playoffD.val === true) {
             whereClause = "where Playoff = \"TRUE\" AND Two_Week = \"TRUE\"";
         } else {
             whereClause = "where true";

@@ -67,7 +67,7 @@ class Overview extends Component {
             seasons: [{count: 0}],
             gp: [{count: 0}],
             games: [],
-            recordData: {totalWins: 0, totalLosses: 0, rsWins: 0, rsLosses: 0, pWins:0, pLosses:0},
+            recordData: {totalWins: 1, totalLosses: 1, rsWins: 1, rsLosses: 1, pWins: 1, pLosses: 1},
             tpf: [{tpf: 0}],
             tpa: [{tpa: 0}],
             highScore: [{Year: 0, Week: 0, Score: 0}],
@@ -158,8 +158,8 @@ class Overview extends Component {
         var wins = [];
         var points = [];
         this.state.games.forEach(function (game, i) { 
-            if(i%14 == 0) {
-                if(i != 0) {
+            if(i%14 === 0) {
+                if(i !== 0) {
                     points[index] = points[index].toFixed(2);
                     index++;
                 }
@@ -390,7 +390,7 @@ class Overview extends Component {
                                         needleHeightRatio={0.7}
                                         maxSegmentLabels={4}
                                         segments={1000}
-                                        value={(this.state.recordData.rsWins/(this.state.recordData.rsWins + this.state.recordData.rsLosses)).toFixed(3)}
+                                        value={parseFloat((this.state.recordData.rsWins/(this.state.recordData.rsWins + this.state.recordData.rsLosses)).toFixed(3))}
                                         textColor='#777'
                                         />
                                 </div>
@@ -475,7 +475,7 @@ class Overview extends Component {
                                         needleHeightRatio={0.7}
                                         maxSegmentLabels={4}
                                         segments={1000}
-                                        value={(this.state.recordData.pWins/(this.state.recordData.pWins + this.state.recordData.pLosses)).toFixed(3)}
+                                        value={parseFloat((this.state.recordData.pWins/(this.state.recordData.pWins + this.state.recordData.pLosses)).toFixed(3))}
                                         textColor='#777'
                                         />
                                 </div>
