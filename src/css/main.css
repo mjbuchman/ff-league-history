@@ -5,9 +5,8 @@
     width: 100%;
     padding: 20px;
     margin-bottom: 1000px;
-    font-size: 28px;
     font-weight: 400;
-    z-index: 99;
+    z-index: 98;
 }
 
 #mini {
@@ -16,6 +15,13 @@
     border: 0;
     border-radius: 0;
     margin-right: 10px;
+}
+
+.hamburger {
+    position: fixed !important;
+    margin-left: 90%;
+    margin-top: 27px;
+    z-index: 99;
 }
 
 ul.navbar {
@@ -54,6 +60,41 @@ ul.navbar li a:hover {
     color: #888;
 }
 
+ul.hamburger-navbar {
+    height: auto;
+    width: 100%; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    background-color: #e7e7e7; 
+    overflow-x: hidden; 
+    padding-top: 20px;
+    margin-top: 76px;
+    box-shadow:inset -5px -5px 15px -5px #969696;
+
+}
+
+ul.hamburger-navbar li {
+    display: block;
+    text-align: right;
+    padding-right: 30px;
+    padding-bottom: 30px;
+    text-shadow: 1px 1px #fff;
+    line-height: 1;
+}
+
+
+ul.hamburger-navbar li a {
+    text-decoration: none;
+    font-size: 28px;
+    color: #222;
+    line-height: 1
+}
+
+ul.hamburger-navbar li a:hover {
+    color: #888;
+}
+
 .material-icons {
     font-family: 'Material Icons';
     font-weight: normal;
@@ -70,9 +111,21 @@ ul.navbar li a:hover {
     padding-right: 5px;
   }
 
-.content {
-    background-color: #fff;
-    padding: 20px;
-    margin-left: 180px;
-    padding-top: 80px;
+
+@media screen and (max-width: 767px) {
+    .content {
+        background-color: #fff;
+        padding: 20px;
+        margin-left: 0px;
+        padding-top: 80px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .content {
+        background-color: #fff;
+        padding: 20px;
+        margin-left: 180px;
+        padding-top: 80px;
+    }
 }
