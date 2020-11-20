@@ -200,7 +200,7 @@ class Standings extends Component {
                 if (this.state.currDate !== "All-Time" && this.state.currDate !== new Date().getFullYear() && this.state.playoff.val) {
                     rows[4].forEach(row =>
                         this.state.finalStandings.forEach(rowStandings => { 
-                            if(rowStandings.Owner === row.owner && rowStandings.Year === this.state.currDate) row.placement = rowStandings.Place;
+                            if(rowStandings.Owner === row.owner && rowStandings.Year === parseInt(this.state.currDate)) row.placement = rowStandings.Place;
                         })
                     )
                 } else {
