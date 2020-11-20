@@ -214,7 +214,7 @@ class Standings extends Component {
     chooseTableType() {
         if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate === new Date().getFullYear()) {
             return (
-                <div id="box">
+                <div id="box-scrollable">
                     <FilterableTable
                         namespace="People"
                         initialSort="placement"
@@ -230,7 +230,7 @@ class Standings extends Component {
             )
         } else {
             return (
-                <div id="box">
+                <div id="box-scrollable">
                     <FilterableTable
                         namespace="People"
                         initialSort="placement"

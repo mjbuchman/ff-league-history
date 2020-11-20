@@ -159,7 +159,6 @@ class Records extends Component {
 
         if(this.state.currDate !== "All-Time") whereClause = whereClause.concat(` AND Year = ${this.state.currDate}`)
 
-        console.log(whereClause)
         this.getHighLowScores(whereClause);
         this.getMOV(whereClause);
         this.getCombinedPoints(whereClause);
@@ -233,7 +232,7 @@ class Records extends Component {
                                 })}
                             </select>
                         </h4>
-                        <div id="box">
+                        <div id="box-scrollable">
                             <div className="row">
                                 <div className="col-sm-6">
                                     <div className="table-title">

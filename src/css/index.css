@@ -107,6 +107,20 @@ p, ul, li {
   padding-top: 20px;
   padding-right: 20px;
   padding-left: 20px;
+  overflow: hidden;
+}
+
+#box-scrollable {
+  width: 100%;
+  border-left: 1px solid #DFDFDF;
+  border-right: 1px solid #DFDFDF;
+  border-bottom: 1px solid #DFDFDF;
+  margin-top: -8px;
+  margin-bottom: 20px;
+  margin-left: 0px;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
   overflow: scroll;
 }
 
