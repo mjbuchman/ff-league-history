@@ -88,11 +88,7 @@ p, ul, li {
   text-shadow: 1px 1px #000;
 }
 
-.col-sm-3 {
-  text-align: center;
-}
-
-.col-sm-4 {
+#center-align {
   text-align: center;
 }
 

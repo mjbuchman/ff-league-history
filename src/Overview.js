@@ -54,7 +54,8 @@ const options = {
                 },
             }
         ]
-    }
+    },
+    maintainAspectRatio: false
 }
 
 class Overview extends Component {
@@ -306,70 +307,70 @@ class Overview extends Component {
                                     </Col>
                                 </Row>
                                 <Row>           
-                                    <Col id="top-padded">
+                                    <Col md={4} id="top-padded">
                                         <h3>Seasons Played</h3>
                                         <h2>{this.state.seasons[0].count}</h2>
                                     </Col>
-                                    <Col id="top-padded">
+                                    <Col md={4} id="top-padded">
                                         <h3>Games Played</h3>
                                         <h2>{this.state.gp[0].count}</h2>
                                     </Col>
-                                    <Col id="top-padded">
+                                    <Col md={4} id="top-padded">
                                         <h3>Record</h3>
                                         <h2>{`${this.state.recordData.totalWins}-${this.state.recordData.totalLosses}-0`}</h2>
                                     </Col>
                                 </Row>
                                 <Row>           
-                                    <Col id="top-padded">
+                                    <Col md={6} id="top-padded">
                                         <h3>Total Points For</h3>
                                         <h2>{this.state.tpf[0].tpf}</h2>
                                     </Col>
-                                    <Col id="top-padded">
+                                    <Col md={6} id="top-padded">
                                         <h3>Total Points Against</h3>
                                         <h2>{this.state.tpa[0].tpa}</h2>
                                     </Col> 
                                 </Row>
                                 <Row>        
-                                    <Col id="top-padded">
+                                    <Col md={6} id="top-padded">
                                         <h3>Average Points For</h3>
                                         <h2>{(this.state.tpf[0].tpf/this.state.gp[0].count).toFixed(2)}</h2>
                                     </Col>
-                                    <Col id="top-padded">
+                                    <Col md={6} id="top-padded">
                                         <h3>Average Points Against</h3>
                                         <h2>{(this.state.tpa[0].tpa/this.state.gp[0].count).toFixed(2)}</h2>
                                     </Col>
                                 </Row>
                                 <Row> 
-                                    <Col id="top-padded">
+                                    <Col md={6} id="top-padded">
                                         <h3>Highest Score - Regular Season</h3>
                                         <h2>{this.state.highScore[0].Score}</h2>
                                         <p>(Week {this.state.highScore[0].Week}, {this.state.highScore[0].Year})</p>
                                     </Col>
-                                    <Col id="top-padded">
+                                    <Col md={6} id="top-padded">
                                         <h3>Lowest Score - Regular Season</h3>
                                         <h2>{this.state.lowScore[0].Score}</h2>
                                         <p>(Week {this.state.lowScore[0].Week}, {this.state.lowScore[0].Year})</p>
                                     </Col>
                                 </Row>
                                 <Row> 
-                                    <Col id="top-padded">
+                                    <Col md={6} id="top-padded">
                                         <h3>Biggest Win Margin</h3>
                                         <h2>{this.state.bwm[0].Margin}</h2>
                                         <p>(Week {this.state.bwm[0].Week}, {this.state.bwm[0].Year})</p>
                                     </Col>
-                                    <Col id="top-padded">
+                                    <Col md={6} id="top-padded">
                                         <h3>Smallest Win Margin</h3>
                                         <h2>{this.state.swm[0].Margin}</h2>
                                         <p>(Week {this.state.swm[0].Week}, {this.state.swm[0].Year})</p>
                                     </Col>
                                 </Row>
                                 <Row> 
-                                    <Col id="top-padded">
+                                    <Col md={6} id="top-padded">
                                         <h3>Biggest Loss Margin</h3>
                                         <h2>{this.state.blm[0].Margin}</h2>
                                         <p>(Week {this.state.blm[0].Week}, {this.state.blm[0].Year})</p>
                                     </Col>
-                                    <Col id="top-padded">
+                                    <Col md={6} id="top-padded">
                                         <h3>Smallest Loss Margin</h3>
                                         <h2>{this.state.slm[0].Margin}</h2>
                                         <p>(Week {this.state.slm[0].Week}, {this.state.slm[0].Year})</p>
@@ -382,7 +383,7 @@ class Overview extends Component {
                         <h4>Regular Season Performance</h4>
                         {!this.state.refreshing && <div id="box">
                             <Row>
-                                <Col>
+                                <Col lg={3} id="center-align">
                                     <h5>Win Rate</h5>
                                     <ReactSpeedometer
                                         maxValue={1.000}
@@ -395,24 +396,24 @@ class Overview extends Component {
                                         textColor='#777'
                                         />
                                 </Col>
-                                <Col>
+                                <Col sm={4} lg={3} id="center-align">
                                     <h5>Win</h5>
                                     <hr></hr>
                                     <h1>{this.state.recordData.rsWins}</h1>
                                 </Col>
-                                <Col>
+                                <Col sm={4} lg={3} id="center-align">
                                     <h5>Loss</h5>
                                     <hr></hr>
                                     <h1>{this.state.recordData.rsLosses}</h1>
                                 </Col>
-                                <Col>
+                                <Col sm={4} lg={3} id="center-align">
                                     <h5>Tie</h5>
                                     <hr></hr>
                                     <h1>0</h1>
                                 </Col>
                             </Row>
                             <Row>
-                                <Col>
+                                <Col lg={4} id="center-align">
                                     <div className="stats-box">
                                         <h6>Regular Season Champion</h6>
                                         <div id="box">
@@ -420,7 +421,7 @@ class Overview extends Component {
                                         </div>
                                     </div>
                                 </Col>
-                                <Col>
+                                <Col lg={4} id="center-align">
                                     <div className="stats-box">
                                         <h6>Last Place Finishes</h6>
                                         <div id="box">
@@ -428,7 +429,7 @@ class Overview extends Component {
                                         </div>
                                     </div>
                                 </Col>
-                                <Col>
+                                <Col lg={4} id="center-align">
                                     <div className="stats-box">
                                         <h6>Best Placement</h6>
                                         <div id="box">
@@ -438,7 +439,7 @@ class Overview extends Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col>
+                                <Col lg={4} id="center-align">
                                     <div className="stats-box">
                                         <h6>Season High Scorer</h6>
                                         <div id="box">
@@ -446,7 +447,7 @@ class Overview extends Component {
                                         </div>
                                     </div>
                                 </Col>
-                                <Col>
+                                <Col lg={4} id="center-align">
                                     <div className="stats-box">
                                         <h6>Weekly High Scorer</h6>
                                         <div id="box">
@@ -454,7 +455,7 @@ class Overview extends Component {
                                         </div>
                                     </div>
                                 </Col>
-                                <Col>
+                                <Col lg={4} id="center-align">
                                     <div className="stats-box">
                                         <h6>Weekly Low Scorer</h6>
                                         <div id="box">
@@ -467,7 +468,7 @@ class Overview extends Component {
                         <h4>Playoff Performance</h4>
                         {!this.state.refreshing && <div id="box">
                             <Row>
-                                <Col>
+                                <Col lg={3} id="center-align">
                                     <h5>Win Rate</h5>
                                     <ReactSpeedometer
                                         maxValue={1.000}
@@ -480,24 +481,24 @@ class Overview extends Component {
                                         textColor='#777'
                                         />
                                 </Col>
-                                <Col>
+                                <Col sm={4} lg={3} id="center-align">
                                     <h5>Win</h5>
                                     <hr></hr>
                                     <h1>{this.state.recordData.pWins}</h1>
                                 </Col>
-                                <Col>
+                                <Col sm={4} lg={3} id="center-align">
                                     <h5>Loss</h5>
                                     <hr></hr>
                                     <h1>{this.state.recordData.pLosses}</h1>
                                 </Col>
-                                <Col>
+                                <Col sm={4} lg={3} id="center-align">
                                     <h5>Tie</h5>
                                     <hr></hr>
                                     <h1>0</h1>
                                 </Col>
                             </Row>
                             <Row>
-                                <Col>
+                                <Col md={3} id="center-align">
                                     <div className="stats-box">
                                         <h6>Playoff Appearances</h6>
                                         <div id="box">
@@ -505,7 +506,7 @@ class Overview extends Component {
                                         </div>
                                     </div>
                                 </Col>
-                                <Col>
+                                <Col md={3} id="center-align">
                                     <div className="stats-box">
                                         <h6>Best Placement</h6>
                                         <div id="box">
@@ -513,7 +514,7 @@ class Overview extends Component {
                                         </div>
                                     </div>
                                 </Col>
-                                <Col>
+                                <Col md={3} id="center-align">
                                     <div className="stats-box">
                                         <h6>Championship Appearances</h6>
                                         <div id="box">
@@ -521,7 +522,7 @@ class Overview extends Component {
                                         </div>
                                     </div>
                                 </Col>
-                                <Col>
+                                <Col md={3} id="center-align">
                                     <div className="stats-box">
                                         <h6>Championships</h6>
                                         <div id="box">
@@ -534,10 +535,10 @@ class Overview extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12}>
+                    <Col>
                         <h4>Yearly Performance</h4>
                         {!this.state.refreshing && <div id="box">
-                            <Line data={this.state.graphData} height={100} options={options}/>
+                            <Line data={this.state.graphData} height={500} options={options}/>
                         </div>}
                     </Col>
                 </Row>
