@@ -281,108 +281,108 @@ class Overview extends Component {
 
     render() {
         return (
-            <div className="container-fluid">
-                <div className="row">
+            <Container fluid>
+                <Row>
                     <header>Team Overview</header>
-                </div>
-                <div className="row">
-                    <div className="col-md-12 col-lg-5">
-                        <div className="row">
-                            <div className="col-sm-12">
+                </Row>
+                <Row>
+                    <Col sm={12} xl={5}>
+                        <Row>
+                            <Col>
                                 <select id="owners" onChange={this.handleOwnerChange()}>
                                     {this.state.owners.map(function(owner,i) {
                                         return <option value={owner.Owner} key={i}>{owner.Owner}</option>
                                     })}
                                 </select>
-                            </div>
-                        </div>
-                        {!this.state.refreshing && <div className="row" id="gray-box" style={{margin:"0px"}}>
-                            <div className="col-sm-12">
-                                <div className="row">           
-                                    <div className="col-sm-12">
+                            </Col>
+                        </Row>
+                        {!this.state.refreshing && <Row id="gray-box" style={{margin:"0px"}}>
+                            <Col>
+                                <Row>           
+                                    <Col>
                                         <img id="overview-logo" src={img[this.state.currOwner]} alt={this.state.currOwner}></img>
                                         <h3>Owner</h3>
                                         <h2 id="owner">{this.state.currOwner}</h2>
-                                    </div>
-                                </div>
-                                <div className="row">           
-                                    <div className="col-sm-4" id="top-padded">
+                                    </Col>
+                                </Row>
+                                <Row>           
+                                    <Col id="top-padded">
                                         <h3>Seasons Played</h3>
                                         <h2>{this.state.seasons[0].count}</h2>
-                                    </div>
-                                    <div className="col-sm-4" id="top-padded">
+                                    </Col>
+                                    <Col id="top-padded">
                                         <h3>Games Played</h3>
                                         <h2>{this.state.gp[0].count}</h2>
-                                    </div>
-                                    <div className="col-sm-4" id="top-padded">
+                                    </Col>
+                                    <Col id="top-padded">
                                         <h3>Record</h3>
                                         <h2>{`${this.state.recordData.totalWins}-${this.state.recordData.totalLosses}-0`}</h2>
-                                    </div>
-                                </div>
-                                <div className="row">           
-                                    <div className="col-sm-6" id="top-padded">
+                                    </Col>
+                                </Row>
+                                <Row>           
+                                    <Col id="top-padded">
                                         <h3>Total Points For</h3>
                                         <h2>{this.state.tpf[0].tpf}</h2>
-                                    </div>
-                                    <div className="col-sm-6" id="top-padded">
+                                    </Col>
+                                    <Col id="top-padded">
                                         <h3>Total Points Against</h3>
                                         <h2>{this.state.tpa[0].tpa}</h2>
-                                    </div> 
-                                </div>
-                                <div className="row">        
-                                    <div className="col-sm-6" id="top-padded">
+                                    </Col> 
+                                </Row>
+                                <Row>        
+                                    <Col id="top-padded">
                                         <h3>Average Points For</h3>
                                         <h2>{(this.state.tpf[0].tpf/this.state.gp[0].count).toFixed(2)}</h2>
-                                    </div>
-                                    <div className="col-sm-6" id="top-padded">
+                                    </Col>
+                                    <Col id="top-padded">
                                         <h3>Average Points Against</h3>
                                         <h2>{(this.state.tpa[0].tpa/this.state.gp[0].count).toFixed(2)}</h2>
-                                    </div>
-                                </div>
-                                <div className="row"> 
-                                    <div className="col-sm-6" id="top-padded">
+                                    </Col>
+                                </Row>
+                                <Row> 
+                                    <Col id="top-padded">
                                         <h3>Highest Score - Regular Season</h3>
                                         <h2>{this.state.highScore[0].Score}</h2>
                                         <p>(Week {this.state.highScore[0].Week}, {this.state.highScore[0].Year})</p>
-                                    </div>
-                                    <div className="col-sm-6" id="top-padded">
+                                    </Col>
+                                    <Col id="top-padded">
                                         <h3>Lowest Score - Regular Season</h3>
                                         <h2>{this.state.lowScore[0].Score}</h2>
                                         <p>(Week {this.state.lowScore[0].Week}, {this.state.lowScore[0].Year})</p>
-                                    </div>
-                                </div>
-                                <div className="row"> 
-                                    <div className="col-sm-6" id="top-padded">
+                                    </Col>
+                                </Row>
+                                <Row> 
+                                    <Col id="top-padded">
                                         <h3>Biggest Win Margin</h3>
                                         <h2>{this.state.bwm[0].Margin}</h2>
                                         <p>(Week {this.state.bwm[0].Week}, {this.state.bwm[0].Year})</p>
-                                    </div>
-                                    <div className="col-sm-6" id="top-padded">
+                                    </Col>
+                                    <Col id="top-padded">
                                         <h3>Smallest Win Margin</h3>
                                         <h2>{this.state.swm[0].Margin}</h2>
                                         <p>(Week {this.state.swm[0].Week}, {this.state.swm[0].Year})</p>
-                                    </div>
-                                </div>
-                                <div className="row"> 
-                                    <div className="col-sm-6" id="top-padded">
+                                    </Col>
+                                </Row>
+                                <Row> 
+                                    <Col id="top-padded">
                                         <h3>Biggest Loss Margin</h3>
                                         <h2>{this.state.blm[0].Margin}</h2>
                                         <p>(Week {this.state.blm[0].Week}, {this.state.blm[0].Year})</p>
-                                    </div>
-                                    <div className="col-sm-6" id="top-padded">
+                                    </Col>
+                                    <Col id="top-padded">
                                         <h3>Smallest Loss Margin</h3>
                                         <h2>{this.state.slm[0].Margin}</h2>
                                         <p>(Week {this.state.slm[0].Week}, {this.state.slm[0].Year})</p>
-                                    </div> 
-                                </div>
-                            </div>   
-                        </div> }  
-                    </div>
-                    <div className="col-md-12 col-lg-7">
+                                    </Col> 
+                                </Row>
+                            </Col>   
+                        </Row> }  
+                    </Col>
+                    <Col sm={12} xl={7}>
                         <h4>Regular Season Performance</h4>
                         {!this.state.refreshing && <div id="box">
-                            <div className="row">
-                                <div className="col-sm-3">
+                            <Row>
+                                <Col>
                                     <h5>Win Rate</h5>
                                     <ReactSpeedometer
                                         maxValue={1.000}
@@ -394,80 +394,80 @@ class Overview extends Component {
                                         value={parseFloat((this.state.recordData.rsWins/(this.state.recordData.rsWins + this.state.recordData.rsLosses)).toFixed(3))}
                                         textColor='#777'
                                         />
-                                </div>
-                                <div className="col-sm-3">
+                                </Col>
+                                <Col>
                                     <h5>Win</h5>
                                     <hr></hr>
                                     <h1>{this.state.recordData.rsWins}</h1>
-                                </div>
-                                <div className="col-sm-3">
+                                </Col>
+                                <Col>
                                     <h5>Loss</h5>
                                     <hr></hr>
                                     <h1>{this.state.recordData.rsLosses}</h1>
-                                </div>
-                                <div className="col-sm-3">
+                                </Col>
+                                <Col>
                                     <h5>Tie</h5>
                                     <hr></hr>
                                     <h1>0</h1>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-4">
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
                                     <div className="stats-box">
                                         <h6>Regular Season Champion</h6>
                                         <div id="box">
                                             <h1 id="small-mar">{this.state.ownerVals.RS_Champion}</h1>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-sm-4">
+                                </Col>
+                                <Col>
                                     <div className="stats-box">
                                         <h6>Last Place Finishes</h6>
                                         <div id="box">
                                             <h1 id="small-mar">{this.state.ownerVals.Last_Place_RS}</h1>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-sm-4">
+                                </Col>
+                                <Col>
                                     <div className="stats-box">
                                         <h6>Best Placement</h6>
                                         <div id="box">
                                             <h1 id="small-mar">{dict[this.state.ownerVals.Best_Placement_RS]}</h1>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-4">
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
                                     <div className="stats-box">
                                         <h6>Season High Scorer</h6>
                                         <div id="box">
                                             <h1 id="small-mar">{this.state.ownerVals.Season_HS}</h1>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-sm-4">
+                                </Col>
+                                <Col>
                                     <div className="stats-box">
                                         <h6>Weekly High Scorer</h6>
                                         <div id="box">
                                             <h1 id="small-mar">{this.state.weekHS[4][0].count}</h1>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-sm-4">
+                                </Col>
+                                <Col>
                                     <div className="stats-box">
                                         <h6>Weekly Low Scorer</h6>
                                         <div id="box">
                                             <h1 id="small-mar">{this.state.weekLS[4][0].count}</h1>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </Col>
+                            </Row>
                         </div>} 
                         <h4>Playoff Performance</h4>
                         {!this.state.refreshing && <div id="box">
-                            <div className="row">
-                                <div className="col-sm-3">
+                            <Row>
+                                <Col>
                                     <h5>Win Rate</h5>
                                     <ReactSpeedometer
                                         maxValue={1.000}
@@ -479,69 +479,69 @@ class Overview extends Component {
                                         value={parseFloat((this.state.recordData.pWins/(this.state.recordData.pWins + this.state.recordData.pLosses)).toFixed(3))}
                                         textColor='#777'
                                         />
-                                </div>
-                                <div className="col-sm-3">
+                                </Col>
+                                <Col>
                                     <h5>Win</h5>
                                     <hr></hr>
                                     <h1>{this.state.recordData.pWins}</h1>
-                                </div>
-                                <div className="col-sm-3">
+                                </Col>
+                                <Col>
                                     <h5>Loss</h5>
                                     <hr></hr>
                                     <h1>{this.state.recordData.pLosses}</h1>
-                                </div>
-                                <div className="col-sm-3">
+                                </Col>
+                                <Col>
                                     <h5>Tie</h5>
                                     <hr></hr>
                                     <h1>0</h1>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-3">
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
                                     <div className="stats-box">
                                         <h6>Playoff Appearances</h6>
                                         <div id="box">
                                             <h1 id="small-mar">{this.state.pApp[0].count}</h1>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-sm-3">
+                                </Col>
+                                <Col>
                                     <div className="stats-box">
                                         <h6>Best Placement</h6>
                                         <div id="box">
                                             <h1 id="small-mar">{dict[this.state.ownerVals.Best_Placement_Final]}</h1>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-sm-3">
+                                </Col>
+                                <Col>
                                     <div className="stats-box">
                                         <h6>Championship Appearances</h6>
                                         <div id="box">
                                             <h1 id="small-mar">{this.state.ownerVals.Champ_App}</h1>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-sm-3">
+                                </Col>
+                                <Col>
                                     <div className="stats-box">
                                         <h6>Championships</h6>
                                         <div id="box">
                                             <h1 id="small-mar">{this.state.ownerVals.Championships}</h1>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </Col>
+                            </Row>
                         </div>}  
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-lg-12">
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12}>
                         <h4>Yearly Performance</h4>
                         {!this.state.refreshing && <div id="box">
                             <Line data={this.state.graphData} height={100} options={options}/>
                         </div>}
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
