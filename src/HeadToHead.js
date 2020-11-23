@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Container, Row, Col} from 'react-bootstrap';
 import "./css/headtohead.css"
 import LogoDef from "./logos/Wallerstein.jpg";
 import LogoMB from "./logos/Michael Buchman.jpg";
@@ -235,14 +236,14 @@ class HeadToHead extends Component {
 
     render() {
         return (
-            <div className="container-fluid">
-                <div className="row">
+            <Container fluid>
+                <Row>
                     <header>Head To Head</header>
-                </div>
-                <div className="row">
-                    <div className="col-lg-7">
-                        <div className="row">
-                            <div className="col-md-6">
+                </Row>
+                <Row>
+                    <Col xl={7}>
+                        <Row>
+                            <Col xs={6}>
                                 <img id="bar-logo" src={img[this.state.currOwner1]} alt={this.state.currOwner1}></img>
                                 <select id="owners-logo" defaultValue={'DEFAULT'} onChange={this.handleOwnerChange1()}>
                                     <option value="DEFAULT" disabled hidden>---</option> 
@@ -253,8 +254,8 @@ class HeadToHead extends Component {
                                 <div className="win-box">
                                     <h5 id="big-bold">{this.state.o1Wins}</h5>
                                 </div>
-                            </div>
-                            <div className="col-md-6">
+                            </Col>
+                            <Col xs={6}>
                                 <img id="bar-logo" src={img[this.state.currOwner2]} alt={this.state.currOwner2}></img>
                                 <select id="owners-logo" defaultValue={'DEFAULT'}  onChange={this.handleOwnerChange2()}>
                                     <option value="DEFAULT" disabled hidden>---</option> 
@@ -265,138 +266,138 @@ class HeadToHead extends Component {
                                 <div className="win-box">
                                     <h5 id="big-bold">{this.state.o2Wins}</h5>
                                 </div>
-                            </div>
-                        </div>
+                            </Col>
+                        </Row>
                         { this.state.currOwner1 !== "" && this.state.currOwner2 !== "" && this.state.currOwner1 !== this.state.currOwner2 ? (
-                            <div className="row" style={{margin:"0px"}}>
-                                <div className="col-md-12" id="gray-box">
-                                    <div className="row">
-                                        <div className="col-md-12">
+                            <Row style={{margin:"0px"}}>
+                                <Col xs={12} id="gray-box">
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Total Points</h3>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.o1Points}</h2>
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.o2Points}</h2>
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row" >
-                                        <div className="col-md-12">
+                                        </Col>
+                                    </Row>
+                                    <Row >
+                                        <Col xs={12}>
                                             <h3>Average Points</h3>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.o1Avg}</h2>
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.o2Avg}</h2>
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Highest Score - Single Week</h3>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.hssw1[0].score}</h2>
                                             <p>(Week {this.state.hssw1[0].week}, {this.state.hssw1[0].year})</p>
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.hssw2[0].score}</h2>
                                             <p>(Week {this.state.hssw2[0].week}, {this.state.hssw2[0].year})</p>
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Lowest Score - Single Week</h3>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.lssw1[0].score}</h2>
                                             <p>(Week {this.state.lssw1[0].week}, {this.state.lssw1[0].year})</p>
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.lssw2[0].score}</h2>
                                             <p>(Week {this.state.lssw2[0].week}, {this.state.lssw2[0].year})</p>
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Highest Score - Double Week</h3>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.hsdw1[0].score ? this.state.hsdw1[0].score : "N/A"}</h2>
                                             {this.state.hsdw1[0].score && <p>(Week {this.state.hsdw1[0].week}, {this.state.hsdw1[0].year})</p>}
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.hsdw2[0].score ? this.state.hsdw2[0].score : "N/A"}</h2>
                                             {this.state.hsdw2[0].score && <p>(Week {this.state.hsdw2[0].week}, {this.state.hsdw2[0].year})</p>}
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Lowest Score - Double Week</h3>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.lsdw1[0].score ? this.state.lsdw1[0].score : "N/A"}</h2>
                                             {this.state.lsdw1[0].score && <p>(Week {this.state.lsdw1[0].week}, {this.state.lsdw1[0].year})</p>}
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.lsdw2[0].score ? this.state.lsdw2[0].score : "N/A"}</h2>
                                             {this.state.lsdw2[0].score && <p>(Week {this.state.lsdw2[0].week}, {this.state.lsdw2[0].year})</p>}
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Biggest Win Margin</h3>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.maxMarg1.val}</h2>
                                             {this.state.maxMarg1.val !== 'N/A' && <p>(Week {this.state.maxMarg1.week}, {this.state.maxMarg1.year})</p>}
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.maxMarg2.val}</h2>
                                             {this.state.maxMarg2.val !== 'N/A' && <p>(Week {this.state.maxMarg2.week}, {this.state.maxMarg2.year})</p>}
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Smallest Win Margin</h3>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.minMarg1.val}</h2>
                                             {this.state.minMarg1.val !== 'N/A' && <p>(Week {this.state.minMarg1.week}, {this.state.minMarg1.year})</p>}
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-md-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.minMarg2.val}</h2>
                                             {this.state.minMarg2.val !== 'N/A' && <p>(Week {this.state.minMarg2.week}, {this.state.minMarg2.year})</p>}
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
                         ) : (
-                            <div className="row" style={{margin:"0px"}}>
-                                <div className="col-md-12" id="gray-box">
-                                </div>
-                            </div>
+                            <Row style={{margin:"0px"}}>
+                                <Col xs={12} id="gray-box">
+                                </Col>
+                            </Row>
                         )}
 
-                    </div>
-                    <div className="col-lg-5">
+                    </Col>
+                    <Col xl={5}>
                         <h4>Gamelogs</h4>
                         <div id="box">
                             <table id="base-table">
@@ -418,9 +419,9 @@ class HeadToHead extends Component {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
