@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Container, Row, Col} from 'react-bootstrap';
 import "./css/standings.css";
 import FilterableTable from "react-filterable-table";
 import ReactTooltip from "react-tooltip";
@@ -45,7 +46,7 @@ const renderTrophy = (props) => {
     } else {
             return (
                 <span>
-                    <img src={img[props.record.placement]} style={{width:"30px", borderRadius: "100%"}}></img>
+                    <img src={img[props.record.placement]} alt="table-trophy" style={{width:"30px", borderRadius: "100%"}}></img>
                 </span>
             );
     }
@@ -54,7 +55,7 @@ const renderTrophy = (props) => {
 const renderLogo = (props) => {
     return (
         <span>
-            <img src={img[props.record.owner]} style={{width:"40px", borderRadius: "100%"}}></img>
+            <img src={img[props.record.owner]} alt="table-logo" style={{width:"40px", borderRadius: "100%"}}></img>
         </span>
     );
 };
@@ -100,6 +101,7 @@ class Standings extends Component {
 
         this.getSeasons = this.getSeasons.bind(this);
         this.getFinalStandings = this.getFinalStandings.bind(this);
+        this.handleDateChange = this.handleDateChange.bind(this);
         this.handleButtonClick = this.handleButtonClick.bind(this);
         this.updateTableData = this.updateTableData.bind(this);
         this.chooseTableType = this.chooseTableType.bind(this);
@@ -196,10 +198,10 @@ class Standings extends Component {
             .then((response) => response.json())
             .then(rows => {
                 rows[4].forEach(row => row.pct = row.pct.toFixed(3) )
-                if (this.state.currDate !== "All-Time" && this.state.currDate != new Date().getFullYear() && this.state.playoff.val) {
+                if (this.state.currDate !== "All-Time" && this.state.currDate !== String(new Date().getFullYear()) && this.state.playoff.val) {
                     rows[4].forEach(row =>
                         this.state.finalStandings.forEach(rowStandings => { 
-                            if(rowStandings.Owner === row.owner && rowStandings.Year == this.state.currDate) row.placement = rowStandings.Place;
+                            if(rowStandings.Owner === row.owner && rowStandings.Year === parseInt(this.state.currDate)) row.placement = rowStandings.Place;
                         })
                     )
                 } else {
@@ -211,9 +213,9 @@ class Standings extends Component {
     }
 
     chooseTableType() {
-        if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate == new Date().getFullYear()) {
+        if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate === String(new Date().getFullYear())) {
             return (
-                <div id="box">
+                <div id="box-scrollable">
                     <FilterableTable
                         namespace="People"
                         initialSort="placement"
@@ -229,7 +231,7 @@ class Standings extends Component {
             )
         } else {
             return (
-                <div id="box">
+                <div id="box-scrollable">
                     <FilterableTable
                         namespace="People"
                         initialSort="placement"
@@ -248,12 +250,12 @@ class Standings extends Component {
 
     render() {
         return (
-            <div className=".container">
-                <div className="row" id="first-row">
+            <Container fluid>
+                <Row id="first-row">
                     <header>Standings</header>
-                </div>
-                <div className="row">
-                    <div className="col-sm-12">
+                </Row>
+                <Row>
+                    <Col>
                         <h4>
                             <button id={this.state.regSeason.id} onClick={() => this.handleButtonClick("regSeason")}>Regular Season</button>
                             <button id={this.state.playoff.id} onClick={() => this.handleButtonClick("playoff")}>Playoffs</button>
@@ -270,9 +272,9 @@ class Standings extends Component {
                             </select>
                         </h4>
                         {this.chooseTableType()}
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }

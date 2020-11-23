@@ -10,13 +10,14 @@ header {
   font-size: 28px;
   text-shadow: 1px 1px #999;
   margin-left: 15px;
+  margin-bottom: 5px;
 }
 
 h1 {
-  font-family: 'Roboto', sans-serif;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  font-size: 28px;
+    font-family: 'Roboto', sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 28px;
 }
 
 h2 {
@@ -87,17 +88,8 @@ p, ul, li {
   text-shadow: 1px 1px #000;
 }
 
-.col-sm-3 {
+#center-align {
   text-align: center;
-}
-
-.col-sm-4 {
-  text-align: center;
-}
-
-#first-row {
-  margin-top: 60px;
-  margin-bottom: 10px;
 }
 
 #box {
@@ -111,6 +103,21 @@ p, ul, li {
   padding-top: 20px;
   padding-right: 20px;
   padding-left: 20px;
+  overflow: hidden;
+}
+
+#box-scrollable {
+  width: 100%;
+  border-left: 1px solid #DFDFDF;
+  border-right: 1px solid #DFDFDF;
+  border-bottom: 1px solid #DFDFDF;
+  margin-top: -8px;
+  margin-bottom: 20px;
+  margin-left: 0px;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
+  overflow: scroll;
 }
 
 #gray-box {
@@ -120,6 +127,9 @@ p, ul, li {
   padding-top: 30px;
   padding-bottom: 45px;
   text-align: center;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 20px;
 }
 
 /* Select Dropdown for Owners*/

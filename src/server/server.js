@@ -4,8 +4,7 @@ var bodyParser = require('body-parser')
 
 const app = express();
 var jsonParser = bodyParser.json()
-const port = 8000;
-
+const port = 5000
 const pool = mysql.createPool({
     host: "rds-mysql-wallersteinffl.cpvy0zo2vtvt.us-east-1.rds.amazonaws.com",
     user: "masterUsername",

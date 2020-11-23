@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Container, Row, Col} from 'react-bootstrap';
 import "./css/headtohead.css"
 import LogoDef from "./logos/Wallerstein.jpg";
 import LogoMB from "./logos/Michael Buchman.jpg";
@@ -30,6 +31,7 @@ class HeadToHead extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            refreshing: false,
             owners: [],
             matchups: [],
             currOwner1: "",
@@ -40,28 +42,34 @@ class HeadToHead extends Component {
             o2Points: null,
             o1Avg: null,
             o2Avg: null,
-            hssw1: [],
-            hssw2: [],
-            lssw1: [],
-            lssw2: [],
-            hsdw1: [],
-            hsdw2: [],
-            lsdw1: [],
-            lsdw2: [],
-            maxMarg1: null,
-            maxMarg2: null,
-            minMarg1: null,
-            minMarg2: null
+            hssw1: [{year: null, week: null, score: null}],
+            hssw2: [{year: null, week: null, score: null}],
+            lssw1: [{year: null, week: null, score: null}],
+            lssw2: [{year: null, week: null, score: null}],
+            hsdw1: [{year: null, week: null, score: null}],
+            hsdw2: [{year: null, week: null, score: null}],
+            lsdw1: [{year: null, week: null, score: null}],
+            lsdw2: [{year: null, week: null, score: null}],
+            maxMarg1: {val: null, year: null, week: null},
+            maxMarg2: {val: null, year: null, week: null},
+            minMarg1: {val: null, year: null, week: null},
+            minMarg2: {val: null, year: null, week: null}
         };
 
         this.handleOwnerChange1 = this.handleOwnerChange1.bind(this);
         this.handleOwnerChange2 = this.handleOwnerChange2.bind(this);
+        this.queryDB = this.queryDB.bind(this);
+        this.updateValues = this.updateValues.bind(this);
         this.hlScore = this.hlScore.bind(this);
         this.highMargin = this.highMargin.bind(this);
         this.lowMargin = this.lowMargin.bind(this);
     }
 
     componentDidMount() {
+        this.queryDB("owners", `select * from Owners`, false)
+    }
+
+    queryDB(field, query, singleVal) {
         fetch("/api/db", {
             method: "post",
             headers: {
@@ -70,32 +78,43 @@ class HeadToHead extends Component {
             },
             //make sure to serialize your JSON body
             body: JSON.stringify({
-                query: 'select * from Owners'
+                query: query
             })
         })
         .then((response) => response.json())
         .then(rows => {
-            this.setState({owners: rows});
+            if(field === "matchups") this.setState({[field]: rows}, this.updateValues);
+            else if(singleVal) {
+                if(rows[4].length === 0) this.setState({[field]: [{year: null, week: null, score: null}]});
+                else this.setState({[field]: rows[4]});
+
+                if(field === "lsdw2") this.setState({refreshing: false});
+            }
+            else this.setState({[field]: rows});
         })
     }
 
+    updateValues() {
+        this.countWins();
+        this.countPoints();
+        this.hlScore("hssw1", true,"FALSE", this.state.currOwner1, this.state.currOwner2);
+        this.hlScore("hssw2", true,"FALSE", this.state.currOwner2, this.state.currOwner1);
+        this.hlScore("lssw1", false,"FALSE", this.state.currOwner1, this.state.currOwner2);
+        this.hlScore("lssw2", false,"FALSE", this.state.currOwner2, this.state.currOwner1);
+        this.hlScore("hsdw1", true,"TRUE", this.state.currOwner1, this.state.currOwner2);
+        this.hlScore("hsdw2", true,"TRUE", this.state.currOwner2, this.state.currOwner1);
+        this.hlScore("lsdw1", false,"TRUE", this.state.currOwner1, this.state.currOwner2);
+        this.hlScore("lsdw2", false,"TRUE", this.state.currOwner2, this.state.currOwner1);
+        this.highMargin(this.state.currOwner1, "maxMarg1");
+        this.highMargin(this.state.currOwner2, "maxMarg2");
+        this.lowMargin(this.state.currOwner1, "minMarg1");
+        this.lowMargin(this.state.currOwner2, "minMarg2");
+    }
+    
     usersSelected() {
         if(this.state.currOwner1 !== "" && this.state.currOwner2 !== "") {
-            fetch("/api/db", {
-                method: "post",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                //make sure to serialize your JSON body
-                body: JSON.stringify({
-                    query: `select * from Matchups where (home_team = "${this.state.currOwner1}" OR home_team = "${this.state.currOwner2}") AND (away_team = "${this.state.currOwner1}" OR away_team = "${this.state.currOwner2}") `
-                })
-            })
-            .then((response) => response.json())
-            .then(rows => {
-                this.setState({matchups: rows}, this.countWins);
-            })
+            var query =  `select * from Matchups where (home_team = "${this.state.currOwner1}" OR home_team = "${this.state.currOwner2}") AND (away_team = "${this.state.currOwner1}" OR away_team = "${this.state.currOwner2}") `
+            this.queryDB("matchups", query, false)
         }
     }
 
@@ -115,7 +134,7 @@ class HeadToHead extends Component {
                 }
             }
             );
-            this.setState({o1Wins: winCount, o2Wins: this.state.matchups.length - winCount}, this.countPoints);
+            this.setState({o1Wins: winCount, o2Wins: this.state.matchups.length - winCount});
         }
     }
 
@@ -132,23 +151,7 @@ class HeadToHead extends Component {
             }
         }
         );
-        this.setState({o1Points: o1Count.toFixed(2), o2Points: o2Count.toFixed(2), o1Avg: (o1Count/this.state.matchups.length).toFixed(2), o2Avg: (o2Count/this.state.matchups.length).toFixed(2)},
-            () => {
-                this.hlScore("hssw1", true,"FALSE", this.state.currOwner1, this.state.currOwner2);
-                this.hlScore("hssw2", true,"FALSE", this.state.currOwner2, this.state.currOwner1);
-                this.hlScore("lssw1", false,"FALSE", this.state.currOwner1, this.state.currOwner2);
-                this.hlScore("lssw2", false,"FALSE", this.state.currOwner2, this.state.currOwner1);
-                this.hlScore("hsdw1", true,"TRUE", this.state.currOwner1, this.state.currOwner2);
-                this.hlScore("hsdw2", true,"TRUE", this.state.currOwner2, this.state.currOwner1);
-                this.hlScore("lsdw1", false,"TRUE", this.state.currOwner1, this.state.currOwner2);
-                this.hlScore("lsdw2", false,"TRUE", this.state.currOwner2, this.state.currOwner1);
-                this.highMargin(this.state.currOwner1, "maxMarg1");
-                this.highMargin(this.state.currOwner2, "maxMarg2");
-                this.lowMargin(this.state.currOwner1, "minMarg1");
-                this.lowMargin(this.state.currOwner2, "minMarg2");
-            }
-        
-        );
+        this.setState({o1Points: o1Count.toFixed(2), o2Points: o2Count.toFixed(2), o1Avg: (o1Count/this.state.matchups.length).toFixed(2), o2Avg: (o2Count/this.state.matchups.length).toFixed(2)});
     }
 
     hlScore(field, high, double, owner1, owner2) {
@@ -156,81 +159,94 @@ class HeadToHead extends Component {
         if(high) type = "max"
         
         if(this.state.currOwner1 !== "" && this.state.currOwner2 !== "") {
-            fetch("/api/db", {
-                method: "post",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                //make sure to serialize your JSON body
-                body: JSON.stringify({
-                    query: `select Year, Week, ${type}(score) as score from (
+            var query = `drop temporary table if exists h2h;
+                            drop temporary table if exists h2h2;
+                            create temporary table h2h
                                 Select Year, Week, Home_Score as score from (
                                     select * from Matchups where home_team = "${owner1}" AND away_team = "${owner2}" AND Two_Week = "${double}"
                                 ) as x
                                 UNION
                                 Select Year, Week, Away_Score as score from (
                                     select * from Matchups where away_team = "${owner1}" AND home_team = "${owner2}" AND Two_Week = "${double}"
-                                ) as y
-                            ) as z
-                    `
-                })
-            })
-            .then((response) => response.json())
-            .then(rows => {
-                this.setState({[field]: rows[0]});
-            })
+                                ) as y;
+                                
+                            create temporary table h2h2 select * from h2h;
+                            
+                            select a.year, a.week, a.score
+                            from h2h a
+                            inner join
+                            (select year, week, ${type}(score) as score from h2h2) b
+                            on a.score = b.score;`
+            this.queryDB(field, query, true)
         }
     }
 
     highMargin(owner, field) {
         var max = Number.MIN_VALUE;
+        var year, week
 
         this.state.matchups.forEach(matchup => {
             if (matchup.Home_Score > matchup.Away_Score) {
-                if (matchup.Home_Team === owner && matchup.Home_Score-matchup.Away_Score > max) max = matchup.Home_Score-matchup.Away_Score;
+                if (matchup.Home_Team === owner && matchup.Home_Score-matchup.Away_Score > max) {
+                    max = matchup.Home_Score-matchup.Away_Score;
+                    year = matchup.Year;
+                    week = matchup.Week;
+                }
             } else {
-                if (matchup.Away_Team === owner && matchup.Away_Score-matchup.Home_Score > max ) max = matchup.Away_Score-matchup.Home_Score;
+                if (matchup.Away_Team === owner && matchup.Away_Score-matchup.Home_Score > max ) {
+                    max = matchup.Away_Score-matchup.Home_Score;
+                    year = matchup.Year;
+                    week = matchup.Week;
+                }
             }
         }
         );
         if(max === Number.MIN_VALUE) max = false
-        this.setState({[field]: max ? max.toFixed(2) : "N/A"})
+        this.setState({[field]: {val: max ? max.toFixed(2) : "N/A", year: max ? year : "", week: max ? week : ""}})
     }
-
+    
     lowMargin(owner, field) {
         var min = Number.MAX_VALUE;
+        var year, week;
 
         this.state.matchups.forEach(matchup => {
             if (matchup.Home_Score > matchup.Away_Score) {
-                if (matchup.Home_Team === owner && matchup.Home_Score-matchup.Away_Score < min) min = matchup.Home_Score-matchup.Away_Score;
+                if (matchup.Home_Team === owner && matchup.Home_Score-matchup.Away_Score < min) {
+                    min = matchup.Home_Score-matchup.Away_Score;
+                    year = matchup.Year;
+                    week = matchup.Week;
+                }
             } else {
-                if (matchup.Away_Team === owner && matchup.Away_Score-matchup.Home_Score < min ) min = matchup.Away_Score-matchup.Home_Score;
+                if (matchup.Away_Team === owner && matchup.Away_Score-matchup.Home_Score < min ) {
+                    min = matchup.Away_Score-matchup.Home_Score;
+                    year = matchup.Year;
+                    week = matchup.Week;
+                }
             }
         }
         );
         if(min === Number.MAX_VALUE) min = false
-        this.setState({[field]: min ? min.toFixed(2) : "N/A"})
+        this.setState({[field]: {val: min ? min.toFixed(2) : "N/A", year: min ? year : "", week: min ? week : ""}})
     }
 
     handleOwnerChange1 = val => event => {
-        this.setState({ currOwner1: event.target.value }, this.usersSelected);
+        this.setState({ currOwner1: event.target.value, refreshing: true }, this.usersSelected);
     }
     
     handleOwnerChange2 = val => event => {
-        this.setState({ currOwner2: event.target.value }, this.usersSelected);
+        this.setState({ currOwner2: event.target.value, refreshing: true }, this.usersSelected);
     }
 
     render() {
         return (
-            <div className=".container">
-                <div className="row" id="first-row">
+            <Container fluid>
+                <Row>
                     <header>Head To Head</header>
-                </div>
-                <div className="row">
-                    <div className="col-sm-7">
-                        <div className="row">
-                            <div className="col-sm-6">
+                </Row>
+                <Row>
+                    <Col xl={7}>
+                        <Row>
+                            <Col xs={6}>
                                 <img id="bar-logo" src={img[this.state.currOwner1]} alt={this.state.currOwner1}></img>
                                 <select id="owners-logo" defaultValue={'DEFAULT'} onChange={this.handleOwnerChange1()}>
                                     <option value="DEFAULT" disabled hidden>---</option> 
@@ -239,10 +255,10 @@ class HeadToHead extends Component {
                                     })}
                                 </select>
                                 <div className="win-box">
-                                    <h5 id="big-bold">{this.state.o1Wins}</h5>
+                                    {!this.state.refreshing && <h5 id="big-bold">{this.state.o1Wins}</h5>}
                                 </div>
-                            </div>
-                            <div className="col-sm-6">
+                            </Col>
+                            <Col xs={6}>
                                 <img id="bar-logo" src={img[this.state.currOwner2]} alt={this.state.currOwner2}></img>
                                 <select id="owners-logo" defaultValue={'DEFAULT'}  onChange={this.handleOwnerChange2()}>
                                     <option value="DEFAULT" disabled hidden>---</option> 
@@ -251,140 +267,140 @@ class HeadToHead extends Component {
                                     })}
                                 </select>
                                 <div className="win-box">
-                                    <h5 id="big-bold">{this.state.o2Wins}</h5>
+                                    {!this.state.refreshing && <h5 id="big-bold">{this.state.o2Wins}</h5>}
                                 </div>
-                            </div>
-                        </div>
-                        { this.state.currOwner1 !== "" && this.state.currOwner2 !== "" && this.state.currOwner1 !== this.state.currOwner2 ? (
-                            <div className="row" style={{margin:"0px"}}>
-                                <div className="col-sm-12" id="gray-box">
-                                    <div className="row">
-                                        <div className="col-sm-12">
+                            </Col>
+                        </Row>
+                        { this.state.currOwner1 !== "" && this.state.currOwner2 !== "" && this.state.currOwner1 !== this.state.currOwner2 && !this.state.refreshing ? (
+                            <Row style={{margin:"0px"}}>
+                                <Col xs={12} id="gray-box">
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Total Points</h3>
-                                        </div>
-                                        <div className="col-sm-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.o1Points}</h2>
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-sm-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.o2Points}</h2>
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row" >
-                                        <div className="col-sm-12">
+                                        </Col>
+                                    </Row>
+                                    <Row >
+                                        <Col xs={12}>
                                             <h3>Average Points</h3>
-                                        </div>
-                                        <div className="col-sm-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.o1Avg}</h2>
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-sm-6">
+                                        </Col>
+                                        <Col xs={6}>
                                             <h2 id="drop-shadow">{this.state.o2Avg}</h2>
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-sm-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Highest Score - Single Week</h3>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.hssw1.score}</h2>
-                                            <p>(Week {this.state.hssw1.Week}, {this.state.hssw1.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.hssw1[0].score}</h2>
+                                            <p>(Week {this.state.hssw1[0].week}, {this.state.hssw1[0].year})</p>
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.hssw2.score}</h2>
-                                            <p>(Week {this.state.hssw2.Week}, {this.state.hssw2.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.hssw2[0].score}</h2>
+                                            <p>(Week {this.state.hssw2[0].week}, {this.state.hssw2[0].year})</p>
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-sm-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Lowest Score - Single Week</h3>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.lssw1.score}</h2>
-                                            <p>(Week {this.state.lssw1.Week}, {this.state.lssw1.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.lssw1[0].score}</h2>
+                                            <p>(Week {this.state.lssw1[0].week}, {this.state.lssw1[0].year})</p>
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.lssw2.score}</h2>
-                                            <p>(Week {this.state.lssw2.Week}, {this.state.lssw2.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.lssw2[0].score}</h2>
+                                            <p>(Week {this.state.lssw2[0].week}, {this.state.lssw2[0].year})</p>
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-sm-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Highest Score - Double Week</h3>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.hsdw1.score ? this.state.hsdw1.score : "N/A"}</h2>
-                                            <p>(Week {this.state.hsdw1.Week}, {this.state.hsdw1.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.hsdw1[0].score ? this.state.hsdw1[0].score : "N/A"}</h2>
+                                            {this.state.hsdw1[0].score && <p>(Week {this.state.hsdw1[0].week}, {this.state.hsdw1[0].year})</p>}
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.hsdw2.score ? this.state.hsdw2.score : "N/A"}</h2>
-                                            <p>(Week {this.state.hsdw2.Week}, {this.state.hsdw2.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.hsdw2[0].score ? this.state.hsdw2[0].score : "N/A"}</h2>
+                                            {this.state.hsdw2[0].score && <p>(Week {this.state.hsdw2[0].week}, {this.state.hsdw2[0].year})</p>}
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-sm-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Lowest Score - Double Week</h3>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.lsdw1.score ? this.state.lsdw1.score : "N/A"}</h2>
-                                            <p>(Week {this.state.lsdw1.Week}, {this.state.lsdw1.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.lsdw1[0].score ? this.state.lsdw1[0].score : "N/A"}</h2>
+                                            {this.state.lsdw1[0].score && <p>(Week {this.state.lsdw1[0].week}, {this.state.lsdw1[0].year})</p>}
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.lsdw2.score ? this.state.lsdw2.score : "N/A"}</h2>
-                                            <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.lsdw2[0].score ? this.state.lsdw2[0].score : "N/A"}</h2>
+                                            {this.state.lsdw2[0].score && <p>(Week {this.state.lsdw2[0].week}, {this.state.lsdw2[0].year})</p>}
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-sm-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Biggest Win Margin</h3>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.maxMarg1}</h2>
-                                            <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.maxMarg1.val}</h2>
+                                            {this.state.maxMarg1.val !== 'N/A' && <p>(Week {this.state.maxMarg1.week}, {this.state.maxMarg1.year})</p>}
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.maxMarg2}</h2>
-                                            <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.maxMarg2.val}</h2>
+                                            {this.state.maxMarg2.val !== 'N/A' && <p>(Week {this.state.maxMarg2.week}, {this.state.maxMarg2.year})</p>}
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-sm-12">
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={12}>
                                             <h3>Smallest Win Margin</h3>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.minMarg1}</h2>
-                                            <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.minMarg1.val}</h2>
+                                            {this.state.minMarg1.val !== 'N/A' && <p>(Week {this.state.minMarg1.week}, {this.state.minMarg1.year})</p>}
                                             <hr></hr>
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <h2 id="drop-shadow">{this.state.minMarg2}</h2>
-                                            <p>(Week {this.state.lsdw2.Week}, {this.state.lsdw2.Year})</p>
+                                        </Col>
+                                        <Col xs={6}>
+                                            <h2 id="drop-shadow">{this.state.minMarg2.val}</h2>
+                                            {this.state.minMarg2.val !== 'N/A' && <p>(Week {this.state.minMarg2.week}, {this.state.minMarg2.year})</p>}
                                             <hr></hr>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
                         ) : (
-                            <div className="row" style={{margin:"0px"}}>
-                                <div className="col-sm-12" id="gray-box">
-                                </div>
-                            </div>
+                            <Row style={{margin:"0px"}}>
+                                <Col xs={12} id="gray-box">
+                                </Col>
+                            </Row>
                         )}
 
-                    </div>
-                    <div className="col-sm-5">
+                    </Col>
+                    <Col xl={5}>
                         <h4>Gamelogs</h4>
                         <div id="box">
                             <table id="base-table">
@@ -394,7 +410,7 @@ class HeadToHead extends Component {
                                         <th>Game</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                {!this.state.refreshing &&  <tbody>
                                     {this.state.matchups.map(function(matchup,i) {
                                         return (
                                             <tr key={i}>
@@ -403,12 +419,12 @@ class HeadToHead extends Component {
                                             </tr>
                                         )
                                     })}
-                                </tbody>
+                                </tbody>}
                             </table>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
