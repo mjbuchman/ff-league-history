@@ -297,7 +297,7 @@ class Overview extends Component {
                                 </select>
                             </Col>
                         </Row>
-                        {!this.state.refreshing && <Row id="gray-box" style={{margin:"0px"}}>
+                        {!this.state.refreshing && <Row id="gray-box">
                             <Col>
                                 <Row>           
                                     <Col>

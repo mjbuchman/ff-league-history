@@ -127,6 +127,9 @@ p, ul, li {
   padding-top: 30px;
   padding-bottom: 45px;
   text-align: center;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 20px;
 }
 
 /* Select Dropdown for Owners*/
