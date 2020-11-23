@@ -31,6 +31,7 @@ class HeadToHead extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            refreshing: false,
             owners: [],
             matchups: [],
             currOwner1: "",
@@ -86,6 +87,8 @@ class HeadToHead extends Component {
             else if(singleVal) {
                 if(rows[4].length === 0) this.setState({[field]: [{year: null, week: null, score: null}]});
                 else this.setState({[field]: rows[4]});
+
+                if(field === "lsdw2") this.setState({refreshing: false});
             }
             else this.setState({[field]: rows});
         })
@@ -227,11 +230,11 @@ class HeadToHead extends Component {
     }
 
     handleOwnerChange1 = val => event => {
-        this.setState({ currOwner1: event.target.value }, this.usersSelected);
+        this.setState({ currOwner1: event.target.value, refreshing: true }, this.usersSelected);
     }
     
     handleOwnerChange2 = val => event => {
-        this.setState({ currOwner2: event.target.value }, this.usersSelected);
+        this.setState({ currOwner2: event.target.value, refreshing: true }, this.usersSelected);
     }
 
     render() {
@@ -252,7 +255,7 @@ class HeadToHead extends Component {
                                     })}
                                 </select>
                                 <div className="win-box">
-                                    <h5 id="big-bold">{this.state.o1Wins}</h5>
+                                    {!this.state.refreshing && <h5 id="big-bold">{this.state.o1Wins}</h5>}
                                 </div>
                             </Col>
                             <Col xs={6}>
@@ -264,11 +267,11 @@ class HeadToHead extends Component {
                                     })}
                                 </select>
                                 <div className="win-box">
-                                    <h5 id="big-bold">{this.state.o2Wins}</h5>
+                                    {!this.state.refreshing && <h5 id="big-bold">{this.state.o2Wins}</h5>}
                                 </div>
                             </Col>
                         </Row>
-                        { this.state.currOwner1 !== "" && this.state.currOwner2 !== "" && this.state.currOwner1 !== this.state.currOwner2 ? (
+                        { this.state.currOwner1 !== "" && this.state.currOwner2 !== "" && this.state.currOwner1 !== this.state.currOwner2 && !this.state.refreshing ? (
                             <Row style={{margin:"0px"}}>
                                 <Col xs={12} id="gray-box">
                                     <Row>
@@ -407,7 +410,7 @@ class HeadToHead extends Component {
                                         <th>Game</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                {!this.state.refreshing &&  <tbody>
                                     {this.state.matchups.map(function(matchup,i) {
                                         return (
                                             <tr key={i}>
@@ -416,7 +419,7 @@ class HeadToHead extends Component {
                                             </tr>
                                         )
                                     })}
-                                </tbody>
+                                </tbody>}
                             </table>
                         </div>
                     </Col>

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./css/overview.css";
 import {Container, Row, Col} from 'react-bootstrap';
+import ReactCSSTransitionGroup from 'react-transition-group';
 import ReactSpeedometer from "react-d3-speedometer";
 import {Line} from 'react-chartjs-2';
 import LogoMB from "./logos/Michael Buchman.jpg";
@@ -297,8 +298,8 @@ class Overview extends Component {
                                 </select>
                             </Col>
                         </Row>
-                        {!this.state.refreshing && <Row id="gray-box">
-                            <Col>
+                        <Row id="gray-box">
+                            {!this.state.refreshing && <Col>
                                 <Row>           
                                     <Col>
                                         <img id="overview-logo" src={img[this.state.currOwner]} alt={this.state.currOwner}></img>
@@ -376,8 +377,8 @@ class Overview extends Component {
                                         <p>(Week {this.state.slm[0].Week}, {this.state.slm[0].Year})</p>
                                     </Col> 
                                 </Row>
-                            </Col>   
-                        </Row> }  
+                            </Col> } 
+                        </Row> 
                     </Col>
                     <Col sm={12} xl={7}>
                         <h4>Regular Season Performance</h4>
