@@ -198,7 +198,7 @@ class Standings extends Component {
             .then((response) => response.json())
             .then(rows => {
                 rows[4].forEach(row => row.pct = row.pct.toFixed(3) )
-                if (this.state.currDate !== "All-Time" && this.state.currDate !== new Date().getFullYear() && this.state.playoff.val) {
+                if (this.state.currDate !== "All-Time" && this.state.currDate !== String(new Date().getFullYear()) && this.state.playoff.val) {
                     rows[4].forEach(row =>
                         this.state.finalStandings.forEach(rowStandings => { 
                             if(rowStandings.Owner === row.owner && rowStandings.Year === parseInt(this.state.currDate)) row.placement = rowStandings.Place;
@@ -213,7 +213,7 @@ class Standings extends Component {
     }
 
     chooseTableType() {
-        if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate === new Date().getFullYear()) {
+        if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate === String(new Date().getFullYear())) {
             return (
                 <div id="box-scrollable">
                     <FilterableTable
