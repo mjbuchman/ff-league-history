@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Container, Row, Col} from 'react-bootstrap';
 import "./css/records.css"
 import FilterableTable from "react-filterable-table";
 import LogoMB from "./logos/Michael Buchman.jpg";
@@ -214,12 +215,12 @@ class Records extends Component {
 
     render() {
         return (
-            <div className="container-fluid">
-                <div className="row" id="first-row">
+            <Container fluid>
+                <Row id="first-row">
                     <header>Records</header>
-                </div>
-                <div className="row">
-                    <div className="col-sm-12">
+                </Row>
+                <Row>
+                    <Col xl={12}>
                         <h4>
                             <button id={this.state.regSeason.id} onClick={() => this.handleButtonClick("regSeason")}>Regular Season</button>
                             <button id={this.state.playoffS.id} onClick={() => this.handleButtonClick("playoffS")}>Playoff - Single Week</button>
@@ -233,8 +234,8 @@ class Records extends Component {
                             </select>
                         </h4>
                         <div id="box-scrollable">
-                            <div className="row">
-                                <div className="col-lg-12">
+                            <Row>
+                                <Col xl={6}>
                                     <div className="table-title">
                                         <h3 id="table-head">Highest Scores</h3>
                                     </div>
@@ -248,8 +249,8 @@ class Records extends Component {
                                         headerVisible={false}
                                         pagersVisible={false}
                                     />
-                                </div>
-                                <div className="col-lg-12">
+                                </Col>
+                                <Col xl={6}>
                                     <div className="table-title">
                                         <h3 id="table-head">Lowest Scores</h3>
                                     </div>
@@ -263,10 +264,10 @@ class Records extends Component {
                                         headerVisible={false}
                                         pagersVisible={false}
                                     />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-12">
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xl={6}>
                                     <div className="table-title">
                                         <h3 id="table-head">Highest Victory Margins</h3>
                                     </div>
@@ -280,8 +281,8 @@ class Records extends Component {
                                         headerVisible={false}
                                         pagersVisible={false}
                                     />
-                                </div>
-                                <div className="col-sm-12">
+                                </Col>
+                                <Col xl={6}>
                                     <div className="table-title">
                                         <h3 id="table-head">Lowest Victory Margins</h3>
                                     </div>
@@ -295,10 +296,10 @@ class Records extends Component {
                                         headerVisible={false}
                                         pagersVisible={false}
                                     />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-12">
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xl={6}>
                                     <div className="table-title">
                                         <h3 id="table-head">Most Combined Points</h3>
                                     </div>
@@ -312,10 +313,10 @@ class Records extends Component {
                                         headerVisible={false}
                                         pagersVisible={false}
                                     />
-                                </div>
-                                <div className="col-sm-12">
+                                </Col>
+                                <Col xl={6}>
                                     <div className="table-title">
-                                        <h3 id="table-head">Fewest Combined Points</h3>
+                                        <h3 id="table-head">Least Combined Points</h3>
                                     </div>
                                     <FilterableTable
                                         namespace="People"
@@ -327,10 +328,10 @@ class Records extends Component {
                                         headerVisible={false}
                                         pagersVisible={false}
                                     />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-12">
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xl={6}>
                                     <div className="table-title">
                                         <h3 id="table-head">Highest Scores in a Loss</h3>
                                     </div>
@@ -344,8 +345,8 @@ class Records extends Component {
                                         headerVisible={false}
                                         pagersVisible={false}
                                     />
-                                </div>
-                                <div className="col-sm-12">
+                                </Col>
+                                <Col xl={6}>
                                     <div className="table-title">
                                         <h3 id="table-head">Lowest Scores in a Win</h3>
                                     </div>
@@ -359,12 +360,12 @@ class Records extends Component {
                                         headerVisible={false}
                                         pagersVisible={false}
                                     />
-                                </div>
-                            </div>
+                                </Col>
+                            </Row>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }

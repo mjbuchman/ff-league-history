@@ -17,10 +17,26 @@ class Main extends Component {
         super(props);
         this.state = {
             open: false,
-            position: "-300px"
+            position: "-300px",
+            height: 0,
+            width: 0
         };
 
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
         this.handleClick = this.handleClick.bind(this);
+    }
+
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+    }
+      
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+      
+    updateWindowDimensions() {
+        this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
     handleClick() {
@@ -34,7 +50,7 @@ class Main extends Component {
             <HashRouter>
                 <div>
                     <h1 className="header"><img id="mini" src={Logo} alt="WFFL Logo"></img>{window.innerWidth < 768 ? "WFFL Database" : "Wallerstein Fantasy Football League Database"}</h1>
-                    {window.innerWidth < 768 ?
+                    {this.state.width < 768 ?
                         <HamburgerMenu
                             isOpen={this.state.open}
                             menuClicked={this.handleClick.bind(this)}

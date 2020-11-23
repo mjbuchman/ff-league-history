@@ -36,9 +36,20 @@
     background-color: #bbbbbb;
 }
 
-#table-head {
-    color: #fff;
-    font-size: 36px;
-    font-weight: 200;
-    text-shadow: 1px 1px #000;
+@media screen and (min-width: 601px) {
+    #table-head {
+        color: #fff;
+        font-size: 36px;
+        font-weight: 200;
+        text-shadow: 1px 1px #000;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #table-head {
+        color: #fff;
+        font-size: 28px;
+        font-weight: 200;
+        text-shadow: 1px 1px #000;
+    }
 }

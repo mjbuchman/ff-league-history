@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Container, Row, Col} from 'react-bootstrap';
 import "./css/standings.css";
 import FilterableTable from "react-filterable-table";
 import ReactTooltip from "react-tooltip";
@@ -197,7 +198,7 @@ class Standings extends Component {
             .then((response) => response.json())
             .then(rows => {
                 rows[4].forEach(row => row.pct = row.pct.toFixed(3) )
-                if (this.state.currDate !== "All-Time" && this.state.currDate !== new Date().getFullYear() && this.state.playoff.val) {
+                if (this.state.currDate !== "All-Time" && this.state.currDate !== String(new Date().getFullYear()) && this.state.playoff.val) {
                     rows[4].forEach(row =>
                         this.state.finalStandings.forEach(rowStandings => { 
                             if(rowStandings.Owner === row.owner && rowStandings.Year === parseInt(this.state.currDate)) row.placement = rowStandings.Place;
@@ -212,7 +213,7 @@ class Standings extends Component {
     }
 
     chooseTableType() {
-        if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate === new Date().getFullYear()) {
+        if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate === String(new Date().getFullYear())) {
             return (
                 <div id="box-scrollable">
                     <FilterableTable
@@ -249,12 +250,12 @@ class Standings extends Component {
 
     render() {
         return (
-            <div className="container-fluid">
-                <div className="row" id="first-row">
+            <Container fluid>
+                <Row id="first-row">
                     <header>Standings</header>
-                </div>
-                <div className="row">
-                    <div className="col-sm-12">
+                </Row>
+                <Row>
+                    <Col>
                         <h4>
                             <button id={this.state.regSeason.id} onClick={() => this.handleButtonClick("regSeason")}>Regular Season</button>
                             <button id={this.state.playoff.id} onClick={() => this.handleButtonClick("playoff")}>Playoffs</button>
@@ -271,9 +272,9 @@ class Standings extends Component {
                             </select>
                         </h4>
                         {this.chooseTableType()}
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
