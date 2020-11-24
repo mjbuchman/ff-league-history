@@ -14,7 +14,7 @@ import LogoTB from "./logos/Tyler Brown.jpg";
 import LogoNE from "./logos/Nick Eufrasio.jpg";
 import LogoCD from "./logos/Connor DeYoung.jpg";
 
-
+// dictionary for image elements
 const img = {
     "Michael Buchman": LogoMB,
     "Grant Dakovich": LogoGD,
@@ -28,8 +28,10 @@ const img = {
     "Connor DeYoung": LogoCD
 }
 
+// dictionary for placement values
 const dict = {1: "1st", 2: "2nd", 3: "3rd", 4: "4th", 5: "5th", 6: "6th", 7: "7th", 8: "8th", 9: "9th", 10: "10th"}
 
+// options for graph, establishes a multi-axis graph containing wins and points
 const options = {
     scales: {
         yAxes: [
@@ -98,6 +100,11 @@ class Overview extends Component {
         this.getOwners();
     }
 
+    /** 
+     * Function to query the database and set the state value of the given field
+     * @param field - The field in this.state to be set by query result
+     * @param query - The query to be sent to the backend
+     */
     queryDB(field, query) {
         fetch("/api/db", {
             method: "post",
@@ -105,24 +112,28 @@ class Overview extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            //make sure to serialize your JSON body
             body: JSON.stringify({
                 query: query
             })
         })
         .then((response) => response.json())
         .then(rows => {
-            if (field === "owners") this.setState({[field]: rows}, this.updateValues);
-            if (field === "games") this.setState({[field]: rows}, this.getRecordData);
-            if (field === "weekLS") this.setState({[field]: rows}, this.setState({refreshing: false}));
+            if (field === "owners") this.setState({[field]: rows}, this.updateValues); // set on refresh, triggers the initial data update
+            else if (field === "games") this.setState({[field]: rows}, this.getRecordData);
+            else if (field === "weekLS") this.setState({[field]: rows}, this.setState({refreshing: false})); // last field to be updated -> ends 'refresh' period
             else this.setState({[field]: rows});
         })
     }
 
+    // Gets owner data from Owners table to populate dropdown menu
     getOwners() {
         this.queryDB("owners", "select * from Owners")
     }
 
+    /** 
+     * Searches for current owner in the previously retrieved Owner table
+     * Takes all columns in the appropriate owner entry and stores into this.state's ownerVals
+     */
     setOwnerVals() {
         var currOwner = this.state.currOwner;
         var index = 0;
@@ -133,12 +144,14 @@ class Overview extends Component {
         this.setState({ownerVals: this.state.owners[index]});
     }
 
+    // Triggers update of all data fields for current Owner
     updateValues() {
         this.setOwnerVals();
         this.getMainTables();
         this.getWeeklyData();
     }
 
+    // Queries database for all relevant data in main overview, regular season performance and playoff performance, then stores them in appropriate state fields
     getMainTables() {
         this.queryDB("seasons", `select count(distinct year) as count from Matchups where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`)
         this.queryDB("gp", `select count(*) as count from Matchups where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`)
@@ -154,13 +167,19 @@ class Overview extends Component {
         this.queryDB("pApp", `select count(distinct year) as count from Matchups where (home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}") AND Playoff = "TRUE"`)
     }
 
+    /**
+     * Calculates number of wins and total points from the current Owners matchup data
+     * Segments these numbers by distinct years and pushes them into a wins and point array accordingly
+     */
     getGraphData() {
         var currOwner = this.state.currOwner
         var index = 0;
         var wins = [];
         var points = [];
         this.state.games.forEach(function (game, i) { 
+            // After 14 games a new season begins
             if(i%14 === 0) {
+                // Dont start a new season/array entry if it's the first Matchup
                 if(i !== 0) {
                     points[index] = points[index].toFixed(2);
                     index++;
@@ -169,6 +188,7 @@ class Overview extends Component {
                 points.push(0);
             } 
 
+            // Find wins and points scored accross all Matchup entries
             if(game.Home_Team === currOwner) {
                 points[index] += game.Home_Score;
                 if(game.Home_Score > game.Away_Score) wins[index]++;
@@ -202,10 +222,13 @@ class Overview extends Component {
         }})
     }
 
+    // Calculates wins and losses from the current Owners matchup data 
     getRecordData() {
         var totalWins = 0, totalLosses = 0, rsWins = 0, rsLosses = 0, pWins = 0, pLosses = 0
         var currOwner = this.state.currOwner
         this.state.games.forEach(function (game) { 
+
+            // determine what type of matchup this is and place result into the appropriate bucket
             if(game.Home_Team === currOwner) {
                 if(game.Home_Score > game.Away_Score) {
                     totalWins++;
@@ -240,6 +263,7 @@ class Overview extends Component {
 
     }
 
+    // Query the database to find the number of weeks the current Owner high scored and low scored
     getWeeklyData() {
         this.queryDB("weekHS", 
         ` drop temporary table if exists results;
@@ -276,6 +300,7 @@ class Overview extends Component {
         `)
     }
 
+    // Handler for a current owner change which also triggers data refresh
     handleOwnerChange = val => event => {
         this.setState({ currOwner: event.target.value, refreshing: true }, this.updateValues);
     }

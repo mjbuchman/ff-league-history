@@ -13,6 +13,7 @@ import LogoTB from "./logos/Tyler Brown.jpg";
 import LogoNE from "./logos/Nick Eufrasio.jpg";
 import LogoCD from "./logos/Connor DeYoung.jpg";
 
+// dictionary for image elements
 const img = {
     "": LogoDef,
     "Michael Buchman": LogoMB,
@@ -69,6 +70,12 @@ class HeadToHead extends Component {
         this.queryDB("owners", `select * from Owners`, false)
     }
 
+     /** 
+     * Function to query the database and set the state value of the given field
+     * @param field - The field in this.state to be set by query result
+     * @param query - The query to be sent to the backend
+     * @param singleVal - boolean flag to determine the type of query
+     */
     queryDB(field, query, singleVal) {
         fetch("/api/db", {
             method: "post",
@@ -76,7 +83,6 @@ class HeadToHead extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            //make sure to serialize your JSON body
             body: JSON.stringify({
                 query: query
             })
@@ -85,15 +91,17 @@ class HeadToHead extends Component {
         .then(rows => {
             if(field === "matchups") this.setState({[field]: rows}, this.updateValues);
             else if(singleVal) {
+                // single values return different format and need a different setState implementation
                 if(rows[4].length === 0) this.setState({[field]: [{year: null, week: null, score: null}]});
                 else this.setState({[field]: rows[4]});
 
-                if(field === "lsdw2") this.setState({refreshing: false});
+                if(field === "lsdw2") this.setState({refreshing: false}); // last field to update, ends refresh period
             }
             else this.setState({[field]: rows});
         })
     }
 
+    // Calls functions that update each given state value
     updateValues() {
         this.countWins();
         this.countPoints();
@@ -111,6 +119,7 @@ class HeadToHead extends Component {
         this.lowMargin(this.state.currOwner2, "minMarg2");
     }
     
+    // Updates matchup data when two unique users have been selected
     usersSelected() {
         if(this.state.currOwner1 !== "" && this.state.currOwner2 !== "") {
             var query =  `select * from Matchups where (home_team = "${this.state.currOwner1}" OR home_team = "${this.state.currOwner2}") AND (away_team = "${this.state.currOwner1}" OR away_team = "${this.state.currOwner2}") `
@@ -118,6 +127,10 @@ class HeadToHead extends Component {
         }
     }
 
+     /** 
+     * Iterates through matchup data and counts wins for each owner
+     * Counts owner1 wins and then subtracts that from total entries to get owner2 wins
+     */
     countWins() {
         if(this.state.currOwner1 === this.state.currOwner2) {
             this.setState({o1Wins: null, o2Wins: null});
@@ -138,6 +151,7 @@ class HeadToHead extends Component {
         }
     }
 
+    // Iterates through matchup data and counts the points scored by each owner
     countPoints() {
         var o1Count = 0;
         var o2Count = 0;
@@ -154,6 +168,14 @@ class HeadToHead extends Component {
         this.setState({o1Points: o1Count.toFixed(2), o2Points: o2Count.toFixed(2), o1Avg: (o1Count/this.state.matchups.length).toFixed(2), o2Avg: (o2Count/this.state.matchups.length).toFixed(2)});
     }
 
+     /** 
+     * Function to query the database and set the highest or lowest scores by an owner vs. another owner
+     * @param field - The field in this.state to be set by query result
+     * @param high - boolean flag to determine whether query should find min or max
+     * @param double - boolean flag to determine whether query should search only double week matchups
+     * @param owner1 - the current Owner who the value will belong to
+     * @param owner2 - the current Owner's opponent
+     */
     hlScore(field, high, double, owner1, owner2) {
         var type = "min";
         if(high) type = "max"
@@ -181,6 +203,11 @@ class HeadToHead extends Component {
         }
     }
 
+     /** 
+     * Iterates through matchup data and sets the highest margin of victory for an owner vs another owner
+     * @param owner - The owner whos highest MOV is being determined
+     * @param field - The field in this.state to be set by query result
+     */
     highMargin(owner, field) {
         var max = Number.MIN_VALUE;
         var year, week
@@ -205,6 +232,11 @@ class HeadToHead extends Component {
         this.setState({[field]: {val: max ? max.toFixed(2) : "N/A", year: max ? year : "", week: max ? week : ""}})
     }
     
+    /** 
+     * Iterates through matchup data and sets the lowest margin of victory for an owner vs another owner
+     * @param owner - The owner whos lowest MOV is being determined
+     * @param field - The field in this.state to be set by query result
+     */
     lowMargin(owner, field) {
         var min = Number.MAX_VALUE;
         var year, week;
@@ -229,10 +261,12 @@ class HeadToHead extends Component {
         this.setState({[field]: {val: min ? min.toFixed(2) : "N/A", year: min ? year : "", week: min ? week : ""}})
     }
 
+    // Handler for owner1 changes
     handleOwnerChange1 = val => event => {
         this.setState({ currOwner1: event.target.value, refreshing: true }, this.usersSelected);
     }
     
+    // Handler for owner2 changes
     handleOwnerChange2 = val => event => {
         this.setState({ currOwner2: event.target.value, refreshing: true }, this.usersSelected);
     }
