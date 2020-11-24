@@ -1,16 +1,12 @@
 import React, { Component } from "react";
-import {
-    Route,
-    NavLink,
-    HashRouter
-  } from "react-router-dom";
-  import Overview from "./Overview";
-  import HeadToHead from "./HeadToHead";
-  import Standings from "./Standings";
-  import Records from "./Records";
-  import "./css/main.css";
-  import Logo from "./logos/Wallerstein.png";
-  import HamburgerMenu from "react-hamburger-menu";
+import {Route, NavLink, HashRouter} from "react-router-dom";
+import Overview from "./Overview";
+import HeadToHead from "./HeadToHead";
+import Standings from "./Standings";
+import Records from "./Records";
+import "./css/main.css";
+import Logo from "./logos/Wallerstein.png";
+import HamburgerMenu from "react-hamburger-menu";
 
 class Main extends Component {
     constructor(props) {
@@ -26,6 +22,7 @@ class Main extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
+
     componentDidMount() {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
@@ -34,11 +31,13 @@ class Main extends Component {
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
     }
-      
+    
+    // Handles 'resize' event listener and updates state vars for height and width
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
+    // Handler for the hamburger menu, closes/opens menu dpending on previous button state
     handleClick() {
         if(this.state.open) this.setState({position: "-300px"})
         else this.setState({position: "0px"})

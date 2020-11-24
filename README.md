@@ -2,7 +2,7 @@
 
 This project is a React Web App database for records related to an ESPN Fantasy Football League
 
-Project currently deployed at https://wallersteinffl.com
+Project currently deployed at http://wallersteinffl.com
 
 ## Available Scripts
 

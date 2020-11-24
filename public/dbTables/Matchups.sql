@@ -1,5 +1,5 @@
 /* Last Update - Week 8, 2020 */
-CREATE TABLE Wallerstein_Matchup_Scores (
+CREATE TABLE Matchups (
     Year INTEGER NOT NULL PRIMARY KEY,
     Week INTEGER NOT NULL,
     Home_Team VARCHAR(17) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE Wallerstein_Matchup_Scores (
     Two_Week VARCHAR(5) NOT NULL,
     Regular_Season VARCHAR(5) NOT NULL
 );
-INSERT INTO Wallerstein_Matchup_Scores VALUES
+INSERT INTO Matchups VALUES
     (2017,1,'Sal DiVita',92.68,'Michael Buchman',103.14,'FALSE','FALSE', 'TRUE'),
     (2017,1,'Zach Way',109.54,'Ryan Rasmussen',89.64,'FALSE','FALSE', 'TRUE'),
     (2017,1,'Nick Eufrasio',73.02,'Tyler Brown',97.42,'FALSE','FALSE', 'TRUE'),

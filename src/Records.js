@@ -14,6 +14,7 @@ import LogoNE from "./logos/Nick Eufrasio.jpg";
 import LogoCD from "./logos/Connor DeYoung.jpg";
 import LogoDef from "./logos/Wallerstein.jpg";
 
+// dictionary for image elements
 const img = {
     "Michael Buchman": LogoMB,
     "Grant Dakovich": LogoGD,
@@ -29,6 +30,7 @@ const img = {
     "Sal DiVita": LogoDef,
 }
 
+// function passed to tables to render logos
 const renderLogo = (props) => {
     return (
         <span>
@@ -37,6 +39,7 @@ const renderLogo = (props) => {
     );
 };
 
+// table fields if logos should be rendered
 let fields1 = [
 	{ name: 'placement', displayName: "Place", thClassName: "standings-th-header", tdClassName: "standings-td"},
 	{ name: 'logo', displayName: "Owner", thClassName: "standings-th-header", tdClassName: "standings-td", render: renderLogo},
@@ -46,6 +49,7 @@ let fields1 = [
 	{ name: 'score', displayName: "Score", thClassName: "standings-th-header", tdClassName: "standings-td"}
 ];
 
+// table fields if logos should not be rendered
 let fields2 = [
 	{ name: 'placement', displayName: "Place", thClassName: "standings-th-header", tdClassName: "standings-td"},
 	{ name: 'matchup', displayName: "Matchup", thClassName: "standings-th-header", tdClassName: "standings-td"},
@@ -90,6 +94,11 @@ class Records extends Component {
         this.updateTables();
     }
 
+     /** 
+     * Function to query the database and set the state value of the given field
+     * @param field - The field in this.state to be set by query result
+     * @param query - The query to be sent to the backend
+     */
     queryDB (field, query) {
         fetch("/api/db", {
             method: "post",
@@ -97,7 +106,6 @@ class Records extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            //make sure to serialize your JSON body
             body: JSON.stringify({
                 query: query
             })
@@ -111,10 +119,16 @@ class Records extends Component {
         })
     }
 
+    // Finds distinct season values in Matchups
     getSeasons() {
         this.queryDB("seasons", `select distinct Year from Matchups order by Year desc`);
     }
 
+     /** 
+     * Handler for button clicks
+     * Sets current button's value to clicked and all other button's values to unclicked
+     * Only allows one button to be clicked at a time
+     */
     handleButtonClick(field) {
         var temp = [];
         switch(field) {
@@ -142,10 +156,12 @@ class Records extends Component {
         }
     }
 
+    // Handler for data changes which triggers data refresh
     handleDateChange = val => event => {
         this.setState({ currDate: event.target.value }, this.updateTables);
     }
 
+    // Builds query for type of matchup specified and passes it on to each tables update method
     updateTables()  {
         var whereClause;
         if(this.state.regSeason.val === true) {
@@ -167,6 +183,10 @@ class Records extends Component {
         this.getLSW(whereClause);
     }
     
+    /** 
+     * Retrieves highest and lowest scores from database
+     * @param whereClause - clause added to query to specify matchup type
+     */
     getHighLowScores(whereClause) {
         this.queryDB("highScores", `SELECT * FROM (SELECT year, week, home_team as owner, home_score as score FROM Matchups ${whereClause} UNION SELECT year, week, away_team as owner, away_score as score FROM Matchups ${whereClause}) as scores order by score DESC LIMIT 10`)
         this.queryDB("lowScores", `SELECT * FROM (SELECT year, week, home_team as owner, home_score as score FROM Matchups ${whereClause} UNION SELECT year, week, away_team as owner, away_score as score FROM Matchups ${whereClause}) as scores order by score ASC LIMIT 10`)
@@ -175,6 +195,10 @@ class Records extends Component {
         this.state.lowScores.forEach(function (row,i) { row.placement =  i+1})
     }
 
+    /** 
+     * Retrieves highest and lowest margin of victories from database
+     * @param whereClause - clause added to query to specify matchup type
+     */
     getMOV(whereClause) {
         this.queryDB("highMOV", `SELECT year, week, CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, ABS(home_score-away_score) AS points FROM Matchups ${whereClause} ORDER BY (ABS(home_score-away_score)) DESC LIMIT 10`)
         this.queryDB("lowMOV", `SELECT year, week ,CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, ABS(home_score-away_score) AS points FROM Matchups ${whereClause} ORDER BY (ABS(home_score-away_score)) ASC LIMIT 10`)
@@ -183,6 +207,10 @@ class Records extends Component {
         this.state.lowMOV.forEach(function (row,i) { row.placement =  i+1})
     }
     
+    /** 
+     * Retrieves highest and lowest combined points from database
+     * @param whereClause - clause added to query to specify matchup type
+     */
     getCombinedPoints(whereClause) {
         this.queryDB("highComb", `SELECT year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, home_score+away_score AS points FROM Matchups ${whereClause} ORDER BY (home_score+away_score) DESC LIMIT 10`);
         this.queryDB("lowComb", `SELECT year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, home_score+away_score AS points FROM Matchups ${whereClause} ORDER BY (home_score+away_score) ASC LIMIT 10`);
@@ -191,6 +219,10 @@ class Records extends Component {
         this.state.lowComb.forEach(function (row,i) { row.placement =  i+1})
     }
 
+    /** 
+     * Retrieves highest scores in a loss from database
+     * @param whereClause - clause added to query to specify matchup type
+     */
     getHSL(whereClause) {
         whereClause = whereClause.substring(6);
         this.queryDB("highSL", 
@@ -201,7 +233,11 @@ class Records extends Component {
         
         this.state.highSL.forEach(function (row,i) { row.placement =  i+1})
     }
-    
+
+    /** 
+     * Retrieves lowest scores in a win from database
+     * @param whereClause - clause added to query to specify matchup type
+     */
     getLSW(whereClause) {
         whereClause = whereClause.substring(6);
         this.queryDB("lowSW", 
