@@ -5,7 +5,7 @@ var bodyParser = require('body-parser')
 
 const app = express();
 var jsonParser = bodyParser.json()
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 7000
 
 const buildPath = path.join(__dirname, '..', 'build');
 app.use(express.static(buildPath));

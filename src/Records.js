@@ -112,7 +112,7 @@ class Records extends Component {
     }
 
     getSeasons() {
-        this.queryDB("seasons", `select distinct Year from Matchups order by Year desc`);
+        this.queryDB("seasons", `select distinct Year from testing order by Year desc`);
     }
 
     handleButtonClick(field) {
@@ -168,24 +168,24 @@ class Records extends Component {
     }
     
     getHighLowScores(whereClause) {
-        this.queryDB("highScores", `SELECT * FROM (SELECT year, week, home_team as owner, home_score as score FROM Matchups ${whereClause} UNION SELECT year, week, away_team as owner, away_score as score FROM Matchups ${whereClause}) as scores order by score DESC LIMIT 10`)
-        this.queryDB("lowScores", `SELECT * FROM (SELECT year, week, home_team as owner, home_score as score FROM Matchups ${whereClause} UNION SELECT year, week, away_team as owner, away_score as score FROM Matchups ${whereClause}) as scores order by score ASC LIMIT 10`)
+        this.queryDB("highScores", `SELECT * FROM (SELECT year, week, home_team as owner, home_score as score FROM testing ${whereClause} UNION SELECT year, week, away_team as owner, away_score as score FROM testing ${whereClause}) as scores order by score DESC LIMIT 10`)
+        this.queryDB("lowScores", `SELECT * FROM (SELECT year, week, home_team as owner, home_score as score FROM testing ${whereClause} UNION SELECT year, week, away_team as owner, away_score as score FROM testing ${whereClause}) as scores order by score ASC LIMIT 10`)
     
         this.state.highScores.forEach(function (row,i) { row.placement =  i+1})
         this.state.lowScores.forEach(function (row,i) { row.placement =  i+1})
     }
 
     getMOV(whereClause) {
-        this.queryDB("highMOV", `SELECT year, week, CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, ABS(home_score-away_score) AS points FROM Matchups ${whereClause} ORDER BY (ABS(home_score-away_score)) DESC LIMIT 10`)
-        this.queryDB("lowMOV", `SELECT year, week ,CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, ABS(home_score-away_score) AS points FROM Matchups ${whereClause} ORDER BY (ABS(home_score-away_score)) ASC LIMIT 10`)
+        this.queryDB("highMOV", `SELECT year, week, CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, ABS(home_score-away_score) AS points FROM testing ${whereClause} ORDER BY (ABS(home_score-away_score)) DESC LIMIT 10`)
+        this.queryDB("lowMOV", `SELECT year, week ,CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, ABS(home_score-away_score) AS points FROM testing ${whereClause} ORDER BY (ABS(home_score-away_score)) ASC LIMIT 10`)
     
         this.state.highMOV.forEach(function (row,i) { row.placement =  i+1})
         this.state.lowMOV.forEach(function (row,i) { row.placement =  i+1})
     }
     
     getCombinedPoints(whereClause) {
-        this.queryDB("highComb", `SELECT year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, home_score+away_score AS points FROM Matchups ${whereClause} ORDER BY (home_score+away_score) DESC LIMIT 10`);
-        this.queryDB("lowComb", `SELECT year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, home_score+away_score AS points FROM Matchups ${whereClause} ORDER BY (home_score+away_score) ASC LIMIT 10`);
+        this.queryDB("highComb", `SELECT year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, home_score+away_score AS points FROM testing ${whereClause} ORDER BY (home_score+away_score) DESC LIMIT 10`);
+        this.queryDB("lowComb", `SELECT year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, home_score+away_score AS points FROM testing ${whereClause} ORDER BY (home_score+away_score) ASC LIMIT 10`);
 
         this.state.highComb.forEach(function (row,i) { row.placement =  i+1})
         this.state.lowComb.forEach(function (row,i) { row.placement =  i+1})
@@ -195,7 +195,7 @@ class Records extends Component {
         whereClause = whereClause.substring(6);
         this.queryDB("highSL", 
         `select year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, score AS points from \
-        (select *, Away_Score as score from Matchups where home_score > away_score AND ${whereClause} UNION select *, Home_Score as score from Matchups where home_score < away_score AND ${whereClause}) as scores \
+        (select *, Away_Score as score from testing where home_score > away_score AND ${whereClause} UNION select *, Home_Score as score from testing where home_score < away_score AND ${whereClause}) as scores \
         order by Points desc limit 10 \
         `);
         
@@ -206,7 +206,7 @@ class Records extends Component {
         whereClause = whereClause.substring(6);
         this.queryDB("lowSW", 
         `select year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, score AS points from \
-            (select *, Home_Score as score from Matchups where home_score > away_score AND ${whereClause} UNION select *, Away_Score as score from Matchups where home_score < away_score AND ${whereClause}) as scores \
+            (select *, Home_Score as score from testing where home_score > away_score AND ${whereClause} UNION select *, Away_Score as score from testing where home_score < away_score AND ${whereClause}) as scores \
             order by Points Asc limit 10 \
         `);
 

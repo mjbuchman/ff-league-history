@@ -64,7 +64,7 @@ class Overview extends Component {
         this.state = {
             refreshing: false,
             owners: [],
-            currOwner: "Michael Buchman",
+            currOwner: "MB",
             ownerVals: [],
             seasons: [{count: 0}],
             gp: [{count: 0}],
@@ -120,7 +120,7 @@ class Overview extends Component {
     }
 
     getOwners() {
-        this.queryDB("owners", "select * from Owners")
+        this.queryDB("owners", "select * from ownerstesting")
     }
 
     setOwnerVals() {
@@ -140,18 +140,18 @@ class Overview extends Component {
     }
 
     getMainTables() {
-        this.queryDB("seasons", `select count(distinct year) as count from Matchups where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`)
-        this.queryDB("gp", `select count(*) as count from Matchups where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`)
-        this.queryDB("games", `select * from Matchups where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`)
-        this.queryDB("tpf", `select sum(score) as tpf from (Select sum(Home_score) as score from Matchups where Home_Team = "${this.state.currOwner}" UNION Select sum(Away_score) as score from Matchups where Away_Team = "${this.state.currOwner}") as points`)
-        this.queryDB("tpa", `select sum(score) as tpa from (Select sum(Away_score) as score from Matchups where Home_Team = "${this.state.currOwner}" UNION Select sum(Home_score) as score from Matchups where Away_Team = "${this.state.currOwner}") as points`)
-        this.queryDB("highScore", `Select Year, Week, Score from (Select Year, Week, Home_score as Score from Matchups where Home_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE" UNION Select Year, Week, Away_Score as Score from Matchups where Away_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE") as scores order by Score DESC limit 1`)
-        this.queryDB("lowScore", `Select Year, Week, Score from (Select Year, Week, Home_score as Score from Matchups where Home_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE" UNION Select Year, Week, Away_Score as Score from Matchups where Away_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE") as scores order by Score ASC limit 1`)
-        this.queryDB("bwm", `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${this.state.currOwner}" AND Home_Score > Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${this.state.currOwner}" AND Away_Score > Home_Score) as margins order by Margin desc limit 1`)
-        this.queryDB("swm", `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${this.state.currOwner}" AND Home_Score > Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${this.state.currOwner}" AND Away_Score > Home_Score) as margins order by Margin asc limit 1`)
-        this.queryDB("blm", `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${this.state.currOwner}" AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${this.state.currOwner}" AND Away_Score < Home_Score) as margins order by Margin asc limit 1`)
-        this.queryDB("slm", `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${this.state.currOwner}" AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${this.state.currOwner}" AND Away_Score < Home_Score) as margins order by Margin desc limit 1`)
-        this.queryDB("pApp", `select count(distinct year) as count from Matchups where (home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}") AND Playoff = "TRUE"`)
+        this.queryDB("seasons", `select count(distinct year) as count from testing where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`)
+        this.queryDB("gp", `select count(*) as count from testing where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`)
+        this.queryDB("games", `select * from testing where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`)
+        this.queryDB("tpf", `select sum(score) as tpf from (Select sum(Home_score) as score from testing where Home_Team = "${this.state.currOwner}" UNION Select sum(Away_score) as score from testing where Away_Team = "${this.state.currOwner}") as points`)
+        this.queryDB("tpa", `select sum(score) as tpa from (Select sum(Away_score) as score from testing where Home_Team = "${this.state.currOwner}" UNION Select sum(Home_score) as score from testing where Away_Team = "${this.state.currOwner}") as points`)
+        this.queryDB("highScore", `Select Year, Week, Score from (Select Year, Week, Home_score as Score from testing where Home_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE" UNION Select Year, Week, Away_Score as Score from testing where Away_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE") as scores order by Score DESC limit 1`)
+        this.queryDB("lowScore", `Select Year, Week, Score from (Select Year, Week, Home_score as Score from testing where Home_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE" UNION Select Year, Week, Away_Score as Score from testing where Away_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE") as scores order by Score ASC limit 1`)
+        this.queryDB("bwm", `select * from (Select Year, Week, Home_Score-Away_Score as Margin from testing where Home_Team = "${this.state.currOwner}" AND Home_Score > Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from testing where Away_Team = "${this.state.currOwner}" AND Away_Score > Home_Score) as margins order by Margin desc limit 1`)
+        this.queryDB("swm", `select * from (Select Year, Week, Home_Score-Away_Score as Margin from testing where Home_Team = "${this.state.currOwner}" AND Home_Score > Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from testing where Away_Team = "${this.state.currOwner}" AND Away_Score > Home_Score) as margins order by Margin asc limit 1`)
+        this.queryDB("blm", `select * from (Select Year, Week, Home_Score-Away_Score as Margin from testing where Home_Team = "${this.state.currOwner}" AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from testing where Away_Team = "${this.state.currOwner}" AND Away_Score < Home_Score) as margins order by Margin asc limit 1`)
+        this.queryDB("slm", `select * from (Select Year, Week, Home_Score-Away_Score as Margin from testing where Home_Team = "${this.state.currOwner}" AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from testing where Away_Team = "${this.state.currOwner}" AND Away_Score < Home_Score) as margins order by Margin desc limit 1`)
+        this.queryDB("pApp", `select count(distinct year) as count from testing where (home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}") AND Playoff = "TRUE"`)
     }
 
     getGraphData() {
@@ -246,7 +246,7 @@ class Overview extends Component {
         drop temporary table if exists results2;
         
         Create temporary table results
-        select year, week, home_team as owner, home_score as score from Matchups where Home_Score > Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score < Away_Score;
+        select year, week, home_team as owner, home_score as score from testing where Home_Score > Away_Score UNION select year, week, away_team as owner, away_score as score from testing where Home_Score < Away_Score;
         
         Create temporary table results2 select * from results;
         
@@ -263,7 +263,7 @@ class Overview extends Component {
         drop temporary table if exists results2;
         
         Create temporary table results
-        select year, week, home_team as owner, home_score as score from Matchups where Home_Score < Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score > Away_Score;
+        select year, week, home_team as owner, home_score as score from testing where Home_Score < Away_Score UNION select year, week, away_team as owner, away_score as score from testing where Home_Score > Away_Score;
         
         Create temporary table results2 select * from results;
         

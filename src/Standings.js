@@ -122,7 +122,7 @@ class Standings extends Component {
             },
             //make sure to serialize your JSON body
             body: JSON.stringify({
-                query: `select distinct Year from Matchups order by Year desc`
+                query: `select distinct Year from testing order by Year desc`
             })
         })
         .then((response) => response.json())
@@ -184,12 +184,12 @@ class Standings extends Component {
 
                                 create temporary table WinLoss
                                     select owner, sum(win) as win, sum(loss) as loss from (
-                                    (SELECT owner, COUNT(*) AS win, 0 as loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score > away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score > home_score AND (${clause})) AS innerWins GROUP BY owner
+                                    (SELECT owner, COUNT(*) AS win, 0 as loss FROM (SELECT home_team AS owner FROM testing WHERE home_score > away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM testing WHERE away_score > home_score AND (${clause})) AS innerWins GROUP BY owner
                                     UNION ALL
-                                    SELECT owner, 0 as win, COUNT(*) AS loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score < away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score < home_score AND (${clause})) AS innerLosses GROUP BY owner)) as WL group by owner;
+                                    SELECT owner, 0 as win, COUNT(*) AS loss FROM (SELECT home_team AS owner FROM testing WHERE home_score < away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM testing WHERE away_score < home_score AND (${clause})) AS innerLosses GROUP BY owner)) as WL group by owner;
                                     
                                     create temporary table Points
-                                    Select * from (SELECT owner, SUM(pf) AS pf, SUM(pa) AS pa FROM (SELECT home_team AS owner, SUM(home_score) AS pf, SUM(away_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner UNION ALL SELECT away_team AS Owner, SUM(away_score) AS pf, SUM(home_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner) AS innerPoints GROUP BY owner) as OuterPoints;
+                                    Select * from (SELECT owner, SUM(pf) AS pf, SUM(pa) AS pa FROM (SELECT home_team AS owner, SUM(home_score) AS pf, SUM(away_score) AS pa FROM testing WHERE ${clause} GROUP BY Owner UNION ALL SELECT away_team AS Owner, SUM(away_score) AS pf, SUM(home_score) AS pa FROM testing WHERE ${clause} GROUP BY Owner) AS innerPoints GROUP BY owner) as OuterPoints;
                                     
                                     select 0 as placement, Points.owner as owner, win+loss AS gp, win, loss, 0 AS tie, win/(win+loss) AS pct, pf, pa from WinLoss inner join Points on (WinLoss.owner = Points.owner) ${exclude} order by pct desc, pf desc;
                             `

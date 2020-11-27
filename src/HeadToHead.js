@@ -66,7 +66,7 @@ class HeadToHead extends Component {
     }
 
     componentDidMount() {
-        this.queryDB("owners", `select * from Owners`, false)
+        this.queryDB("owners", `select * from ownerstesting`, false)
     }
 
     queryDB(field, query, singleVal) {
@@ -113,7 +113,7 @@ class HeadToHead extends Component {
     
     usersSelected() {
         if(this.state.currOwner1 !== "" && this.state.currOwner2 !== "") {
-            var query =  `select * from Matchups where (home_team = "${this.state.currOwner1}" OR home_team = "${this.state.currOwner2}") AND (away_team = "${this.state.currOwner1}" OR away_team = "${this.state.currOwner2}") `
+            var query =  `select * from testing where (home_team = "${this.state.currOwner1}" OR home_team = "${this.state.currOwner2}") AND (away_team = "${this.state.currOwner1}" OR away_team = "${this.state.currOwner2}") `
             this.queryDB("matchups", query, false)
         }
     }
@@ -163,11 +163,11 @@ class HeadToHead extends Component {
                             drop temporary table if exists h2h2;
                             create temporary table h2h
                                 Select Year, Week, Home_Score as score from (
-                                    select * from Matchups where home_team = "${owner1}" AND away_team = "${owner2}" AND Two_Week = "${double}"
+                                    select * from testing where home_team = "${owner1}" AND away_team = "${owner2}" AND Two_Week = "${double}"
                                 ) as x
                                 UNION
                                 Select Year, Week, Away_Score as score from (
-                                    select * from Matchups where away_team = "${owner1}" AND home_team = "${owner2}" AND Two_Week = "${double}"
+                                    select * from testing where away_team = "${owner1}" AND home_team = "${owner2}" AND Two_Week = "${double}"
                                 ) as y;
                                 
                             create temporary table h2h2 select * from h2h;
