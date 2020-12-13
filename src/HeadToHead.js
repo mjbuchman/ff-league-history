@@ -165,7 +165,12 @@ class HeadToHead extends Component {
             }
         }
         );
-        this.setState({o1Points: o1Count.toFixed(2), o2Points: o2Count.toFixed(2), o1Avg: (o1Count/this.state.matchups.length).toFixed(2), o2Avg: (o2Count/this.state.matchups.length).toFixed(2)});
+        this.setState({ 
+            o1Points: o1Count.toFixed(2), 
+            o2Points: o2Count.toFixed(2), 
+            o1Avg: (o1Count/this.state.matchups.length).toFixed(2), 
+            o2Avg: (o2Count/this.state.matchups.length).toFixed(2)
+        });
     }
 
      /** 

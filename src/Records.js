@@ -164,11 +164,11 @@ class Records extends Component {
     // Builds query for type of matchup specified and passes it on to each tables update method
     updateTables()  {
         var whereClause;
-        if(this.state.regSeason.val === true) {
+        if(this.state.regSeason.val) {
             whereClause = "where Regular_Season = \"TRUE\"";
-        } else if(this.state.playoffS.val === true ) {
+        } else if(this.state.playoffS.val) {
             whereClause = "where Playoff = \"TRUE\" AND Two_Week = \"FALSE\"";
-        } else if(this.state.playoffD.val === true) {
+        } else if(this.state.playoffD.val) {
             whereClause = "where Playoff = \"TRUE\" AND Two_Week = \"TRUE\"";
         } else {
             whereClause = "where true";
