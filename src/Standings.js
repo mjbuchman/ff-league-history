@@ -97,7 +97,6 @@ class Standings extends Component {
         this.state = {
             regSeason: { val: true, id: "clicked"},
             playoff: { val: true, id: "clicked" },
-            timePeriod: "All-Time",
             data: [],
             currDate: "All-Time",
             seasons: [],

@@ -14,7 +14,7 @@ class Main extends Component {
         super(props);
         this.state = {
             open: false,
-            position: "-300px",
+            position: "-400px",
             height: 0,
             width: 0
         };
@@ -40,7 +40,7 @@ class Main extends Component {
 
     // Handler for the hamburger menu, closes/opens menu dpending on previous button state
     handleClick() {
-        if(this.state.open) this.setState({position: "-300px"})
+        if(this.state.open) this.setState({position: "-400px"})
         else this.setState({position: "0px"})
         this.setState({open: !this.state.open});
     }
