@@ -14,7 +14,7 @@ let fullDraft = [
 	{ name: 'PRK', displayName: "PRK", thClassName: "standings-th", tdClassName: "standings-td"},
 	{ name: 'Games', displayName: "GP", thClassName: "standings-th", tdClassName: "standings-td"},
 	{ name: 'FPTSG', displayName: "FPTS/G", thClassName: "standings-th", tdClassName: "standings-td"},
-	{ name: 'FPTS', displayName: "FPTS", thClassName: "standings-th", tdClassName: "standings-td"}
+	{ name: 'FPTS', displayName: "FPTS", thClassName: "standings-th", tdClassName: "standings-td"},
 ];
 
 let indvidualDraft = [
@@ -42,6 +42,7 @@ class Drafts extends Component {
 
         this.getDropdownValues = this.getDropdownValues.bind(this);
         this.updateTableData = this.updateTableData.bind(this);
+        this.calculatePlayerValues = this.calculatePlayerValues.bind(this);
         this.handleOwnerChange = this.handleOwnerChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
     }
@@ -69,7 +70,8 @@ class Drafts extends Component {
         })
         .then((response) => response.json())
         .then(rows => {
-            this.setState({[field]: rows});
+            if(field === "draftData") this.setState({[field]: rows}, this.calculatePlayerValues);
+            else this.setState({[field]: rows});
         })
     }
 
@@ -84,8 +86,28 @@ class Drafts extends Component {
         var ownerClause = ""
         if(this.state.currOwner !== "All Owners") ownerClause = ` AND Owner = \"${this.state.currOwner}\"`;
 
-        console.log(ownerClause)
         this.queryDB("draftData", `select * from Drafts where Year = ${this.state.currDate}${ownerClause}`)
+    }
+
+    calculatePlayerValues() {
+        var updatedDraftData = [];
+        var sbValue, value;
+        if(this.state.currDate !== String(new Date().getFullYear())) {
+            this.state.draftData.forEach(draftPick => {
+                sbValue = draftPick.Round-draftPick.PRK;
+                
+                if(draftPick.Position === "QB") value = (draftPick.FPTS*.8) + (10*draftPick.Round);
+                else value = draftPick.FPTS + (10*draftPick.Round);
+
+                draftPick["sbValue"] = sbValue;
+                draftPick["value"] = value;
+
+                updatedDraftData.push(draftPick);
+            });
+            
+            this.setState({draftData: updatedDraftData});
+        }
+
     }
 
     // Handler for date dropdown changes which triggers data refresh
