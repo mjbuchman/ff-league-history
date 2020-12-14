@@ -37,7 +37,9 @@ class Drafts extends Component {
             currDate: String(new Date().getFullYear()),
             seasons: [],
             owners: [],
-            draftData: []
+            draftData: [],
+            indvSuperlatives: {},
+            ovrSuperlatives: {}
         };
 
         this.getDropdownValues = this.getDropdownValues.bind(this);
@@ -110,6 +112,10 @@ class Drafts extends Component {
 
     }
 
+    setIndvSuperlatives() {
+        
+    }
+
     // Handler for date dropdown changes which triggers data refresh
     handleDateChange = val => event => {
         this.setState({ currDate: event.target.value }, this.updateTableData);
@@ -169,6 +175,7 @@ class Drafts extends Component {
                                         <div className="stats-box">
                                             <h6>Biggest Steal</h6>
                                             <div id="box">
+                                                <h1 id="small-mar">N/A</h1>
                                             </div>
                                         </div>
                                     </Col>
@@ -176,6 +183,7 @@ class Drafts extends Component {
                                         <div className="stats-box">
                                             <h6>Biggest Bust</h6>
                                             <div id="box">
+                                                <h1 id="small-mar">N/A</h1>
                                             </div>
                                         </div>
                                     </Col>
@@ -183,6 +191,7 @@ class Drafts extends Component {
                                         <div className="stats-box">
                                             <h6>Best Draft</h6>
                                             <div id="box">
+                                                <h1 id="small-mar">N/A</h1>
                                             </div>
                                         </div>
                                     </Col>
@@ -190,17 +199,19 @@ class Drafts extends Component {
                                         <div className="stats-box">
                                             <h6>Worst Draft</h6>
                                             <div id="box">
+                                                <h1 id="small-mar">N/A</h1>
                                             </div>
                                         </div>
                                     </Col>
                                 </Row>
                             :
-                                <div>
+                            <div>
                                     <Row>
                                         <Col lg={4} id="center-align">
                                             <div className="stats-box">
                                                 <h6>Best Player</h6>
                                                 <div id="box">
+                                                    <h1 id="small-mar">N/A</h1>
                                                 </div>
                                             </div>
                                         </Col>
@@ -208,6 +219,7 @@ class Drafts extends Component {
                                             <div className="stats-box">
                                                 <h6>Best Value</h6>
                                                 <div id="box">
+                                                    <h1 id="small-mar">N/A</h1>
                                                 </div>
                                             </div>
                                         </Col>
@@ -215,6 +227,7 @@ class Drafts extends Component {
                                             <div className="stats-box">
                                                 <h6>Biggest Steal</h6>
                                                 <div id="box">
+                                                    <h1 id="small-mar">N/A</h1>
                                                 </div>
                                             </div>
                                         </Col>
@@ -224,6 +237,7 @@ class Drafts extends Component {
                                             <div className="stats-box">
                                                 <h6>Biggest Bust</h6>
                                                 <div id="box">
+                                                    <h1 id="small-mar">N/A</h1>
                                                 </div>
                                             </div>
                                         </Col>
@@ -231,6 +245,7 @@ class Drafts extends Component {
                                             <div className="stats-box">
                                                 <h6>Draft Grade</h6>
                                                 <div id="box">
+                                                    <h1 id="small-mar">N/A</h1>
                                                 </div>
                                             </div>
                                         </Col>
@@ -238,6 +253,7 @@ class Drafts extends Component {
                                             <div className="stats-box">
                                                 <h6>Draft Rank</h6>
                                                 <div id="box">
+                                                    <h1 id="small-mar">N/A</h1>
                                                 </div>
                                             </div>
                                         </Col>
