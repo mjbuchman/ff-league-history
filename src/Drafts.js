@@ -104,7 +104,7 @@ class Drafts extends Component {
 
                 updatedDraftData.push(draftPick);
             });
-            
+
             this.setState({draftData: updatedDraftData});
         }
 
@@ -156,6 +156,94 @@ class Drafts extends Component {
                                 headerVisible={false}
                                 pagersVisible={false}
                             />
+                        </div>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <h4>Draft Overview</h4>
+                        <div id="box">
+                            {this.state.currOwner === "All Owners" ?
+                                <Row>
+                                    <Col lg={3} id="center-align">
+                                        <div className="stats-box">
+                                            <h6>Biggest Steal</h6>
+                                            <div id="box">
+                                            </div>
+                                        </div>
+                                    </Col>
+                                    <Col lg={3} id="center-align">
+                                        <div className="stats-box">
+                                            <h6>Biggest Bust</h6>
+                                            <div id="box">
+                                            </div>
+                                        </div>
+                                    </Col>
+                                    <Col lg={3} id="center-align">
+                                        <div className="stats-box">
+                                            <h6>Best Draft</h6>
+                                            <div id="box">
+                                            </div>
+                                        </div>
+                                    </Col>
+                                    <Col lg={3} id="center-align">
+                                        <div className="stats-box">
+                                            <h6>Worst Draft</h6>
+                                            <div id="box">
+                                            </div>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            :
+                                <div>
+                                    <Row>
+                                        <Col lg={4} id="center-align">
+                                            <div className="stats-box">
+                                                <h6>Best Player</h6>
+                                                <div id="box">
+                                                </div>
+                                            </div>
+                                        </Col>
+                                        <Col lg={4} id="center-align">
+                                            <div className="stats-box">
+                                                <h6>Best Value</h6>
+                                                <div id="box">
+                                                </div>
+                                            </div>
+                                        </Col>
+                                        <Col lg={4} id="center-align">
+                                            <div className="stats-box">
+                                                <h6>Biggest Steal</h6>
+                                                <div id="box">
+                                                </div>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col lg={4} id="center-align">
+                                            <div className="stats-box">
+                                                <h6>Biggest Bust</h6>
+                                                <div id="box">
+                                                </div>
+                                            </div>
+                                        </Col>
+                                        <Col lg={4} id="center-align">
+                                            <div className="stats-box">
+                                                <h6>Draft Grade</h6>
+                                                <div id="box">
+                                                </div>
+                                            </div>
+                                        </Col>
+                                        <Col lg={4} id="center-align">
+                                            <div className="stats-box">
+                                                <h6>Draft Rank</h6>
+                                                <div id="box">
+                                                </div>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            }
                         </div>
                     </Col>
                 </Row>
