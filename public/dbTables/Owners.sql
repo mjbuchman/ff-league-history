@@ -10,13 +10,13 @@ CREATE TABLE Matchups (
     Championships NUMERIC(1,0) NOT NULL,
 );
 INSERT INTO Owners VALUES 
-    ('Michael Buchman', 3, 4, 0, 1, 0, 0, 0),
-    ('Jon Setzke', 7, 5, 0, 1, 0, 0, 0),
-    ('James Earley', 1, 1, 0, 1, 1, 2, 1),
-    ('Grant Dakovich', 1, 1, 1, 0, 1, 1, 1),
-    ('Brenden Zarrinnam', 3, 2, 1, 0, 0, 1, 0),
-    ('Ryan Rasmussen', 5, 4, 0, 0, 0, 0, 0),
-    ('Connor DeYoung', 4, 5, 0, 0, 0, 0, 0),
-    ('Tyler Brown', 1, 1, 0, 0, 1, 1, 1),
-    ('Joe Perry', 2, 2, 0, 0, 0, 1, 0),
-    ('Nick Eufrasio', 3, 6, 0, 0, 0, 0, 0)
+    ('Michael Buchman',1,2,0,2,1,1,0),
+    ('Jon Setzke',3,3,0,1,0,0,0),
+    ('James Earley',1,1,0,1,1,2,1),
+    ('Grant Dakovich',1,1,1,0,1,1,1),
+    ('Brenden Zarrinnam',3,2,1,0,0,1,0),
+    ('Ryan Rasmussen',2,1,0,0,0,1,1),
+    ('Connor DeYoung',4,5,0,0,0,0,0),
+    ('Tyler Brown',1,1,0,0,1,1,1),
+    ('Joe Perry',2,2,0,0,0,1,0),
+    ('Nick Eufrasio',3,6,1,0,0,0,0);
