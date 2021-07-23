@@ -34,12 +34,13 @@ class Drafts extends Component {
         super(props);
         this.state = {
             currOwner: "All Owners",
-            currDate: String(new Date().getFullYear()),
+            //currDate: String(new Date().getFullYear()),
+            currDate: "2020",
             seasons: [],
             owners: [],
             draftData: [],
             indvSuperlatives: {},
-            ovrSuperlatives: {}
+            ovrSuperlatives: {biggestSteal: [], biggestBust: [], bestDraft: "", worstDraft: ""}
         };
 
         this.getDropdownValues = this.getDropdownValues.bind(this);
@@ -86,12 +87,14 @@ class Drafts extends Component {
 
     updateTableData() {
         var ownerClause = ""
-        if(this.state.currOwner !== "All Owners") ownerClause = ` AND Owner = \"${this.state.currOwner}\"`;
+        if(this.state.currOwner !== "All Owners") ownerClause = ` AND Owner = "${this.state.currOwner}"`;
 
         this.queryDB("draftData", `select * from Drafts where Year = ${this.state.currDate}${ownerClause}`)
     }
 
     calculatePlayerValues() {
+        if(this.state.draftData == null) return;
+
         var updatedDraftData = [];
         var sbValue, value;
         if(this.state.currDate !== String(new Date().getFullYear())) {
@@ -107,13 +110,68 @@ class Drafts extends Component {
                 updatedDraftData.push(draftPick);
             });
 
-            this.setState({draftData: updatedDraftData});
+            this.setState({draftData: updatedDraftData}, this.setOvrSuperlatives);
         }
 
     }
 
-    setIndvSuperlatives() {
+    setOvrSuperlatives() {
+        var biggestSteal, biggestBust;      
+
+        // sort draft picks on their steal/bust value
+        var sortedData = [...this.state.draftData];
+        sortedData.sort(function(a,b) {
+            return b.sbValue - a.sbValue;
+        });
+
+        biggestSteal = sortedData[0];
+        biggestBust = sortedData[sortedData.length - 1];
+
+        var draftPick, nonSkillPlayer, skillPlayer, ownerDraftValues = {};
+        for (var i = 0; i < this.state.draftData.length; i++) {
+            draftPick = sortedData[i]
+            if (i < 10 && draftPick.Position !== "D/ST" && draftPick.Position !== "K") {
+                if(!nonSkillPlayer && (draftPick.Position === "QB" || draftPick.Position === "TE")) nonSkillPlayer = draftPick;
+                if(!skillPlayer && (draftPick.Position === "RB" || draftPick.Position === "WR")) nonSkillPlayer = draftPick;
+            } 
+            
+            if (draftPick.sbValue <=  -30) {
+                if (draftPick.Round < biggestBust.Round) {
+                    biggestBust = draftPick;
+                } else if (draftPick.Round === biggestBust.Round) {
+                    biggestBust = draftPick.Pick < biggestBust.Pick ? draftPick : biggestBust;
+                } else {}
+            }
+
+            if(!ownerDraftValues[draftPick.Owner]) ownerDraftValues[draftPick.Owner] = 0;
+
+            ownerDraftValues[draftPick.Owner] += draftPick.value;
+        }
+        var sortedOwnerDraftValues = this.ownerValuePairToSortedArray(ownerDraftValues);
+        console.log(sortedOwnerDraftValues)
         
+        biggestSteal = skillPlayer ? skillPlayer : nonSkillPlayer;
+        this.setState({
+            ovrSuperlatives: {
+                biggestSteal: biggestSteal, 
+                biggestBust: biggestBust, bestDraft: 
+                sortedOwnerDraftValues[0].owner, 
+                worstDraft: sortedOwnerDraftValues[sortedOwnerDraftValues.length - 1].owner
+            }
+        });
+    }
+
+    ownerValuePairToSortedArray(ownerDraftValues) {
+        var sortedReturnArr = [];
+        for (const [owner, value] of Object.entries(ownerDraftValues)) {
+           sortedReturnArr.push({owner: owner, value: value});
+        }
+        
+        sortedReturnArr.sort(function(a,b) {
+            return b.value - a.value;
+        });
+
+        return sortedReturnArr;
     }
 
     // Handler for date dropdown changes which triggers data refresh
@@ -175,7 +233,10 @@ class Drafts extends Component {
                                         <div className="stats-box">
                                             <h6>Biggest Steal</h6>
                                             <div id="box">
-                                                <h1 id="small-mar">N/A</h1>
+                                                <h1 id="small-mar">{this.state.ovrSuperlatives.biggestSteal.Player}</h1>
+                                                <h5 id="small-mar" style={{color: "black"}}>{this.state.ovrSuperlatives.biggestSteal.Owner} - 
+                                                RD {this.state.ovrSuperlatives.biggestSteal.Round}, PK {this.state.ovrSuperlatives.biggestSteal.Pick}</h5>
+                                                <p id="black">PRK: {this.state.ovrSuperlatives.biggestSteal.PRK} | {this.state.ovrSuperlatives.biggestSteal.FPTS} Pts</p>
                                             </div>
                                         </div>
                                     </Col>
@@ -183,7 +244,10 @@ class Drafts extends Component {
                                         <div className="stats-box">
                                             <h6>Biggest Bust</h6>
                                             <div id="box">
-                                                <h1 id="small-mar">N/A</h1>
+                                                <h1 id="small-mar">{this.state.ovrSuperlatives.biggestBust.Player}</h1>
+                                                <h5 id="small-mar" style={{color: "black"}}>{this.state.ovrSuperlatives.biggestBust.Owner} - 
+                                                RD {this.state.ovrSuperlatives.biggestBust.Round}, PK {this.state.ovrSuperlatives.biggestBust.Pick}</h5>
+                                                <p id="black">PRK: {this.state.ovrSuperlatives.biggestBust.PRK} | {this.state.ovrSuperlatives.biggestBust.FPTS} Pts</p>
                                             </div>
                                         </div>
                                     </Col>
@@ -191,7 +255,7 @@ class Drafts extends Component {
                                         <div className="stats-box">
                                             <h6>Best Draft</h6>
                                             <div id="box">
-                                                <h1 id="small-mar">N/A</h1>
+                                                <h1 id="small-mar">{this.state.ovrSuperlatives.bestDraft}</h1>
                                             </div>
                                         </div>
                                     </Col>
@@ -199,7 +263,7 @@ class Drafts extends Component {
                                         <div className="stats-box">
                                             <h6>Worst Draft</h6>
                                             <div id="box">
-                                                <h1 id="small-mar">N/A</h1>
+                                                <h1 id="small-mar">{this.state.ovrSuperlatives.worstDraft}</h1>
                                             </div>
                                         </div>
                                     </Col>
