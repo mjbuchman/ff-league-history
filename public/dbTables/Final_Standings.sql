@@ -36,4 +36,12 @@ INSERT INTO Final_Standings VALUES
     (2019, 7, 'Connor DeYoung'),
     (2019, 8, 'Brenden Zarrinnam'),
     (2019, 9, 'Jon Setzke'),
-    (2019, 10, 'Joe Perry')
+    (2019, 10, 'Joe Perry'),
+    (2020,1,'Ryan Rasmussen'),
+    (2020,2,'Michael Buchman'),
+    (2020,3,'Jon Setzke'),
+    (2020,4,'Brenden Zarrinnam'),
+    (2020,5,'James Earley'),
+    (2020,6,'Joe Perry'),
+    (2020,7,'Nick Eufrasio'),
+    (2020,8,'Grant Dakovich');
