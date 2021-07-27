@@ -18,6 +18,7 @@ import fPlace from "./logos/trophy_first.svg";
 import sPlace from "./logos/trophy_second.svg";
 import tPlace from "./logos/trophy_third.svg";
 
+// dictionary for image elements
 const img = {
     "Michael Buchman": LogoMB,
     "Grant Dakovich": LogoGD,
@@ -36,6 +37,7 @@ const img = {
     3: tPlace
 }
 
+// function passed into table that renders a trophy if final placement is top 3
 const renderTrophy = (props) => {
     if (props.record.placement > 3) {
         return (
@@ -52,6 +54,7 @@ const renderTrophy = (props) => {
     }
 };
 
+// function passed into table to render team logos
 const renderLogo = (props) => {
     return (
         <span>
@@ -60,6 +63,7 @@ const renderLogo = (props) => {
     );
 };
 
+// table fields when displaying regular season standings
 let fields = [
 	{ name: 'placement', displayName: "Place", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'logo', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td", render: renderLogo},
@@ -73,6 +77,7 @@ let fields = [
 	{ name: 'pa', displayName: "PA", thClassName: "standings-th", tdClassName: "standings-td", inputFilterable: true, exactFilterable: true, sortable: true }
 ];
 
+// table fields when displaying final standings
 let fields2 = [
 	{ name: 'placement', displayName: "Place", thClassName: "standings-th", tdClassName: "standings-td", render: renderTrophy, inputFilterable: true, exactFilterable: true, sortable: true },
 	{ name: 'logo', displayName: "Owner", thClassName: "standings-th", tdClassName: "standings-td", render: renderLogo},
@@ -92,7 +97,6 @@ class Standings extends Component {
         this.state = {
             regSeason: { val: true, id: "clicked"},
             playoff: { val: true, id: "clicked" },
-            timePeriod: "All-Time",
             data: [],
             currDate: "All-Time",
             seasons: [],
@@ -113,6 +117,7 @@ class Standings extends Component {
         this.updateTableData();
     }
 
+    // Queries database to find distinct seasons
     getSeasons() {
         fetch("/api/db", {
             method: "post",
@@ -120,7 +125,6 @@ class Standings extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            //make sure to serialize your JSON body
             body: JSON.stringify({
                 query: `select distinct Year from Matchups order by Year desc`
             })
@@ -131,6 +135,7 @@ class Standings extends Component {
         })
     }
 
+    // Queries database for all final standings data
     getFinalStandings() {
         fetch("/api/db", {
             method: "post",
@@ -138,7 +143,6 @@ class Standings extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            //make sure to serialize your JSON body
             body: JSON.stringify({
                 query: `select * from Final_Standings`
             })
@@ -149,23 +153,32 @@ class Standings extends Component {
         })
     }
 
+    // Handler for date dropdown changes which triggers data refresh
     handleDateChange = val => event => {
         this.setState({ currDate: event.target.value }, this.updateTableData);
     }
-
+    
+    /** 
+     * Handler for button clicks which triggers data refresh
+     * @param field - The field indicating which button was clicked
+    */
     handleButtonClick(field) {
         if(this.state[field].id === "clicked") this.setState({ [field]: {val: false, id: "unclicked"}}, this.updateTableData);
         else this.setState({ [field]: {val: true, id: "clicked"}}, this.updateTableData);
     }
     
+    // Sets data and matchup type data from state and then queries database for full table data
     updateTableData() {
         let dateClause = ""
-        let exclude = `where Points.owner != "Sal DiVita" AND Points.owner != "Zach Way"`
+        let exclude = `where Points.owner != "Sal DiVita" AND Points.owner != "Zach Way"` // INACTIVE LEAGUE MEMBERS
+        
+        // add date to query if year is specified
         if (this.state.currDate !== "All-Time") {
             dateClause = ` AND Year = ${this.state.currDate}`
             exclude = ""
         }
 
+        // add regular season and playoff values to query
         let clause = `Regular_Season = "${this.state.regSeason.val}" AND Playoff = "${this.state.playoff.val}"${dateClause}`
         if (this.state.regSeason.val && this.state.playoff.val) clause = `true${dateClause}`;
 
@@ -177,7 +190,6 @@ class Standings extends Component {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                //make sure to serialize your JSON body
                 body: JSON.stringify({
                     query: `drop temporary table if exists WinLoss;
                                 drop temporary table if exists Points;
@@ -198,6 +210,8 @@ class Standings extends Component {
             .then((response) => response.json())
             .then(rows => {
                 rows[4].forEach(row => row.pct = row.pct.toFixed(3) )
+
+                // sets place values to final standings, else uses regular season standings
                 if (this.state.currDate !== "All-Time" && this.state.currDate !== String(new Date().getFullYear()) && this.state.playoff.val) {
                     rows[4].forEach(row =>
                         this.state.finalStandings.forEach(rowStandings => { 
@@ -212,6 +226,7 @@ class Standings extends Component {
         }   
     }
 
+    // Chooses the table type depending on whether regular season or final standings are to be displayed
     chooseTableType() {
         if(!this.state.playoff.val || this.state.currDate === "All-Time" || this.state.currDate === String(new Date().getFullYear())) {
             return (
