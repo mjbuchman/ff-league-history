@@ -2,7 +2,40 @@ import React, { Component } from "react";
 import {Container, Row, Col} from 'react-bootstrap';
 import "./css/drafts.css";
 import FilterableTable from "react-filterable-table";
+import iconAp from "./letter-icons/A+.png";
+import iconA from "./letter-icons/A.png";
+import iconAm from "./letter-icons/A-.png";
+import iconBp from "./letter-icons/B+.png";
+import iconB from "./letter-icons/B.png";
+import iconBm from "./letter-icons/B-.png";
+import iconCp from "./letter-icons/C+.png";
+import iconC from "./letter-icons/C.png";
+import iconCm from "./letter-icons/C-.png";
+import iconD from "./letter-icons/D.png";
+import iconF from "./letter-icons/F.png";
 
+const img = {
+    "A+": iconAp,
+    "A": iconA,
+    "A-": iconAm,
+    "B+": iconBp,
+    "B": iconB,
+    "B-": iconBm,
+    "C+": iconCp,
+    "C": iconC,
+    "C-": iconCm,
+    "D": iconD,
+    "F": iconF
+}
+
+// function passed to tables to render letter icons
+const renderIcon = (props) => {
+    return (
+        <span>
+            <img src={img[props.record.Grade]} alt="letter-icon" style={{width:"50px"}}></img>
+        </span>
+    );
+};
 
 let fullDraft = [
 	{ name: 'Round', displayName: "Round", thClassName: "standings-th", tdClassName: "standings-td"},
@@ -15,7 +48,7 @@ let fullDraft = [
 	{ name: 'Games', displayName: "GP", thClassName: "standings-th", tdClassName: "standings-td"},
 	{ name: 'FPTSG', displayName: "FPTS/G", thClassName: "standings-th", tdClassName: "standings-td"},
 	{ name: 'FPTS', displayName: "FPTS", thClassName: "standings-th", tdClassName: "standings-td"},
-	{ name: 'Grade', displayName: "Grade", thClassName: "standings-th", tdClassName: "standings-td"},
+	{ name: 'Grade', displayName: "Grade", thClassName: "standings-th", tdClassName: "standings-td", render: renderIcon}
 ];
 
 let indvidualDraft = [
@@ -28,13 +61,13 @@ let indvidualDraft = [
 	{ name: 'Games', displayName: "GP", thClassName: "standings-th", tdClassName: "standings-td"},
 	{ name: 'FPTSG', displayName: "FPTS/G", thClassName: "standings-th", tdClassName: "standings-td"},
 	{ name: 'FPTS', displayName: "FPTS", thClassName: "standings-th", tdClassName: "standings-td"},
-	{ name: 'Grade', displayName: "Grade", thClassName: "standings-th", tdClassName: "standings-td"}
+	{ name: 'Grade', displayName: "Grade", thClassName: "standings-th", tdClassName: "standings-td", render: renderIcon}
 ];
 
 let draftRank = [
 	{ name: 'owner', displayName: "Team", thClassName: "standings-th", tdClassName: "standings-td"},
 	{ name: 'value', displayName: "Value-Based Metric Score", thClassName: "standings-th", tdClassName: "standings-td"},
-	{ name: 'Grade', displayName: "Grade", thClassName: "standings-th", tdClassName: "standings-td"}
+	{ name: 'Grade', displayName: "Grade", thClassName: "standings-th", tdClassName: "standings-td", render: renderIcon}
 ];
 
 class Drafts extends Component {
