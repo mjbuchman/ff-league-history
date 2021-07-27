@@ -16,8 +16,8 @@ app.use(express.static(buildPath));
 // database credentials
 const pool = mysql.createPool({
     host: "rds-mysql-wallersteinffl.cpvy0zo2vtvt.us-east-1.rds.amazonaws.com",
-    user: "masterUsername",
-    password: "wallersteinFFLdb",
+    user: process.env.REACT_APP_DB_USERNAME,
+    password: process.env.REACT_APP_DB_PASSWORD,
     database: "WallersteinFFL",
     multipleStatements: true
 });
