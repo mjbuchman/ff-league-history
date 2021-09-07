@@ -7,6 +7,7 @@ import Records from "./Records";
 import Drafts from "./Drafts";
 import "./css/main.css";
 import Logo from "./logos/Wallerstein.png";
+import Pdf from "./docs/WFFL-Rules.pdf";
 import HamburgerMenu from "react-hamburger-menu";
 
 class Main extends Component {
@@ -71,6 +72,7 @@ class Main extends Component {
                             <li><NavLink to="/standings" replace><i className="material-icons">assessment</i>Standings</NavLink></li>
                             <li><NavLink to="/records" replace><i className="material-icons">bookmark_border</i>Records</NavLink></li>
                             <li><NavLink to="/drafts" replace><i className="material-icons">web</i>Drafts</NavLink></li>
+                            <li><a href={Pdf} target='_blank' without rel='noopener noreferrer'><i className="material-icons">menu_book</i>Rulebook</a></li>
                         </ul>
                     }
                     <ul className="hamburger-navbar" style={{top: this.state.position}}>
