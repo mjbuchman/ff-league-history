@@ -11,7 +11,7 @@ CREATE TABLE Matchups (
 );
 INSERT INTO Owners VALUES 
     ('Michael Buchman',1,2,0,2,1,1,0),
-    ('Jon Setzke',3,3,0,1,0,0,0),
+    ('Jonathan Setzke',3,3,0,1,0,0,0),
     ('James Earley',1,1,0,1,1,2,1),
     ('Grant Dakovich',1,1,1,0,1,1,1),
     ('Brenden Zarrinnam',3,2,1,0,0,1,0),
