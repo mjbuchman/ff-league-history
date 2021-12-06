@@ -1,5 +1,5 @@
 /* Last Update - After 2019 Season */
-CREATE TABLE Matchups (
+CREATE TABLE Owners (
     Owner VARCHAR(17) NOT NULL,
     Best_Placement_RS NUMERIC(1,0) NOT NULL,
     Best_Placement_Final NUMERIC(1,0) NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE Matchups (
     Season_HS NUMERIC(1,0) NOT NULL,
     RS_Champion NUMERIC(1,0) NOT NULL,
     Champ_App NUMERIC(1,0) NOT NULL,
-    Championships NUMERIC(1,0) NOT NULL,
+    Championships NUMERIC(1,0) NOT NULL
 );
 INSERT INTO Owners VALUES 
     ('Michael Buchman',1,2,0,2,1,1,0),

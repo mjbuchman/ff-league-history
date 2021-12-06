@@ -1,6 +1,6 @@
 /* Last Update - Week 8, 2020 */
 CREATE TABLE Matchups (
-    Year INTEGER NOT NULL PRIMARY KEY,
+    Year INTEGER NOT NULL,
     Week INTEGER NOT NULL,
     Home_Team VARCHAR(17) NOT NULL,
     Home_Score NUMERIC(6,2) NOT NULL,
@@ -261,7 +261,7 @@ INSERT INTO Matchups VALUES
     (2020,6,'Brenden Zarrinnam',144.38,'Joe Perry',111.3,'FALSE','FALSE', 'TRUE'),
     (2020,7,'Michael Buchman',178.6,'Grant Dakovich',106.86,'FALSE','FALSE', 'TRUE'),
     (2020,7,'James Earley',106.54,'Jonathan Setzke',113.82,'FALSE','FALSE', 'TRUE');
-INSERT INTO Wallerstein_Matchup_Scores
+INSERT INTO Matchups VALUES
     (2020,7,'Ryan Rasmussen',108.98,'Brenden Zarrinnam',121.92,'FALSE','FALSE', 'TRUE'),
     (2020,7,'Nick Eufrasio',110.72,'Joe Perry',153,'FALSE','FALSE', 'TRUE'),
     (2020,8,'Michael Buchman',122.52,'Brenden Zarrinam',91.02,'FALSE','FALSE', 'TRUE'),

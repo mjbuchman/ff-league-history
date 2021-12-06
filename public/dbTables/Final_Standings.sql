@@ -2,7 +2,7 @@
 CREATE TABLE Final_Standings (
     Year INTEGER NOT NULL,
     Week INTEGER NOT NULL,
-    Owner VARCHAR(17) NOT NULL,
+    Owner VARCHAR(17) NOT NULL
 );
 INSERT INTO Final_Standings VALUES
     (2017, 1, 'Grant Dakovich'),
