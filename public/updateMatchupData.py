@@ -19,6 +19,8 @@ sqlData.write(',')
 league = League(league_id=1667721, year=year)	
 for week in range(startWeek,startWeek+weeksToAdd):
 	for matchup in league.scoreboard(week):
+        
+
 		rawData.write('\n' +
       		str(year) + ',' +
       		str(week) + ',' +
