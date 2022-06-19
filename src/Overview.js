@@ -8,7 +8,7 @@ import LogoGD from "./logos/Grant Dakovich.jpg";
 import LogoBZ from "./logos/Brenden Zarrinnam.jpg";
 import LogoJP from "./logos/Joe Perry.jpg";
 import LogoJE from "./logos/James Earley.jpg";
-import LogoJS from "./logos/Jon Setzke.jpg";
+import LogoJS from "./logos/Jonathan Setzke.jpg";
 import LogoRR from "./logos/Ryan Rasmussen.jpg";
 import LogoTB from "./logos/Tyler Brown.jpg";
 import LogoNE from "./logos/Nick Eufrasio.jpg";
@@ -16,17 +16,17 @@ import LogoCD from "./logos/Connor DeYoung.jpg";
 
 // dictionary for image elements
 const img = {
-  "Michael Buchman": LogoMB,
-  "Grant Dakovich": LogoGD,
-  "Brenden Zarrinnam": LogoBZ,
-  "Joe Perry": LogoJP,
-  "James Earley": LogoJE,
-  "Jon Setzke": LogoJS,
-  "Ryan Rasmussen": LogoRR,
-  "Tyler Brown": LogoTB,
-  "Nick Eufrasio": LogoNE,
-  "Connor DeYoung": LogoCD,
-};
+    "Michael Buchman": LogoMB,
+    "Grant Dakovich": LogoGD,
+    "Brenden Zarrinnam": LogoBZ,
+    "Joe Perry": LogoJP,
+    "James Earley": LogoJE,
+    "Jonathan Setzke": LogoJS,
+    "Ryan Rasmussen": LogoRR,
+    "Tyler Brown": LogoTB,
+    "Nick Eufrasio": LogoNE,
+    "Connor DeYoung": LogoCD
+}
 
 // dictionary for placement values
 const dict = {

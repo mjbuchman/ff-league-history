@@ -7,7 +7,7 @@ import LogoGD from "./logos/Grant Dakovich.jpg";
 import LogoBZ from "./logos/Brenden Zarrinnam.jpg";
 import LogoJP from "./logos/Joe Perry.jpg";
 import LogoJE from "./logos/James Earley.jpg";
-import LogoJS from "./logos/Jon Setzke.jpg";
+import LogoJS from "./logos/Jonathan Setzke.jpg";
 import LogoRR from "./logos/Ryan Rasmussen.jpg";
 import LogoTB from "./logos/Tyler Brown.jpg";
 import LogoNE from "./logos/Nick Eufrasio.jpg";
@@ -21,7 +21,7 @@ const img = {
     "Brenden Zarrinnam": LogoBZ,
     "Joe Perry": LogoJP,
     "James Earley": LogoJE,
-    "Jon Setzke": LogoJS,
+    "Jonathan Setzke": LogoJS,
     "Ryan Rasmussen": LogoRR,
     "Tyler Brown": LogoTB,
     "Nick Eufrasio": LogoNE,
