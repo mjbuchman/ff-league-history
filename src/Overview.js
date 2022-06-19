@@ -16,17 +16,17 @@ import LogoCD from "./logos/Connor DeYoung.jpg";
 
 // dictionary for image elements
 const img = {
-    "Michael Buchman": LogoMB,
-    "Grant Dakovich": LogoGD,
-    "Brenden Zarrinnam": LogoBZ,
-    "Joe Perry": LogoJP,
-    "James Earley": LogoJE,
-    "Jonathan Setzke": LogoJS,
-    "Ryan Rasmussen": LogoRR,
-    "Tyler Brown": LogoTB,
-    "Nick Eufrasio": LogoNE,
-    "Connor DeYoung": LogoCD
-}
+  "Michael Buchman": LogoMB,
+  "Grant Dakovich": LogoGD,
+  "Brenden Zarrinnam": LogoBZ,
+  "Joe Perry": LogoJP,
+  "James Earley": LogoJE,
+  "Jonathan Setzke": LogoJS,
+  "Ryan Rasmussen": LogoRR,
+  "Tyler Brown": LogoTB,
+  "Nick Eufrasio": LogoNE,
+  "Connor DeYoung": LogoCD,
+};
 
 // dictionary for placement values
 const dict = {
@@ -701,14 +701,20 @@ class Overview extends Component {
             )}
           </Col>
         </Row>
-        {/* <Row>
-                    <Col>
-                        <h4>Yearly Performance</h4>
-                        {!this.state.refreshing && <div id="box">
-                            <Line data={this.state.graphData} height={500} options={options}/>
-                        </div>}
-                    </Col>
-                </Row> */}
+        <Row>
+          <Col>
+            <h4>Yearly Performance</h4>
+            {/* {!this.state.refreshing && (
+              <div id="box">
+                <Line
+                  data={this.state.graphData}
+                  height={500}
+                  options={options}
+                />
+              </div>
+            )} */}
+          </Col>
+        </Row>
       </Container>
     );
   }

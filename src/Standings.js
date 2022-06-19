@@ -14,28 +14,28 @@ import LogoTB from "./logos/Tyler Brown.jpg";
 import LogoNE from "./logos/Nick Eufrasio.jpg";
 import LogoCD from "./logos/Connor DeYoung.jpg";
 import LogoDef from "./logos/Wallerstein.jpg";
-import fPlace from "./logos/trophy_first.svg";
-import sPlace from "./logos/trophy_second.svg";
-import tPlace from "./logos/trophy_third.svg";
+import fPlace from "./logos/1st.png";
+import sPlace from "./logos/2nd.png";
+import tPlace from "./logos/3rd.png";
 
 // dictionary for image elements
 const img = {
-    "Michael Buchman": LogoMB,
-    "Grant Dakovich": LogoGD,
-    "Brenden Zarrinnam": LogoBZ,
-    "Joe Perry": LogoJP,
-    "James Earley": LogoJE,
-    "Jonathan Setzke": LogoJS,
-    "Ryan Rasmussen": LogoRR,
-    "Tyler Brown": LogoTB,
-    "Nick Eufrasio": LogoNE,
-    "Connor DeYoung": LogoCD,
-    "Zach Way": LogoDef,
-    "Sal DiVita": LogoDef,
-    1: fPlace,
-    2: sPlace,
-    3: tPlace
-}
+  "Michael Buchman": LogoMB,
+  "Grant Dakovich": LogoGD,
+  "Brenden Zarrinnam": LogoBZ,
+  "Joe Perry": LogoJP,
+  "James Earley": LogoJE,
+  "Jonathan Setzke": LogoJS,
+  "Ryan Rasmussen": LogoRR,
+  "Tyler Brown": LogoTB,
+  "Nick Eufrasio": LogoNE,
+  "Connor DeYoung": LogoCD,
+  "Zach Way": LogoDef,
+  "Sal DiVita": LogoDef,
+  1: fPlace,
+  2: sPlace,
+  3: tPlace,
+};
 
 // function passed into table that renders a trophy if final placement is top 3
 const renderTrophy = (props) => {

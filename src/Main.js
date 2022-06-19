@@ -130,13 +130,15 @@ class Main extends Component {
               </NavLink>
             </li>
           </ul>
-          <Routes className="content">
-            <Route exact path="/" element={<Overview />} />
-            <Route path="/h2h" element={<HeadToHead />} />
-            <Route path="/standings" element={<Standings />} />
-            <Route path="/records" element={<Records />} />
-            <Route path="/drafts" element={<Drafts />} />
-          </Routes>
+          <div className="content">
+            <Routes>
+              <Route exact path="/" element={<Overview />} />
+              <Route path="/h2h" element={<HeadToHead />} />
+              <Route path="/standings" element={<Standings />} />
+              <Route path="/records" element={<Records />} />
+              <Route path="/drafts" element={<Drafts />} />
+            </Routes>
+          </div>
         </div>
       </HashRouter>
     );
