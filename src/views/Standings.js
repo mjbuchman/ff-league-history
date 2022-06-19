@@ -1,250 +1,12 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import "./css/standings.css";
+import "../css/standings.css";
 import FilterableTable from "react-filterable-table";
 import ReactTooltip from "react-tooltip";
-import LogoMB from "./logos/Michael Buchman.jpg";
-import LogoGD from "./logos/Grant Dakovich.jpg";
-import LogoBZ from "./logos/Brenden Zarrinnam.jpg";
-import LogoJP from "./logos/Joe Perry.jpg";
-import LogoJE from "./logos/James Earley.jpg";
-import LogoJS from "./logos/Jonathan Setzke.jpg";
-import LogoRR from "./logos/Ryan Rasmussen.jpg";
-import LogoTB from "./logos/Tyler Brown.jpg";
-import LogoNE from "./logos/Nick Eufrasio.jpg";
-import LogoCD from "./logos/Connor DeYoung.jpg";
-import LogoDef from "./logos/Wallerstein.jpg";
-import fPlace from "./logos/1st.png";
-import sPlace from "./logos/2nd.png";
-import tPlace from "./logos/3rd.png";
-
-// dictionary for image elements
-const img = {
-  "Michael Buchman": LogoMB,
-  "Grant Dakovich": LogoGD,
-  "Brenden Zarrinnam": LogoBZ,
-  "Joe Perry": LogoJP,
-  "James Earley": LogoJE,
-  "Jonathan Setzke": LogoJS,
-  "Ryan Rasmussen": LogoRR,
-  "Tyler Brown": LogoTB,
-  "Nick Eufrasio": LogoNE,
-  "Connor DeYoung": LogoCD,
-  "Zach Way": LogoDef,
-  "Sal DiVita": LogoDef,
-  1: fPlace,
-  2: sPlace,
-  3: tPlace,
-};
-
-// function passed into table that renders a trophy if final placement is top 3
-const renderTrophy = (props) => {
-  if (props.record.placement > 3) {
-    return <span>{props.record.placement}</span>;
-  } else {
-    return (
-      <span>
-        <img
-          src={img[props.record.placement]}
-          alt="table-trophy"
-          style={{ width: "30px", borderRadius: "100%" }}
-        ></img>
-      </span>
-    );
-  }
-};
-
-// function passed into table to render team logos
-const renderLogo = (props) => {
-  return (
-    <span>
-      <img
-        src={img[props.record.owner]}
-        alt="table-logo"
-        style={{ width: "40px", borderRadius: "100%" }}
-      ></img>
-    </span>
-  );
-};
-
-// table fields when displaying regular season standings
-let fields = [
-  {
-    name: "placement",
-    displayName: "Place",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "logo",
-    displayName: "Owner",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    render: renderLogo,
-  },
-  {
-    name: "owner",
-    displayName: "",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-  },
-  {
-    name: "gp",
-    displayName: "Games Played",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "win",
-    displayName: "Wins",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "loss",
-    displayName: "Losses",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "tie",
-    displayName: "Ties",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "pct",
-    displayName: "Win %",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "pf",
-    displayName: "PF",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "pa",
-    displayName: "PA",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-];
-
-// table fields when displaying final standings
-let fields2 = [
-  {
-    name: "placement",
-    displayName: "Place",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    render: renderTrophy,
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "logo",
-    displayName: "Owner",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    render: renderLogo,
-  },
-  {
-    name: "owner",
-    displayName: "",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-  },
-  {
-    name: "gp",
-    displayName: "Games Played",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "win",
-    displayName: "Wins",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "loss",
-    displayName: "Losses",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "tie",
-    displayName: "Ties",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "pct",
-    displayName: "Win %",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "pf",
-    displayName: "PF",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-  {
-    name: "pa",
-    displayName: "PA",
-    thClassName: "standings-th",
-    tdClassName: "standings-td",
-    inputFilterable: true,
-    exactFilterable: true,
-    sortable: true,
-  },
-];
+import {
+  standingsTableOptions1,
+  standingsTableOptions2,
+} from "../shared/Options.js";
 
 class Standings extends Component {
   constructor(props) {
@@ -374,7 +136,6 @@ class Standings extends Component {
       })
         .then((response) => response.json())
         .then((rows) => {
-          console.log(rows);
           rows[4].forEach((row) => (row.pct = row.pct.toFixed(3)));
 
           // sets place values to final standings, else uses regular season standings
@@ -416,7 +177,7 @@ class Standings extends Component {
             initialSort="placement"
             initialSortDir={true}
             data={this.state.data}
-            fields={fields}
+            fields={standingsTableOptions1}
             tableClassName="standings-table"
             trClassName="standings-tr"
             headerVisible={false}
@@ -432,7 +193,7 @@ class Standings extends Component {
             initialSort="placement"
             initialSortDir={true}
             data={this.state.data}
-            fields={fields2}
+            fields={standingsTableOptions2}
             tableClassName="standings-table"
             trClassName="standings-tr"
             headerVisible={false}
@@ -464,9 +225,9 @@ class Standings extends Component {
               >
                 Playoffs
               </button>
-              <a data-tip data-for="info">
+              <span data-tip data-for="info">
                 <i className="material-icons">help_outline</i>
-              </a>
+              </span>
               <ReactTooltip
                 id="info"
                 place="right"

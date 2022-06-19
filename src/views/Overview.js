@@ -1,75 +1,10 @@
 import React, { Component } from "react";
-import "./css/overview.css";
+import "../css/overview.css";
 import { Container, Row, Col } from "react-bootstrap";
 import ReactSpeedometer from "react-d3-speedometer";
 import { Line } from "react-chartjs-2";
-import LogoMB from "./logos/Michael Buchman.jpg";
-import LogoGD from "./logos/Grant Dakovich.jpg";
-import LogoBZ from "./logos/Brenden Zarrinnam.jpg";
-import LogoJP from "./logos/Joe Perry.jpg";
-import LogoJE from "./logos/James Earley.jpg";
-import LogoJS from "./logos/Jonathan Setzke.jpg";
-import LogoRR from "./logos/Ryan Rasmussen.jpg";
-import LogoTB from "./logos/Tyler Brown.jpg";
-import LogoNE from "./logos/Nick Eufrasio.jpg";
-import LogoCD from "./logos/Connor DeYoung.jpg";
-
-// dictionary for image elements
-const img = {
-  "Michael Buchman": LogoMB,
-  "Grant Dakovich": LogoGD,
-  "Brenden Zarrinnam": LogoBZ,
-  "Joe Perry": LogoJP,
-  "James Earley": LogoJE,
-  "Jonathan Setzke": LogoJS,
-  "Ryan Rasmussen": LogoRR,
-  "Tyler Brown": LogoTB,
-  "Nick Eufrasio": LogoNE,
-  "Connor DeYoung": LogoCD,
-};
-
-// dictionary for placement values
-const dict = {
-  1: "1st",
-  2: "2nd",
-  3: "3rd",
-  4: "4th",
-  5: "5th",
-  6: "6th",
-  7: "7th",
-  8: "8th",
-  9: "9th",
-  10: "10th",
-};
-
-// options for graph, establishes a multi-axis graph containing wins and points
-const options = {
-  scales: {
-    yAxes: [
-      {
-        type: "linear",
-        id: "y-axis-1",
-        display: true,
-        position: "left",
-        ticks: {
-          min: 0,
-          max: 16,
-        },
-      },
-      {
-        type: "linear",
-        id: "y-axis-2",
-        display: true,
-        position: "right",
-        ticks: {
-          min: 1200,
-          max: 2800,
-        },
-      },
-    ],
-  },
-  maintainAspectRatio: false,
-};
+import { imgDict, placeDict } from "../shared/Dicts.js";
+import { yearlyOptions } from "../shared/Options.js";
 
 class Overview extends Component {
   constructor(props) {
@@ -413,7 +348,7 @@ class Overview extends Component {
                     <Col>
                       <img
                         id="overview-logo"
-                        src={img[this.state.currOwner]}
+                        src={imgDict[this.state.currOwner]}
                         alt={this.state.currOwner}
                       ></img>
                       <h3>Owner</h3>
@@ -586,7 +521,7 @@ class Overview extends Component {
                       <h6>Best Placement</h6>
                       <div id="box">
                         <h1 id="small-mar">
-                          {dict[this.state.ownerVals.Best_Placement_RS]}
+                          {placeDict[this.state.ownerVals.Best_Placement_RS]}
                         </h1>
                       </div>
                     </div>
@@ -673,7 +608,7 @@ class Overview extends Component {
                       <h6>Best Placement</h6>
                       <div id="box">
                         <h1 id="small-mar">
-                          {dict[this.state.ownerVals.Best_Placement_Final]}
+                          {placeDict[this.state.ownerVals.Best_Placement_Final]}
                         </h1>
                       </div>
                     </div>
@@ -709,7 +644,7 @@ class Overview extends Component {
                 <Line
                   data={this.state.graphData}
                   height={500}
-                  options={options}
+                  options={yearlyOptions}
                 />
               </div>
             )} */}

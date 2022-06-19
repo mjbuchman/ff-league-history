@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Route, Routes, NavLink, HashRouter } from "react-router-dom";
-import Overview from "./Overview";
-import HeadToHead from "./HeadToHead";
-import Standings from "./Standings";
-import Records from "./Records";
-import Drafts from "./Drafts";
+import Overview from "./views/Overview";
+import HeadToHead from "./views/HeadToHead";
+import Standings from "./views/Standings";
+import Records from "./views/Records";
+import Drafts from "./views/Drafts";
 import "./css/main.css";
-import Logo from "./logos/Wallerstein.png";
+import Logo from "./images/logos/Wallerstein.png";
 import Pdf from "./docs/WFFL-Rules.pdf";
 import HamburgerMenu from "react-hamburger-menu";
 
