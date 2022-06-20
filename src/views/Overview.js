@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import "../css/overview.css";
 import { Container, Row, Col } from "react-bootstrap";
 import ReactSpeedometer from "react-d3-speedometer";
-import { Line } from "react-chartjs-2";
+import { Chart as ChartJS } from "chart.js/auto";
+import { Chart, Line } from "react-chartjs-2";
 import { imgDict, placeDict } from "../shared/Dicts.js";
 import { yearlyOptions, yearsPlayed } from "../shared/Options.js";
 
@@ -36,7 +37,7 @@ class Overview extends Component {
       pApp: [{ count: 0 }],
       weekHS: [{}, {}, {}, {}, [{ count: 0 }]],
       weekLS: [{}, {}, {}, {}, [{ count: 0 }]],
-      graphData: { labels: yearsPlayed },
+      graphData: { labels: yearsPlayed, datasets: [] },
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -161,7 +162,7 @@ class Overview extends Component {
             lineTension: 0,
             backgroundColor: "rgb(255, 99, 132)",
             borderColor: "rgba(255, 99, 132)",
-            yAxisID: "y-axis-1",
+            yAxisID: "y1",
           },
           {
             label: "Points For",
@@ -170,7 +171,7 @@ class Overview extends Component {
             lineTension: 0,
             backgroundColor: "rgb(54, 162, 235)",
             borderColor: "rgba(54, 162, 235)",
-            yAxisID: "y-axis-2",
+            yAxisID: "y2",
           },
         ],
       },
@@ -559,7 +560,7 @@ class Overview extends Component {
         <Row>
           <Col>
             <h4>Yearly Performance</h4>
-            {/* {!this.state.refreshing && (
+            {!this.state.refreshing && (
               <div id="box">
                 <Line
                   data={this.state.graphData}
@@ -567,7 +568,7 @@ class Overview extends Component {
                   options={yearlyOptions}
                 />
               </div>
-            )} */}
+            )}
           </Col>
         </Row>
       </Container>

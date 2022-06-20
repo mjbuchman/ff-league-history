@@ -10,28 +10,23 @@ export const yearsPlayed = ["2017", "2018", "2019", "2020", "2021"];
 //----------------------------------------
 export const yearlyOptions = {
   scales: {
-    yAxes: [
-      {
-        type: "linear",
-        id: "y-axis-1",
-        display: true,
-        position: "left",
-        ticks: {
-          min: 0,
-          max: 16,
-        },
+    y1: {
+      type: "linear",
+      display: true,
+      position: "left",
+      min: 0,
+      max: 16,
+    },
+    y2: {
+      type: "linear",
+      display: true,
+      position: "right",
+      min: 1200,
+      max: 2800,
+      grid: {
+        drawOnChartArea: false, // only want the grid lines for one axis to show up
       },
-      {
-        type: "linear",
-        id: "y-axis-2",
-        display: true,
-        position: "right",
-        ticks: {
-          min: 1200,
-          max: 2800,
-        },
-      },
-    ],
+    },
   },
   maintainAspectRatio: false,
 };
