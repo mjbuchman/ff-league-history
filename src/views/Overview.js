@@ -4,7 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import ReactSpeedometer from "react-d3-speedometer";
 import { Line } from "react-chartjs-2";
 import { imgDict, placeDict } from "../shared/Dicts.js";
-import { yearlyOptions } from "../shared/Options.js";
+import { yearlyOptions, yearsPlayed } from "../shared/Options.js";
 
 class Overview extends Component {
   constructor(props) {
@@ -36,10 +36,10 @@ class Overview extends Component {
       pApp: [{ count: 0 }],
       weekHS: [{}, {}, {}, {}, [{ count: 0 }]],
       weekLS: [{}, {}, {}, {}, [{ count: 0 }]],
-      graphData: { labels: ["2017", "2018", "2019", "2020"] },
+      graphData: { labels: yearsPlayed },
     };
 
-    this.queryDB = this.queryDB.bind(this);
+    this.fetchData = this.fetchData.bind(this);
     this.getOwners = this.getOwners.bind(this);
     this.setOwnerVals = this.setOwnerVals.bind(this);
     this.updateValues = this.updateValues.bind(this);
@@ -56,19 +56,10 @@ class Overview extends Component {
   /**
    * Function to query the database and set the state value of the given field
    * @param field - The field in this.state to be set by query result
-   * @param query - The query to be sent to the backend
+   * @param route - The backend endpoint to hit
    */
-  queryDB(field, query) {
-    fetch("/api/db", {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: query,
-      }),
-    })
+  fetchData(field, route) {
+    fetch(route)
       .then((response) => response.json())
       .then((rows) => {
         if (field === "owners")
@@ -88,7 +79,7 @@ class Overview extends Component {
 
   // Gets owner data from Owners table to populate dropdown menu
   getOwners() {
-    this.queryDB("owners", "select * from Owners");
+    this.fetchData("owners", "/owners");
   }
 
   /**
@@ -114,54 +105,18 @@ class Overview extends Component {
 
   // Queries database for all relevant data in main overview, regular season performance and playoff performance, then stores them in appropriate state fields
   getMainTables() {
-    this.queryDB(
-      "seasons",
-      `select count(distinct year) as count from Matchups where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`
-    );
-    this.queryDB(
-      "gp",
-      `select count(*) as count from Matchups where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`
-    );
-    this.queryDB(
-      "games",
-      `select * from Matchups where home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}"`
-    );
-    this.queryDB(
-      "tpf",
-      `select sum(score) as tpf from (Select sum(Home_score) as score from Matchups where Home_Team = "${this.state.currOwner}" UNION Select sum(Away_score) as score from Matchups where Away_Team = "${this.state.currOwner}") as points`
-    );
-    this.queryDB(
-      "tpa",
-      `select sum(score) as tpa from (Select sum(Away_score) as score from Matchups where Home_Team = "${this.state.currOwner}" UNION Select sum(Home_score) as score from Matchups where Away_Team = "${this.state.currOwner}") as points`
-    );
-    this.queryDB(
-      "highScore",
-      `Select Year, Week, Score from (Select Year, Week, Home_score as Score from Matchups where Home_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE" UNION Select Year, Week, Away_Score as Score from Matchups where Away_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE") as scores order by Score DESC limit 1`
-    );
-    this.queryDB(
-      "lowScore",
-      `Select Year, Week, Score from (Select Year, Week, Home_score as Score from Matchups where Home_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE" UNION Select Year, Week, Away_Score as Score from Matchups where Away_Team = "${this.state.currOwner}" AND Regular_Season = "TRUE") as scores order by Score ASC limit 1`
-    );
-    this.queryDB(
-      "bwm",
-      `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${this.state.currOwner}" AND Home_Score > Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${this.state.currOwner}" AND Away_Score > Home_Score) as margins order by Margin desc limit 1`
-    );
-    this.queryDB(
-      "swm",
-      `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${this.state.currOwner}" AND Home_Score > Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${this.state.currOwner}" AND Away_Score > Home_Score) as margins order by Margin asc limit 1`
-    );
-    this.queryDB(
-      "blm",
-      `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${this.state.currOwner}" AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${this.state.currOwner}" AND Away_Score < Home_Score) as margins order by Margin asc limit 1`
-    );
-    this.queryDB(
-      "slm",
-      `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${this.state.currOwner}" AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${this.state.currOwner}" AND Away_Score < Home_Score) as margins order by Margin desc limit 1`
-    );
-    this.queryDB(
-      "pApp",
-      `select count(distinct year) as count from Matchups where (home_team = "${this.state.currOwner}" OR away_team = "${this.state.currOwner}") AND Playoff = "TRUE"`
-    );
+    this.fetchData("seasons", `/overview/seasons/${this.state.currOwner}`);
+    this.fetchData("gp", `/overview/gp/${this.state.currOwner}`);
+    this.fetchData("games", `/overview/games/${this.state.currOwner}`);
+    this.fetchData("tpf", `/overview/tpf/${this.state.currOwner}`);
+    this.fetchData("tpa", `/overview/tpa/${this.state.currOwner}`);
+    this.fetchData("highScore", `/overview/highScore/${this.state.currOwner}`);
+    this.fetchData("lowScore", `/overview/lowScore/${this.state.currOwner}`);
+    this.fetchData("bwm", `/overview/bwm/${this.state.currOwner}`);
+    this.fetchData("swm", `/overview/swm/${this.state.currOwner}`);
+    this.fetchData("blm", `/overview/blm/${this.state.currOwner}`);
+    this.fetchData("slm", `/overview/slm/${this.state.currOwner}`);
+    this.fetchData("pApp", `/overview/playoffs/${this.state.currOwner}`);
   }
 
   /**
@@ -197,7 +152,7 @@ class Overview extends Component {
 
     this.setState({
       graphData: {
-        labels: ["2017", "2018", "2019", "2020"],
+        labels: yearsPlayed,
         datasets: [
           {
             label: "Wins",
@@ -273,43 +228,8 @@ class Overview extends Component {
 
   // Query the database to find the number of weeks the current Owner high scored and low scored
   getWeeklyData() {
-    this.queryDB(
-      "weekHS",
-      ` drop temporary table if exists results;
-        drop temporary table if exists results2;
-        
-        Create temporary table results
-        select year, week, home_team as owner, home_score as score from Matchups where Home_Score > Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score < Away_Score;
-        
-        Create temporary table results2 select * from results;
-        
-        select count(*) as count from 
-        (select a.year, a.week, a.score, a.owner
-        from results a
-        inner join
-        (select year, week, max(score) as score from results2 group by year, week) b
-        on a.year = b.year AND a.week = b.week AND a.score = b.score) as res where owner = "${this.state.currOwner}"
-        `
-    );
-
-    this.queryDB(
-      "weekLS",
-      `drop temporary table if exists results;
-        drop temporary table if exists results2;
-        
-        Create temporary table results
-        select year, week, home_team as owner, home_score as score from Matchups where Home_Score < Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score > Away_Score;
-        
-        Create temporary table results2 select * from results;
-        
-        select count(*) as count from 
-        (select a.year, a.week, a.score, a.owner
-        from results a
-        inner join
-        (select year, week, min(score) as score from results2 group by year, week) b
-        on a.year = b.year AND a.week = b.week AND a.score = b.score) as res where owner = "${this.state.currOwner}"
-        `
-    );
+    this.fetchData("weekHS", `/overview/weekHS/${this.state.currOwner}`);
+    this.fetchData("weekLS", `/overview/weekLS/${this.state.currOwner}`);
   }
 
   // Handler for a current owner change which also triggers data refresh

@@ -34,7 +34,7 @@ class HeadToHead extends Component {
 
     this.handleOwnerChange1 = this.handleOwnerChange1.bind(this);
     this.handleOwnerChange2 = this.handleOwnerChange2.bind(this);
-    this.queryDB = this.queryDB.bind(this);
+    this.fetchData = this.fetchData.bind(this);
     this.updateValues = this.updateValues.bind(this);
     this.hlScore = this.hlScore.bind(this);
     this.highMargin = this.highMargin.bind(this);
@@ -42,26 +42,17 @@ class HeadToHead extends Component {
   }
 
   componentDidMount() {
-    this.queryDB("owners", `select * from Owners`, false);
+    this.fetchData("owners", "/owners", false);
   }
 
   /**
    * Function to query the database and set the state value of the given field
    * @param field - The field in this.state to be set by query result
-   * @param query - The query to be sent to the backend
+   * @param route - The backend endpoint to hit
    * @param singleVal - boolean flag to determine the type of query
    */
-  queryDB(field, query, singleVal) {
-    fetch("/api/db", {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: query,
-      }),
-    })
+  fetchData(field, route, singleVal) {
+    fetch(route)
       .then((response) => response.json())
       .then((rows) => {
         if (field === "matchups")
@@ -148,8 +139,11 @@ class HeadToHead extends Component {
   // Updates matchup data when two unique users have been selected
   usersSelected() {
     if (this.state.currOwner1 !== "" && this.state.currOwner2 !== "") {
-      var query = `select * from Matchups where (home_team = "${this.state.currOwner1}" OR home_team = "${this.state.currOwner2}") AND (away_team = "${this.state.currOwner1}" OR away_team = "${this.state.currOwner2}") `;
-      this.queryDB("matchups", query, false);
+      this.fetchData(
+        "matchups",
+        `/h2h/matchups/${this.state.currOwner1}/${this.state.currOwner2}`,
+        false
+      );
     }
   }
 
@@ -212,25 +206,11 @@ class HeadToHead extends Component {
     if (high) type = "max";
 
     if (this.state.currOwner1 !== "" && this.state.currOwner2 !== "") {
-      var query = `drop temporary table if exists h2h;
-                            drop temporary table if exists h2h2;
-                            create temporary table h2h
-                                Select Year, Week, Home_Score as score from (
-                                    select * from Matchups where home_team = "${owner1}" AND away_team = "${owner2}" AND Two_Week = "${double}"
-                                ) as x
-                                UNION
-                                Select Year, Week, Away_Score as score from (
-                                    select * from Matchups where away_team = "${owner1}" AND home_team = "${owner2}" AND Two_Week = "${double}"
-                                ) as y;
-                                
-                            create temporary table h2h2 select * from h2h;
-                            
-                            select a.year, a.week, a.score
-                            from h2h a
-                            inner join
-                            (select year, week, ${type}(score) as score from h2h2) b
-                            on a.score = b.score;`;
-      this.queryDB(field, query, true);
+      this.fetchData(
+        field,
+        `/h2h/matchups/${owner1}/${owner2}/${double}/${type}`,
+        true
+      );
     }
   }
 

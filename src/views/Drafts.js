@@ -3,6 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import "../css/drafts.css";
 import FilterableTable from "react-filterable-table";
 import {
+  yearsPlayed,
   fullDraftOptions,
   indvidualDraftOptions,
   draftRankOptions,
@@ -13,7 +14,7 @@ class Drafts extends Component {
     super(props);
     this.state = {
       currOwner: "All Owners",
-      currDate: "2020",
+      currDate: yearsPlayed[yearsPlayed.length - 1],
       seasons: [],
       owners: [],
       draftData: [],
@@ -49,19 +50,10 @@ class Drafts extends Component {
   /**
    * Function to query the database and set the state value of the given field
    * @param field - The field in this.state to be set by query result
-   * @param query - The query to be sent to the backend
+   * @param route - The backend endpoint to hit
    */
-  queryDB(field, query) {
-    fetch("/api/db", {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: query,
-      }),
-    })
+  fetchData(field, route) {
+    fetch(route)
       .then((response) => response.json())
       .then((rows) => {
         if (field === "draftData")
@@ -72,18 +64,12 @@ class Drafts extends Component {
 
   // Queries database to find distinct seasons
   getDropdownValues() {
-    this.queryDB(
-      "seasons",
-      `select distinct Year from Drafts order by Year desc`
-    );
-    this.queryDB("owners", `select * from Owners`);
+    this.fetchData("seasons", "/drafts");
+    this.fetchData("owners", "/owners");
   }
 
   updateTableData() {
-    this.queryDB(
-      "draftData",
-      `select * from Drafts where Year = ${this.state.currDate}`
-    );
+    this.fetchData("draftData", `/drafts/${this.state.currDate}`);
   }
 
   calculatePlayerValues() {
@@ -217,12 +203,14 @@ class Drafts extends Component {
       this.calculateOwnerDraftGrades(ownerDraftValues);
 
     biggestSteal = skillPlayer ? skillPlayer : nonSkillPlayer;
+    var dataFlag = this.state.draftData.length !== 0;
     this.setState({
       ovrSuperlatives: {
         biggestSteal: biggestSteal,
         biggestBust: biggestBust,
       },
       sortedODV: sortedOwnerDraftValues,
+      validData: dataFlag,
     });
   }
 
