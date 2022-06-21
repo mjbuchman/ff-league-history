@@ -24,6 +24,9 @@ import iconCm from "../images/letter-icons/C-.png";
 import iconD from "../images/letter-icons/D.png";
 import iconF from "../images/letter-icons/F.png";
 
+export const yearsPlayed = ["2017", "2018", "2019", "2020", "2021"];
+export const yearsCompleted = ["2017", "2018", "2019", "2020"]; // Requires final standings in db
+
 export const imgDict = {
   "Michael Buchman": LogoMB,
   "Grant Dakovich": LogoGD,

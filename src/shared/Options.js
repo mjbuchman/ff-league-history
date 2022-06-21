@@ -1,11 +1,6 @@
 import { imgDict, gradeDict } from "./Dicts.js";
 
 //----------------------------------------
-//  SHARED
-//----------------------------------------
-export const yearsPlayed = ["2017", "2018", "2019", "2020", "2021"];
-
-//----------------------------------------
 //  OVERVIEW
 //----------------------------------------
 export const yearlyOptions = {
@@ -21,8 +16,8 @@ export const yearlyOptions = {
       type: "linear",
       display: true,
       position: "right",
-      min: 1200,
-      max: 2800,
+      min: 0,
+      max: 3000,
       grid: {
         drawOnChartArea: false, // only want the grid lines for one axis to show up
       },
@@ -35,7 +30,7 @@ export const yearlyOptions = {
 //  STANDINGS
 //----------------------------------------
 
-export const renderTrophy = (props) => {
+export const renderTrophyStandings = (props) => {
   if (props.record.placement > 3) {
     return <span>{props.record.placement}</span>;
   } else {
@@ -51,7 +46,7 @@ export const renderTrophy = (props) => {
   }
 };
 
-export const renderLogo = (props) => {
+export const renderLogoStandings = (props) => {
   return (
     <span>
       <img
@@ -78,7 +73,7 @@ export const standingsTableOptions1 = [
     displayName: "Owner",
     thClassName: "standings-th",
     tdClassName: "standings-td",
-    render: renderLogo,
+    render: renderLogoStandings,
   },
   {
     name: "owner",
@@ -157,7 +152,7 @@ export const standingsTableOptions2 = [
     displayName: "Place",
     thClassName: "standings-th",
     tdClassName: "standings-td",
-    render: renderTrophy,
+    render: renderTrophyStandings,
     inputFilterable: true,
     exactFilterable: true,
     sortable: true,
@@ -167,7 +162,7 @@ export const standingsTableOptions2 = [
     displayName: "Owner",
     thClassName: "standings-th",
     tdClassName: "standings-td",
-    render: renderLogo,
+    render: renderLogoStandings,
   },
   {
     name: "owner",

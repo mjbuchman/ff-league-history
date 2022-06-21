@@ -3,11 +3,11 @@ import { Container, Row, Col } from "react-bootstrap";
 import "../css/drafts.css";
 import FilterableTable from "react-filterable-table";
 import {
-  yearsPlayed,
   fullDraftOptions,
   indvidualDraftOptions,
   draftRankOptions,
 } from "../shared/Options";
+import { yearsPlayed } from "../shared/Dicts.js";
 
 class Drafts extends Component {
   constructor(props) {

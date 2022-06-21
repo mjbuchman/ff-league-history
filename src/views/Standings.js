@@ -7,6 +7,7 @@ import {
   standingsTableOptions1,
   standingsTableOptions2,
 } from "../shared/Options.js";
+import { yearsPlayed, yearsCompleted } from "../shared/Dicts.js";
 
 class Standings extends Component {
   constructor(props) {
@@ -16,11 +17,10 @@ class Standings extends Component {
       playoff: { val: true, id: "clicked" },
       data: [],
       currDate: "All-Time",
-      seasons: [],
+      seasons: yearsPlayed,
       finalStandings: [],
     };
 
-    this.getSeasons = this.getSeasons.bind(this);
     this.getFinalStandings = this.getFinalStandings.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleButtonClick = this.handleButtonClick.bind(this);
@@ -30,7 +30,6 @@ class Standings extends Component {
 
   componentDidMount() {
     this.getFinalStandings();
-    this.getSeasons();
     this.updateTableData();
   }
 
@@ -49,7 +48,7 @@ class Standings extends Component {
           // sets place values to final standings, else uses regular season standings
           if (
             this.state.currDate !== "All-Time" &&
-            this.state.currDate !== String(new Date().getFullYear()) &&
+            yearsCompleted.includes(this.state.currDate) &&
             this.state.playoff.val
           ) {
             rows[4].forEach((row) =>
@@ -71,11 +70,6 @@ class Standings extends Component {
           this.setState({ [field]: rows });
         }
       });
-  }
-
-  // Queries database to find distinct seasons
-  getSeasons() {
-    this.fetchData("seasons", "/seasons");
   }
 
   // Queries database for all final standings data
@@ -122,7 +116,7 @@ class Standings extends Component {
     if (
       !this.state.playoff.val ||
       this.state.currDate === "All-Time" ||
-      this.state.currDate === String(new Date().getFullYear())
+      !yearsCompleted.includes(this.state.currDate)
     ) {
       return (
         <div id="box-scrollable">
@@ -200,8 +194,8 @@ class Standings extends Component {
                 <option value="All-Time">All-Time</option>
                 {this.state.seasons.map(function (season, i) {
                   return (
-                    <option value={season.Year} key={i}>
-                      {season.Year}
+                    <option value={season} key={i}>
+                      {season}
                     </option>
                   );
                 })}

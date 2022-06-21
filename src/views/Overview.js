@@ -4,8 +4,8 @@ import { Container, Row, Col } from "react-bootstrap";
 import ReactSpeedometer from "react-d3-speedometer";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Chart, Line } from "react-chartjs-2";
-import { imgDict, placeDict } from "../shared/Dicts.js";
-import { yearlyOptions, yearsPlayed } from "../shared/Options.js";
+import { imgDict, placeDict, yearsPlayed } from "../shared/Dicts.js";
+import { yearlyOptions } from "../shared/Options.js";
 
 class Overview extends Component {
   constructor(props) {
@@ -129,7 +129,7 @@ class Overview extends Component {
     var index = 0;
     var wins = [];
     var points = [];
-    this.state.games.forEach(function (game, i) {
+    this.state.games.forEach(function (game, i, games) {
       // After 14 games a new season begins
       if (i % 14 === 0) {
         // Dont start a new season/array entry if it's the first Matchup
@@ -139,6 +139,13 @@ class Overview extends Component {
         }
         wins.push(0);
         points.push(0);
+
+        // edge case handler to add a blank array value for years skipped i.e. Connor/Tyler 2020
+        if (i > 0 && game.Year - games[i - 1].Year !== 1) {
+          wins.push(0);
+          points.push(0);
+          index++;
+        }
       }
 
       // Find wins and points scored accross all Matchup entries

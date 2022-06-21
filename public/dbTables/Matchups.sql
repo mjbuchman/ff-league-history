@@ -264,7 +264,7 @@ INSERT INTO Matchups VALUES
 INSERT INTO Matchups VALUES
     (2020,7,'Ryan Rasmussen',108.98,'Brenden Zarrinnam',121.92,'FALSE','FALSE', 'TRUE'),
     (2020,7,'Nick Eufrasio',110.72,'Joe Perry',153,'FALSE','FALSE', 'TRUE'),
-    (2020,8,'Michael Buchman',122.52,'Brenden Zarrinam',91.02,'FALSE','FALSE', 'TRUE'),
+    (2020,8,'Michael Buchman',122.52,'Brenden Zarrinnam',91.02,'FALSE','FALSE', 'TRUE'),
     (2020,8,'Jonathan Setzke',126.92,'Grant Dakovich',98.94,'FALSE','FALSE', 'TRUE'),
     (2020,8,'James Earley',101.82,'Joe Perry',133.74,'FALSE','FALSE', 'TRUE'),
     (2020,8,'Ryan Rasmussen',141.86,'Nick Eufrasio',98.34,'FALSE','FALSE', 'TRUE'),
