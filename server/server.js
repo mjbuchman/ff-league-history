@@ -1,8 +1,10 @@
 const path = require("path");
 const express = require("express");
 const mysql = require("mysql");
+var bodyParser = require("body-parser");
 
 const app = express();
+var jsonParser = bodyParser.json();
 
 // use local host or heroku specified port
 const port = process.env.PORT || 5000;
@@ -282,5 +284,24 @@ app.get("/drafts", (req, res) => {
 
 app.get("/drafts/:year", (req, res) => {
   var query = `select * from Drafts where Year = ${req.params.year}`;
+  queryDB(res, query);
+});
+
+//----------------------------------
+//  ADMIN
+//----------------------------------
+app.get("/deleteMatchups/:year/:start/:end", (req, res) => {
+  var query = `DELETE from Matchups where Year = ${req.params.year} AND Week >= ${req.params.start} AND Week <= ${req.params.end}`;
+  queryDB(res, query);
+});
+
+app.post("/updateMatchups", jsonParser, (req, res) => {
+  var query = "INSERT INTO Matchups VALUES";
+  query += req.body.matchups.map((week) => {
+    return week.map((matchup) => {
+      return ` (\"${matchup.year}\", \"${matchup.week}\", \"${matchup.homeTeam}\", \"${matchup.homeScore}\", \"${matchup.awayTeam}\", \"${matchup.awayScore}\", \"${matchup.playoff}\", \"${matchup.twoWeek}\", \"${matchup.regularSeason}\") `;
+    });
+  });
+  query = query.slice(0, -1) + ";";
   queryDB(res, query);
 });

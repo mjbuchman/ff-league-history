@@ -48,6 +48,7 @@ class Overview extends Component {
     this.getGraphData = this.getGraphData.bind(this);
     this.getRecordDate = this.getRecordData.bind(this);
     this.handleOwnerChange = this.handleOwnerChange.bind(this);
+    this.renderRings = this.renderRings.bind(this);
   }
 
   componentDidMount() {
@@ -248,6 +249,12 @@ class Overview extends Component {
     );
   };
 
+  renderRings() {
+    return this.state.ownerVals.Championships === 0 ? null : (
+      <img id="ring-logo" src={imgDict["Ring"]} alt="Ring"></img>
+    );
+  }
+
   render() {
     return (
       <Container fluid>
@@ -281,15 +288,16 @@ class Overview extends Component {
                       ></img>
                       <h3>Owner</h3>
                       <h2 id="owner">{this.state.currOwner}</h2>
+                      {this.renderRings()}
                     </Col>
                   </Row>
                   <Row>
                     <Col md={4} id="top-padded">
-                      <h3>Seasons Played</h3>
+                      <h3>Seasons</h3>
                       <h2>{this.state.seasons[0].count}</h2>
                     </Col>
                     <Col md={4} id="top-padded">
-                      <h3>Games Played</h3>
+                      <h3>Games</h3>
                       <h2>{this.state.gp[0].count}</h2>
                     </Col>
                     <Col md={4} id="top-padded">
@@ -523,7 +531,7 @@ class Overview extends Component {
                   </Col>
                 </Row>
                 <Row>
-                  <Col md={3} id="center-align">
+                  <Col md={4} id="center-align">
                     <div className="stats-box">
                       <h6>Playoff Appearances</h6>
                       <div id="box">
@@ -531,7 +539,7 @@ class Overview extends Component {
                       </div>
                     </div>
                   </Col>
-                  <Col md={3} id="center-align">
+                  <Col md={4} id="center-align">
                     <div className="stats-box">
                       <h6>Best Placement</h6>
                       <div id="box">
@@ -541,21 +549,11 @@ class Overview extends Component {
                       </div>
                     </div>
                   </Col>
-                  <Col md={3} id="center-align">
+                  <Col md={4} id="center-align">
                     <div className="stats-box">
                       <h6>Championship Appearances</h6>
                       <div id="box">
                         <h1 id="small-mar">{this.state.ownerVals.Champ_App}</h1>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col md={3} id="center-align">
-                    <div className="stats-box">
-                      <h6>Championships</h6>
-                      <div id="box">
-                        <h1 id="small-mar">
-                          {this.state.ownerVals.Championships}
-                        </h1>
                       </div>
                     </div>
                   </Col>

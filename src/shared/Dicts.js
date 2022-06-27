@@ -12,6 +12,7 @@ import LogoDef from "../images/logos/Wallerstein.jpg";
 import fPlace from "../images/trophies/1st.png";
 import sPlace from "../images/trophies/2nd.png";
 import tPlace from "../images/trophies/3rd.png";
+import Ring from "../images/trophies/Ring.png";
 import iconAp from "../images/letter-icons/A+.png";
 import iconA from "../images/letter-icons/A.png";
 import iconAm from "../images/letter-icons/A-.png";
@@ -44,6 +45,7 @@ export const imgDict = {
   1: fPlace,
   2: sPlace,
   3: tPlace,
+  Ring: Ring,
 };
 
 export const gradeDict = {

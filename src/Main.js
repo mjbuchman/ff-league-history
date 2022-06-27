@@ -5,6 +5,8 @@ import HeadToHead from "./views/HeadToHead";
 import Standings from "./views/Standings";
 import Records from "./views/Records";
 import Drafts from "./views/Drafts";
+import HallOfFame from "./views/HallOfFame";
+import Admin from "./views/Admin";
 import "./css/main.css";
 import Logo from "./images/logos/Wallerstein.png";
 import Pdf from "./docs/WFFL-Rules.pdf";
@@ -15,7 +17,7 @@ class Main extends Component {
     super(props);
     this.state = {
       open: false,
-      position: "-400px",
+      position: "-600px",
       height: 0,
       width: 0,
     };
@@ -40,7 +42,7 @@ class Main extends Component {
 
   // Handler for the hamburger menu, closes/opens menu dpending on previous button state
   handleClick() {
-    if (this.state.open) this.setState({ position: "-400px" });
+    if (this.state.open) this.setState({ position: "-600px" });
     else this.setState({ position: "0px" });
     this.setState({ open: !this.state.open });
   }
@@ -97,6 +99,11 @@ class Main extends Component {
                 </NavLink>
               </li>
               <li>
+                <NavLink to="/halloffame" replace>
+                  <i className="material-icons">emoji_events</i>Hall Of Fame
+                </NavLink>
+              </li>
+              <li>
                 <a href={Pdf} target="_blank" without rel="noopener noreferrer">
                   <i className="material-icons">menu_book</i>Rulebook
                 </a>
@@ -129,6 +136,16 @@ class Main extends Component {
                 Drafts
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/halloffame" replace onClick={this.handleClick}>
+                Hall Of Fame
+              </NavLink>
+            </li>
+            <li>
+              <a href={Pdf} target="_blank" without rel="noopener noreferrer">
+                Rulebook
+              </a>
+            </li>
           </ul>
           <div className="content">
             <Routes>
@@ -137,6 +154,8 @@ class Main extends Component {
               <Route path="/standings" element={<Standings />} />
               <Route path="/records" element={<Records />} />
               <Route path="/drafts" element={<Drafts />} />
+              <Route path="/halloffame" element={<HallOfFame />} />
+              <Route path="/tools/admin" element={<Admin />} />
             </Routes>
           </div>
         </div>
