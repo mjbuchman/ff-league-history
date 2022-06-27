@@ -196,9 +196,15 @@ app.get("/standings/:year/:regSeason/:playoff", (req, res) => {
     exclude = "";
   }
 
+  console.log(req.params.regSeason + " | " + req.params.playoff);
   // add regular season and playoff values to query
-  let clause = `Regular_Season = "${req.params.regSeason}" AND Playoff = "${req.params.playoff}"${dateClause}`;
-  if (req.params.regSeason && req.params.playoff) clause = `true${dateClause}`;
+  if (req.params.regSeason === "true" && req.params.playoff === "true") {
+    var clause = `true${dateClause}`;
+  } else {
+    var regSeason = req.params.regSeason.toUpperCase();
+    var playoff = req.params.playoff.toUpperCase();
+    var clause = `Regular_Season = "${regSeason}" AND Playoff = "${playoff}"${dateClause}`;
+  }
 
   var query = `
     drop temporary table if exists WinLoss;
@@ -215,6 +221,7 @@ app.get("/standings/:year/:regSeason/:playoff", (req, res) => {
         
         select 0 as placement, Points.owner as owner, win+loss AS gp, win, loss, 0 AS tie, win/(win+loss) AS pct, pf, pa from WinLoss inner join Points on (WinLoss.owner = Points.owner) ${exclude} order by pct desc, pf desc;
     `;
+  console.log(query);
   queryDB(res, query);
 });
 
