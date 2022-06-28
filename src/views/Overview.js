@@ -64,8 +64,14 @@ class Overview extends Component {
     fetch(route)
       .then((response) => response.json())
       .then((rows) => {
-        if (field === "owners")
+        if (field === "owners") {
+          // Inefficient, petty and entirely unneccessary sort to put me first :D
+          var bestOwner = "Michael Buchman";
+          rows.sort(function (x, y) {
+            return x.Owner === bestOwner ? -1 : y.Owner === bestOwner ? 1 : 0;
+          });
           this.setState({ [field]: rows }, this.updateValues);
+        }
         // set on refresh, triggers the initial data update
         else if (field === "games")
           this.setState({ [field]: rows }, this.getRecordData);
@@ -128,18 +134,17 @@ class Overview extends Component {
   getGraphData() {
     var currOwner = this.state.currOwner;
     var index = 0;
-    var wins = [];
-    var points = [];
+    var wins = [0];
+    var leagueWins = [0];
+    var points = [0];
     this.state.games.forEach(function (game, i, games) {
-      // After 14 games a new season begins
-      if (i % 14 === 0) {
-        // Dont start a new season/array entry if it's the first Matchup
-        if (i !== 0) {
-          points[index] = points[index].toFixed(2);
-          index++;
-        }
+      // Begin new season
+      if (i > 0 && game.Year !== games[i - 1].Year) {
+        leagueWins[index] /= 2;
+        leagueWins.push(0);
         wins.push(0);
         points.push(0);
+        index++;
 
         // edge case handler to add a blank array value for years skipped i.e. Connor/Tyler 2020
         if (i > 0 && game.Year - games[i - 1].Year !== 1) {
@@ -150,6 +155,7 @@ class Overview extends Component {
       }
 
       // Find wins and points scored accross all Matchup entries
+      leagueWins[index] += 1;
       if (game.Home_Team === currOwner) {
         points[index] += game.Home_Score;
         if (game.Home_Score > game.Away_Score) wins[index]++;
@@ -158,6 +164,7 @@ class Overview extends Component {
         if (game.Home_Score < game.Away_Score) wins[index]++;
       }
     });
+    leagueWins[index] /= 2;
 
     this.setState({
       graphData: {
@@ -170,6 +177,15 @@ class Overview extends Component {
             lineTension: 0,
             backgroundColor: "rgb(255, 99, 132)",
             borderColor: "rgba(255, 99, 132)",
+            yAxisID: "y1",
+          },
+          {
+            label: "League Avg Wins",
+            data: leagueWins,
+            fill: false,
+            lineTension: 0,
+            backgroundColor: "rgb(196, 77, 86)",
+            borderColor: "rgba(196, 77, 86)",
             yAxisID: "y1",
           },
           {

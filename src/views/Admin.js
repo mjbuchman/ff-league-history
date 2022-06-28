@@ -8,6 +8,7 @@ class Admin extends Component {
     super(props);
     this.state = {
       matchups: [],
+      draft: [],
       startWeek: 1,
       endWeek: 1,
       startWeekDelete: 1,
@@ -21,8 +22,10 @@ class Admin extends Component {
 
     this.getMatchupData = this.getMatchupData.bind(this);
     this.setMatchupTypes = this.setMatchupTypes.bind(this);
-    this.postData = this.postData.bind(this);
-    this.deleteData = this.deleteData.bind(this);
+    this.postMatchups = this.postMatchups.bind(this);
+    this.deleteMatchups = this.deleteMatchups.bind(this);
+    this.getDraftData = this.getDraftData.bind(this);
+    this.postDrafts = this.postDrafts.bind(this);
     this.runLuckBot = this.runLuckBot.bind(this);
     this.handleCurrWeekChange = this.handleCurrWeekChange.bind(this);
     this.handleCurrYearChange = this.handleCurrYearChange.bind(this);
@@ -47,6 +50,7 @@ class Admin extends Component {
       .then((rows) => {
         if (field === "matchups")
           this.setState({ [field]: rows }, this.setMatchupTypes);
+        else if (field === "draft") this.setState({ [field]: rows });
         else {
           //check response here
         }
@@ -77,7 +81,7 @@ class Admin extends Component {
     this.setState({ matchups: matchupData });
   }
 
-  postData() {
+  postMatchups() {
     fetch("/updateMatchups", {
       method: "post",
       headers: {
@@ -94,10 +98,37 @@ class Admin extends Component {
       });
   }
 
-  deleteData() {
+  deleteMatchups() {
     fetch(
       `/deleteMatchups/${this.state.year}/${this.state.startWeek}/${this.state.endWeek}`
     )
+      .then((response) => response.json())
+      .then((rows) => {
+        //handle response
+      });
+  }
+
+  getDraftData() {
+    this.fetchAPI(
+      "draft",
+      "/getDraftData?",
+      new URLSearchParams({
+        year: this.state.year,
+      })
+    );
+  }
+
+  postDrafts() {
+    fetch("/updateDrafts", {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        draft: this.state.draft,
+      }),
+    })
       .then((response) => response.json())
       .then((rows) => {
         //handle response
@@ -243,7 +274,7 @@ class Admin extends Component {
             </Col>
 
             <Col>
-              <button onClick={this.deleteData}>Delete Data</button>
+              <button onClick={this.deleteMatchups}>Delete Data</button>
             </Col>
           </Row>
         </Row>
@@ -272,7 +303,7 @@ class Admin extends Component {
               <button onClick={this.toggleRefresh}>Refresh</button>
             </Col>
             <Col>
-              <button onClick={this.postData}>Post Data</button>
+              <button onClick={this.postMatchups}>Post Data</button>
             </Col>
           </Row>
           {this.state.matchups.map(function (week, i) {
@@ -371,6 +402,62 @@ class Admin extends Component {
               </Row>
             );
           })}
+        </Row>
+        <Row>
+          <header>Add Drafts</header>
+          <Row>
+            <Col>
+              <select id="seasons" onChange={this.handleSeasonChange()}>
+                {yearOpts}
+              </select>
+            </Col>
+            <Col>
+              <button onClick={this.getDraftData}>Fetch</button>
+            </Col>
+            <Col>
+              <button onClick={this.postDrafts}>Post Data</button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    <th>Round</th>
+                    <th>Pick</th>
+                    <th>Owner</th>
+                    <th>Name</th>
+                    <th>Team</th>
+                    <th>Position</th>
+                    <th>PRK</th>
+                    <th>GP</th>
+                    <th>FPTS/G</th>
+                    <th>FPTS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.draft.map(function (pick, i) {
+                    return (
+                      <tr key={i}>
+                        <td>{pick.year}</td>
+                        <td>{pick.round}</td>
+                        <td>{pick.pick}</td>
+                        <td>{pick.owner}</td>
+                        <td>{pick.name}</td>
+                        <td>{pick.team}</td>
+                        <td>{pick.position}</td>
+                        <td>{pick.prk}</td>
+                        <td>{pick.gp}</td>
+                        <td>{pick.fptsg}</td>
+                        <td>{pick.fpts}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </Col>
+          </Row>
         </Row>
       </Container>
     );

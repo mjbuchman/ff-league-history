@@ -49,6 +49,11 @@ app.get("/seasons", (req, res) => {
   queryDB(res, query);
 });
 
+app.get("/leagueAvgPF/:year", (req, res) => {
+  var query = `Select sum(Home_Score + Away_Score)/(Select count(distinct Home_Team) from Matchups where Year = ${req.params.year}) as points from Matchups where Year = ${req.params.year};`;
+  queryDB(res, query);
+});
+
 //----------------------------------
 //  OVERVIEW
 //----------------------------------
@@ -308,6 +313,15 @@ app.post("/updateMatchups", jsonParser, (req, res) => {
     return week.map((matchup) => {
       return ` (\"${matchup.year}\", \"${matchup.week}\", \"${matchup.homeTeam}\", \"${matchup.homeScore}\", \"${matchup.awayTeam}\", \"${matchup.awayScore}\", \"${matchup.playoff}\", \"${matchup.twoWeek}\", \"${matchup.regularSeason}\") `;
     });
+  });
+  query = query.slice(0, -1) + ";";
+  queryDB(res, query);
+});
+
+app.post("/updateDrafts", jsonParser, (req, res) => {
+  var query = "INSERT INTO Drafts VALUES";
+  query += req.body.draft.map((pick) => {
+    return ` (\"${pick.year}\", \"${pick.round}\", \"${pick.pick}\", \"${pick.name}\", \"${pick.team}\", \"${pick.position}\", \"${pick.owner}\", \"${pick.prk}\", \"${pick.gp}\", \"${pick.fptsg}\", \"${pick.fpts}\") `;
   });
   query = query.slice(0, -1) + ";";
   queryDB(res, query);
