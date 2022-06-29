@@ -5,7 +5,7 @@ import HeadToHead from "./views/HeadToHead";
 import Standings from "./views/Standings";
 import Records from "./views/Records";
 import Drafts from "./views/Drafts";
-import HallOfFame from "./views/HallOfFame";
+import TrophyRoom from "./views/TrophyRoom";
 import Admin from "./views/Admin";
 import "./css/main.css";
 import Logo from "./images/logos/Wallerstein.png";
@@ -99,8 +99,8 @@ class Main extends Component {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/halloffame" replace>
-                  <i className="material-icons">emoji_events</i>Hall Of Fame
+                <NavLink to="/trophyroom" replace>
+                  <i className="material-icons">emoji_events</i>Trophy Room
                 </NavLink>
               </li>
               <li>
@@ -137,8 +137,8 @@ class Main extends Component {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/halloffame" replace onClick={this.handleClick}>
-                Hall Of Fame
+              <NavLink to="/trophyroom" replace onClick={this.handleClick}>
+                Trophy Room
               </NavLink>
             </li>
             <li>
@@ -154,7 +154,7 @@ class Main extends Component {
               <Route path="/standings" element={<Standings />} />
               <Route path="/records" element={<Records />} />
               <Route path="/drafts" element={<Drafts />} />
-              <Route path="/halloffame" element={<HallOfFame />} />
+              <Route path="/trophyroom" element={<TrophyRoom />} />
               <Route path="/tools/admin" element={<Admin />} />
             </Routes>
           </div>
