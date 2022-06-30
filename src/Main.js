@@ -53,7 +53,7 @@ class Main extends Component {
         <div>
           <h1 className="header">
             <img id="mini" src={Logo} alt="WFFL Logo"></img>
-            {window.innerWidth < 768
+            {this.state.width < 768
               ? "WFFL Database"
               : "Wallerstein Fantasy Football League Database"}
           </h1>
@@ -104,7 +104,12 @@ class Main extends Component {
                 </NavLink>
               </li>
               <li>
-                <a href={Pdf} target="_blank" without rel="noopener noreferrer">
+                <a
+                  href={Pdf}
+                  target="_blank"
+                  without="true"
+                  rel="noopener noreferrer"
+                >
                   <i className="material-icons">menu_book</i>Rulebook
                 </a>
               </li>
@@ -142,7 +147,12 @@ class Main extends Component {
               </NavLink>
             </li>
             <li>
-              <a href={Pdf} target="_blank" without rel="noopener noreferrer">
+              <a
+                href={Pdf}
+                target="_blank"
+                without="true"
+                rel="noopener noreferrer"
+              >
                 Rulebook
               </a>
             </li>

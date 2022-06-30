@@ -25,7 +25,7 @@ class TrophyRoom extends Component {
               >
                 <iframe
                   title="wallersteinTrophy"
-                  frameborder="0"
+                  frameBorder="0"
                   width="1003"
                   height="1200"
                   style={{
@@ -38,7 +38,7 @@ class TrophyRoom extends Component {
                   src="https://view.genial.ly/62bb69bd2273510010f72f1e"
                   type="text/html"
                   allowscriptaccess="always"
-                  allowfullscreen="true"
+                  allowFullScreen="true"
                   scrolling="yes"
                   allownetworking="all"
                 ></iframe>{" "}

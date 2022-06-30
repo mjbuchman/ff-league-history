@@ -110,17 +110,17 @@ ul.hamburger-navbar li a:hover {
 @media screen and (max-width: 767px) {
   .content {
     background-color: #fff;
-    padding: 20px;
+    padding: 0px;
     margin-left: 0px;
-    padding-top: 80px;
+    padding-top: 75px;
   }
 }
 
 @media screen and (min-width: 768px) {
   .content {
     background-color: #fff;
-    padding: 20px;
+    padding: 0px;
     margin-left: 180px;
-    padding-top: 80px;
+    padding-top: 75px;
   }
 }
