@@ -28,6 +28,7 @@ class Admin extends Component {
     this.deleteMatchups = this.deleteMatchups.bind(this);
     this.getDraftData = this.getDraftData.bind(this);
     this.postDrafts = this.postDrafts.bind(this);
+    this.deleteDrafts = this.deleteDrafts.bind(this);
     this.runLuckBot = this.runLuckBot.bind(this);
     this.handleCurrWeekChange = this.handleCurrWeekChange.bind(this);
     this.handleCurrYearChange = this.handleCurrYearChange.bind(this);
@@ -62,7 +63,14 @@ class Admin extends Component {
         else if (field === "draft")
           this.setState({ [field]: rows, loading: false });
         else {
-          //check response here
+          if (rows.errno) {
+            alert(`ERROR ${rows.errno}:\n${rows.sqlMessage}`);
+            console.log(rows);
+          } else {
+            alert(
+              `SUCCESS:\nLuck Bot has run for Week ${this.state.currWeek} of ${this.state.currYear}`
+            );
+          }
           this.setState({ loading: false });
         }
       });
@@ -107,8 +115,15 @@ class Admin extends Component {
     })
       .then((response) => response.json())
       .then((rows) => {
-        //handle response
-        this.setState({ loading: false });
+        if (rows.errno) {
+          alert(`ERROR ${rows.errno}:\n${rows.sqlMessage}`);
+          console.log(rows);
+        } else {
+          alert(
+            `SUCCESS:\nMatchups added for Weeks ${this.state.startWeek}-${this.state.endWeek} of ${this.state.year}`
+          );
+        }
+        this.setState({ matchups: [], loading: false });
       });
   }
 
@@ -119,7 +134,14 @@ class Admin extends Component {
     )
       .then((response) => response.json())
       .then((rows) => {
-        //handle response
+        if (rows.errno) {
+          alert(`ERROR ${rows.errno}:\n${rows.sqlMessage}`);
+          console.log(rows);
+        } else {
+          alert(
+            `SUCCESS:\nMatchups deleted for Weeks ${this.state.startWeek}-${this.state.endWeek} of ${this.state.year}`
+          );
+        }
         this.setState({ loading: false });
       });
   }
@@ -149,7 +171,27 @@ class Admin extends Component {
     })
       .then((response) => response.json())
       .then((rows) => {
-        //handle response
+        if (rows.errno) {
+          alert(`ERROR ${rows.errno}:\n${rows.sqlMessage}`);
+          console.log(rows);
+        } else {
+          alert(`SUCCESS:\n${this.state.currYear} Draft added`);
+        }
+        this.setState({ draft: [], loading: false });
+      });
+  }
+
+  deleteDrafts() {
+    this.setState({ loading: true });
+    fetch(`/deleteDrafts/${this.state.year}`)
+      .then((response) => response.json())
+      .then((rows) => {
+        if (rows.errno) {
+          alert(`ERROR ${rows.errno}:\n${rows.sqlMessage}`);
+          console.log(rows);
+        } else {
+          alert(`SUCCESS:\n${this.state.year} Draft has been deleted`);
+        }
         this.setState({ loading: false });
       });
   }
@@ -483,6 +525,29 @@ class Admin extends Component {
               </Row>
             );
           })}
+        </Row>
+        <Row>
+          <header>Delete Drafts</header>
+          <Row>
+            <Col>
+              <select
+                className="admin-select"
+                id="seasons"
+                onChange={this.handleSeasonChange()}
+              >
+                {yearOpts}
+              </select>
+              <button
+                className={
+                  this.state.loading ? "disabled-button" : "admin-button"
+                }
+                disabled={this.state.loading}
+                onClick={this.deleteDrafts}
+              >
+                Delete Data
+              </button>
+            </Col>
+          </Row>
         </Row>
         <Row>
           <header>Add Drafts</header>
