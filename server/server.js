@@ -301,17 +301,17 @@ app.get("/drafts/:year", (req, res) => {
 //  ADMIN
 //----------------------------------
 app.get("/deleteMatchups/:year/:start/:end", (req, res) => {
-  var query = `DELETE from MatchupsTest where Year = ${req.params.year} AND Week >= ${req.params.start} AND Week <= ${req.params.end}`;
+  var query = `DELETE from Matchups where Year = ${req.params.year} AND Week >= ${req.params.start} AND Week <= ${req.params.end}`;
   queryDB(res, query);
 });
 
 app.get("/deleteDrafts/:year", (req, res) => {
-  var query = `DELETE from DraftsTest where Year = ${req.params.year}`;
+  var query = `DELETE from Drafts where Year = ${req.params.year}`;
   queryDB(res, query);
 });
 
 app.post("/updateMatchups", jsonParser, (req, res) => {
-  var query = "INSERT INTO MatchupsTest VALUES";
+  var query = "INSERT INTO Matchups VALUES";
   query += req.body.matchups.map((week) => {
     return week.map((matchup) => {
       return ` (\"${matchup.year}\", \"${matchup.week}\", \"${matchup.homeTeam}\", \"${matchup.homeScore}\", \"${matchup.awayTeam}\", \"${matchup.awayScore}\", \"${matchup.playoff}\", \"${matchup.twoWeek}\", \"${matchup.regularSeason}\") `;
@@ -322,7 +322,7 @@ app.post("/updateMatchups", jsonParser, (req, res) => {
 });
 
 app.post("/updateDrafts", jsonParser, (req, res) => {
-  var query = "INSERT INTO DraftsTest VALUES";
+  var query = "INSERT INTO Drafts VALUES";
   query += req.body.draft.map((pick) => {
     return ` (\"${pick.year}\", \"${pick.round}\", \"${pick.pick}\", \"${pick.name}\", \"${pick.team}\", \"${pick.position}\", \"${pick.owner}\", \"${pick.prk}\", \"${pick.gp}\", \"${pick.fptsg}\", \"${pick.fpts}\") `;
   });
