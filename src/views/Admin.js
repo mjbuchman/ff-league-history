@@ -18,6 +18,8 @@ class Admin extends Component {
       currWeek: 2,
       currYear: yearsPlayed[yearsPlayed.length - 1],
       refresh: false,
+      admin: false,
+      loading: false,
     };
 
     this.getMatchupData = this.getMatchupData.bind(this);
@@ -39,25 +41,35 @@ class Admin extends Component {
     this.toggleRefresh = this.toggleRefresh.bind(this);
   }
 
+  componentDidMount() {
+    var token = localStorage.getItem("adminToken");
+    if (token === process.env.REACT_APP_ADMIN_TOKEN) {
+      this.setState({ admin: true });
+    }
+  }
+
   /**
    * Function to query the API and set the state value of the given field
    * @param field - The field in this.state to be set by query result
    * @param route - The API endpoint to hit
    */
   fetchAPI(field, route, params) {
-    fetch("https://wallerstein-data-api.herokuapp.com" + route + params)
+    fetch(process.env.REACT_APP_API_URL + route + params)
       .then((response) => response.json())
       .then((rows) => {
         if (field === "matchups")
           this.setState({ [field]: rows }, this.setMatchupTypes);
-        else if (field === "draft") this.setState({ [field]: rows });
+        else if (field === "draft")
+          this.setState({ [field]: rows, loading: false });
         else {
           //check response here
+          this.setState({ loading: false });
         }
       });
   }
 
   getMatchupData() {
+    this.setState({ loading: true });
     this.fetchAPI(
       "matchups",
       "/getMatchupData?",
@@ -78,10 +90,11 @@ class Admin extends Component {
         matchup["twoWeek"] = "FALSE";
       });
     });
-    this.setState({ matchups: matchupData });
+    this.setState({ matchups: matchupData, loading: false });
   }
 
   postMatchups() {
+    this.setState({ loading: true });
     fetch("/updateMatchups", {
       method: "post",
       headers: {
@@ -95,20 +108,24 @@ class Admin extends Component {
       .then((response) => response.json())
       .then((rows) => {
         //handle response
+        this.setState({ loading: false });
       });
   }
 
   deleteMatchups() {
+    this.setState({ loading: true });
     fetch(
       `/deleteMatchups/${this.state.year}/${this.state.startWeek}/${this.state.endWeek}`
     )
       .then((response) => response.json())
       .then((rows) => {
         //handle response
+        this.setState({ loading: false });
       });
   }
 
   getDraftData() {
+    this.setState({ loading: true });
     this.fetchAPI(
       "draft",
       "/getDraftData?",
@@ -119,6 +136,7 @@ class Admin extends Component {
   }
 
   postDrafts() {
+    this.setState({ loading: true });
     fetch("/updateDrafts", {
       method: "post",
       headers: {
@@ -132,10 +150,12 @@ class Admin extends Component {
       .then((response) => response.json())
       .then((rows) => {
         //handle response
+        this.setState({ loading: false });
       });
   }
 
   runLuckBot() {
+    this.setState({ loading: true });
     this.fetchAPI(
       "luckBot",
       "/runLuckBot?",
@@ -228,23 +248,43 @@ class Admin extends Component {
       );
     });
 
-    return (
+    return !this.state.admin ? (
+      <Container fluid>
+        <Row id="first-row">
+          <p style={{ color: "black" }}>
+            Sorry, you do not have access to this page
+          </p>
+        </Row>
+      </Container>
+    ) : (
       <Container fluid>
         <Row id="first-row">
           <header>Luck Bot</header>
           <Row>
             <Col>
-              <select id="currWeek" onChange={this.handleCurrWeekChange()}>
+              <select
+                className="admin-select"
+                id="currWeek"
+                onChange={this.handleCurrWeekChange()}
+              >
                 {luckWeeks}
               </select>
-            </Col>
-            <Col>
-              <select id="currYear" onChange={this.handleCurrYearChange()}>
+              <select
+                className="admin-select"
+                id="currYear"
+                onChange={this.handleCurrYearChange()}
+              >
                 {yearOpts}
               </select>
-            </Col>
-            <Col>
-              <button onClick={this.runLuckBot}>Run</button>
+              <button
+                className={
+                  this.state.loading ? "disabled-button" : "admin-button"
+                }
+                disabled={this.state.loading}
+                onClick={this.runLuckBot}
+              >
+                Run
+              </button>
             </Col>
           </Row>
         </Row>
@@ -253,28 +293,35 @@ class Admin extends Component {
           <Row>
             <Col>
               <select
+                className="admin-select"
                 id="startDelete"
                 onChange={this.handleStartChangeDelete()}
               >
                 {matchupWeeks}
               </select>
-            </Col>
-            <Col>
-              <select id="endDelete" onChange={this.handleEndChangeDelete()}>
+              <select
+                className="admin-select"
+                id="endDelete"
+                onChange={this.handleEndChangeDelete()}
+              >
                 {matchupWeeks}
               </select>
-            </Col>
-            <Col>
               <select
+                className="admin-select"
                 id="seasonsDelete"
                 onChange={this.handleSeasonChangeDelete()}
               >
                 {yearOpts}
               </select>
-            </Col>
-
-            <Col>
-              <button onClick={this.deleteMatchups}>Delete Data</button>
+              <button
+                className={
+                  this.state.loading ? "disabled-button" : "admin-button"
+                }
+                disabled={this.state.loading}
+                onClick={this.deleteMatchups}
+              >
+                Delete Data
+              </button>
             </Col>
           </Row>
         </Row>
@@ -282,28 +329,54 @@ class Admin extends Component {
           <header>Add Matchups</header>
           <Row>
             <Col>
-              <select id="start" onChange={this.handleStartChange()}>
+              <select
+                className="admin-select"
+                id="start"
+                onChange={this.handleStartChange()}
+              >
                 {matchupWeeks}
               </select>
-            </Col>
-            <Col>
-              <select id="end" onChange={this.handleEndChange()}>
+              <select
+                className="admin-select"
+                id="end"
+                onChange={this.handleEndChange()}
+              >
                 {matchupWeeks}
               </select>
-            </Col>
-            <Col>
-              <select id="seasons" onChange={this.handleSeasonChange()}>
+              <select
+                className="admin-select"
+                id="seasons"
+                onChange={this.handleSeasonChange()}
+              >
                 {yearOpts}
               </select>
-            </Col>
-            <Col>
-              <button onClick={this.getMatchupData}>Fetch</button>
-            </Col>
-            <Col>
-              <button onClick={this.toggleRefresh}>Refresh</button>
-            </Col>
-            <Col>
-              <button onClick={this.postMatchups}>Post Data</button>
+              <button
+                className={
+                  this.state.loading ? "disabled-button" : "admin-button"
+                }
+                disabled={this.state.loading}
+                onClick={this.getMatchupData}
+              >
+                Fetch
+              </button>
+              <button
+                className={
+                  this.state.loading ? "disabled-button" : "admin-button"
+                }
+                disabled={this.state.loading}
+                onClick={this.toggleRefresh}
+              >
+                Refresh
+              </button>
+              <button
+                className={
+                  this.state.loading ? "disabled-button" : "admin-button"
+                }
+                disabled={this.state.loading}
+                onClick={this.postMatchups}
+              >
+                Post Data
+              </button>
             </Col>
           </Row>
           {this.state.matchups.map(function (week, i) {
@@ -312,57 +385,64 @@ class Admin extends Component {
                 <Col sm={12}>Week {week[0].week}</Col>
                 <Col sm={3}>
                   Matchup Type:
-                  <label>
-                    <input
-                      type="radio"
-                      name={week[0].week}
-                      value="RS"
-                      defaultChecked
-                      onChange={() => {
-                        week.forEach((matchup) => {
-                          matchup["regularSeason"] = "TRUE";
-                          matchup["playoff"] = "FALSE";
-                          matchup["twoWeek"] = "FALSE";
-                        });
-                      }}
-                    />
-                    Regular Season
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name={week[0].week}
-                      value="PS"
-                      onChange={() => {
-                        week.forEach((matchup) => {
-                          matchup["regularSeason"] = "FALSE";
-                          matchup["playoff"] = "FALSE";
-                          matchup["twoWeek"] = "FALSE";
-                        });
-                      }}
-                    />
-                    Playoffs - Single
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name={week[0].week}
-                      value="PD"
-                      onChange={() => {
-                        week.forEach((matchup) => {
-                          matchup["regularSeason"] = "FALSE";
-                          matchup["playoff"] = "FALSE";
-                          matchup["twoWeek"] = "TRUE";
-                        });
-                      }}
-                    />
-                    Playoffs - Double
-                  </label>
+                  <Row>
+                    <label>
+                      <input
+                        type="radio"
+                        name={week[0].week}
+                        value="RS"
+                        defaultChecked
+                        onChange={() => {
+                          week.forEach((matchup) => {
+                            matchup["regularSeason"] = "TRUE";
+                            matchup["playoff"] = "FALSE";
+                            matchup["twoWeek"] = "FALSE";
+                          });
+                        }}
+                      />
+                      Regular Season
+                    </label>
+                  </Row>
+                  <Row>
+                    <label>
+                      <input
+                        type="radio"
+                        name={week[0].week}
+                        value="PS"
+                        onChange={() => {
+                          week.forEach((matchup) => {
+                            matchup["regularSeason"] = "FALSE";
+                            matchup["playoff"] = "FALSE";
+                            matchup["twoWeek"] = "FALSE";
+                          });
+                        }}
+                      />
+                      Playoffs - Single
+                    </label>
+                  </Row>
+                  <Row>
+                    <label>
+                      <input
+                        type="radio"
+                        name={week[0].week}
+                        value="PD"
+                        onChange={() => {
+                          week.forEach((matchup) => {
+                            matchup["regularSeason"] = "FALSE";
+                            matchup["playoff"] = "FALSE";
+                            matchup["twoWeek"] = "TRUE";
+                          });
+                        }}
+                      />
+                      Playoffs - Double
+                    </label>
+                  </Row>
                 </Col>
                 <Col sm={9}>
-                  <table>
+                  <table id="admin-table">
                     <thead>
                       <tr>
+                        <th>Playoff?</th>
                         <th>Home</th>
                         <th>Score</th>
                         <th>Away</th>
@@ -391,6 +471,7 @@ class Admin extends Component {
                             <td>{matchup.homeScore}</td>
                             <td>{matchup.awayTeam}</td>
                             <td>{matchup.awayScore}</td>
+                            <td>{matchup.playoff}</td>
                             <td>{matchup.twoWeek}</td>
                             <td>{matchup.regularSeason}</td>
                           </tr>
@@ -407,55 +488,75 @@ class Admin extends Component {
           <header>Add Drafts</header>
           <Row>
             <Col>
-              <select id="seasons" onChange={this.handleSeasonChange()}>
+              <select
+                className="admin-select"
+                id="seasons"
+                onChange={this.handleSeasonChange()}
+              >
                 {yearOpts}
               </select>
-            </Col>
-            <Col>
-              <button onClick={this.getDraftData}>Fetch</button>
-            </Col>
-            <Col>
-              <button onClick={this.postDrafts}>Post Data</button>
+              <button
+                className={
+                  this.state.loading ? "disabled-button" : "admin-button"
+                }
+                disabled={this.state.loading}
+                onClick={this.getDraftData}
+              >
+                Fetch
+              </button>
+              <button
+                className={
+                  this.state.loading ? "disabled-button" : "admin-button"
+                }
+                disabled={this.state.loading}
+                onClick={this.postDrafts}
+              >
+                Post Data
+              </button>
             </Col>
           </Row>
           <Row>
             <Col>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Year</th>
-                    <th>Round</th>
-                    <th>Pick</th>
-                    <th>Owner</th>
-                    <th>Name</th>
-                    <th>Team</th>
-                    <th>Position</th>
-                    <th>PRK</th>
-                    <th>GP</th>
-                    <th>FPTS/G</th>
-                    <th>FPTS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.draft.map(function (pick, i) {
-                    return (
-                      <tr key={i}>
-                        <td>{pick.year}</td>
-                        <td>{pick.round}</td>
-                        <td>{pick.pick}</td>
-                        <td>{pick.owner}</td>
-                        <td>{pick.name}</td>
-                        <td>{pick.team}</td>
-                        <td>{pick.position}</td>
-                        <td>{pick.prk}</td>
-                        <td>{pick.gp}</td>
-                        <td>{pick.fptsg}</td>
-                        <td>{pick.fpts}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              {this.state.draft.length > 0 ? (
+                <table id="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Year</th>
+                      <th>Round</th>
+                      <th>Pick</th>
+                      <th>Owner</th>
+                      <th>Name</th>
+                      <th>Team</th>
+                      <th>Position</th>
+                      <th>PRK</th>
+                      <th>GP</th>
+                      <th>FPTS/G</th>
+                      <th>FPTS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.state.draft.map(function (pick, i) {
+                      return (
+                        <tr key={i}>
+                          <td>{pick.year}</td>
+                          <td>{pick.round}</td>
+                          <td>{pick.pick}</td>
+                          <td>{pick.owner}</td>
+                          <td>{pick.name}</td>
+                          <td>{pick.team}</td>
+                          <td>{pick.position}</td>
+                          <td>{pick.prk}</td>
+                          <td>{pick.gp}</td>
+                          <td>{pick.fptsg}</td>
+                          <td>{pick.fpts}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              ) : (
+                <span></span>
+              )}
             </Col>
           </Row>
         </Row>
