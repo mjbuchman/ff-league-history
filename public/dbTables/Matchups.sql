@@ -1,6 +1,6 @@
 /* Last Update - Week 8, 2020 */
 CREATE TABLE Matchups (
-    Year INTEGER NOT NULL PRIMARY KEY,
+    Year INTEGER NOT NULL,
     Week INTEGER NOT NULL,
     Home_Team VARCHAR(17) NOT NULL,
     Home_Score NUMERIC(6,2) NOT NULL,
@@ -260,11 +260,10 @@ INSERT INTO Matchups VALUES
     (2020,6,'Jonathan Setzke',80.48,'Nick Eufrasio',112.94,'FALSE','FALSE', 'TRUE'),
     (2020,6,'Brenden Zarrinnam',144.38,'Joe Perry',111.3,'FALSE','FALSE', 'TRUE'),
     (2020,7,'Michael Buchman',178.6,'Grant Dakovich',106.86,'FALSE','FALSE', 'TRUE'),
-    (2020,7,'James Earley',106.54,'Jonathan Setzke',113.82,'FALSE','FALSE', 'TRUE');
-INSERT INTO Wallerstein_Matchup_Scores
+    (2020,7,'James Earley',106.54,'Jonathan Setzke',113.82,'FALSE','FALSE', 'TRUE'),
     (2020,7,'Ryan Rasmussen',108.98,'Brenden Zarrinnam',121.92,'FALSE','FALSE', 'TRUE'),
     (2020,7,'Nick Eufrasio',110.72,'Joe Perry',153,'FALSE','FALSE', 'TRUE'),
-    (2020,8,'Michael Buchman',122.52,'Brenden Zarrinam',91.02,'FALSE','FALSE', 'TRUE'),
+    (2020,8,'Michael Buchman',122.52,'Brenden Zarrinnam',91.02,'FALSE','FALSE', 'TRUE'),
     (2020,8,'Jonathan Setzke',126.92,'Grant Dakovich',98.94,'FALSE','FALSE', 'TRUE'),
     (2020,8,'James Earley',101.82,'Joe Perry',133.74,'FALSE','FALSE', 'TRUE'),
     (2020,8,'Ryan Rasmussen',141.86,'Nick Eufrasio',98.34,'FALSE','FALSE', 'TRUE'),
@@ -336,4 +335,19 @@ INSERT INTO Wallerstein_Matchup_Scores
 	(2021,9,'Jonathan Setzke',97.9,'James Earley',90.83,'FALSE','TRUE','FALSE'),
 	(2021,9,'Connor DeYoung',102.79,'Tyler Brown',98.14,'FALSE','TRUE','FALSE'),
 	(2021,9,'Brenden Zarrinnam',115.03,'Nick Eufrasio',85.74,'FALSE','TRUE','FALSE'),
-	(2021,9,'Grant Dakovich',109.67,'Joe Perry',121.94,'FALSE','TRUE','FALSE');
+	(2021,9,'Grant Dakovich',109.67,'Joe Perry',121.94,'FALSE','TRUE','FALSE'),
+	(2021,10,'Ryan Rasmussen',88.49,'James Earley',150.47,'FALSE','TRUE','FALSE'),
+	(2021,10,'Tyler Brown',143.7,'Michael Buchman',93.77,'FALSE','TRUE','FALSE'),
+	(2021,10,'Nick Eufrasio',67.44,'Jonathan Setzke',92.81,'FALSE','TRUE','FALSE'),
+	(2021,10,'Joe Perry',128.8,'Connor DeYoung',107.27,'FALSE','TRUE','FALSE'),
+	(2021,10,'Grant Dakovich',96.08,'Brenden Zarrinnam',118.74,'FALSE','TRUE','FALSE'),
+	(2021,11,'Tyler Brown',126.25,'Ryan Rasmussen',111.21,'FALSE','TRUE','FALSE'),
+	(2021,11,'James Earley',142.93,'Nick Eufrasio',119.68,'FALSE','TRUE','FALSE'),
+	(2021,11,'Michael Buchman',135.44,'Joe Perry',164.98,'FALSE','TRUE','FALSE'),
+	(2021,11,'Jonathan Setzke',109.78,'Grant Dakovich',121.2,'FALSE','TRUE','FALSE'),
+	(2021,11,'Connor DeYoung',123.32,'Brenden Zarrinnam',121.56,'FALSE','TRUE','FALSE'),
+	(2021,12,'Ryan Rasmussen',116.85,'Nick Eufrasio',96.88,'FALSE','TRUE','FALSE'),
+	(2021,12,'Joe Perry',123.37,'Tyler Brown',137.7,'FALSE','TRUE','FALSE'),
+	(2021,12,'Grant Dakovich',150.33,'James Earley',87.76,'FALSE','TRUE','FALSE'),
+	(2021,12,'Brenden Zarrinnam',89.6,'Michael Buchman',137.48,'FALSE','TRUE','FALSE'),
+	(2021,12,'Connor DeYoung',93.15,'Jonathan Setzke',140.89,'FALSE','TRUE','FALSE');
