@@ -20,6 +20,7 @@ class Admin extends Component {
       refresh: false,
       admin: false,
       loading: false,
+      reverseYears: yearsPlayed.reverse(),
     };
 
     this.getMatchupData = this.getMatchupData.bind(this);
@@ -47,7 +48,6 @@ class Admin extends Component {
     if (token === process.env.REACT_APP_ADMIN_TOKEN) {
       this.setState({ admin: true });
     }
-    yearsPlayed = yearsPlayed.reverse();
   }
 
   /**
@@ -283,7 +283,7 @@ class Admin extends Component {
       </option>
     );
 
-    const yearOpts = yearsPlayed.map(function (year, i) {
+    const yearOpts = this.state.reverseYears.map(function (year, i) {
       return (
         <option value={year} key={i}>
           {year}
