@@ -43,6 +43,7 @@ class Admin extends Component {
   }
 
   componentDidMount() {
+    localStorage.setItem("adminToken", process.env.REACT_APP_ADMIN_TOKEN);
     var token = localStorage.getItem("adminToken");
     if (token === process.env.REACT_APP_ADMIN_TOKEN) {
       this.setState({ admin: true });
