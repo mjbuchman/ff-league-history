@@ -38,6 +38,7 @@ class Overview extends Component {
       weekHS: [{}, {}, {}, {}, [{ count: 0 }]],
       weekLS: [{}, {}, {}, {}, [{ count: 0 }]],
       graphData: { labels: yearsPlayed, datasets: [] },
+      leaguePF: [],
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -53,6 +54,7 @@ class Overview extends Component {
 
   componentDidMount() {
     this.getOwners();
+    this.fetchData("leaguePF", "/leagueAvgPf");
   }
 
   /**
@@ -80,6 +82,15 @@ class Overview extends Component {
             { [field]: rows },
             this.setState({ refreshing: false })
           );
+        else if (field === "leaguePF") {
+          var averages = [];
+          if (rows.length >= 2) {
+            for (var i = 0; i < rows[2].length; i++) {
+              averages.push(rows[2][i].avg);
+            }
+          }
+          this.setState({ leaguePF: averages });
+        }
         // last field to be updated -> ends 'refresh' period
         else this.setState({ [field]: rows });
       });
@@ -135,13 +146,10 @@ class Overview extends Component {
     var currOwner = this.state.currOwner;
     var index = 0;
     var wins = [0];
-    var leagueWins = [0];
     var points = [0];
     this.state.games.forEach(function (game, i, games) {
       // Begin new season
       if (i > 0 && game.Year !== games[i - 1].Year) {
-        leagueWins[index] /= 2;
-        leagueWins.push(0);
         wins.push(0);
         points.push(0);
         index++;
@@ -155,7 +163,6 @@ class Overview extends Component {
       }
 
       // Find wins and points scored accross all Matchup entries
-      leagueWins[index] += 1;
       if (game.Home_Team === currOwner) {
         points[index] += game.Home_Score;
         if (game.Home_Score > game.Away_Score) wins[index]++;
@@ -164,7 +171,6 @@ class Overview extends Component {
         if (game.Home_Score < game.Away_Score) wins[index]++;
       }
     });
-    leagueWins[index] /= 2;
 
     this.setState({
       graphData: {
@@ -180,21 +186,21 @@ class Overview extends Component {
             yAxisID: "y1",
           },
           {
-            label: "League Avg Wins",
-            data: leagueWins,
-            fill: false,
-            lineTension: 0,
-            backgroundColor: "rgb(196, 77, 86)",
-            borderColor: "rgba(196, 77, 86)",
-            yAxisID: "y1",
-          },
-          {
             label: "Points For",
             data: points,
             fill: false,
             lineTension: 0,
             backgroundColor: "rgb(54, 162, 235)",
             borderColor: "rgba(54, 162, 235)",
+            yAxisID: "y2",
+          },
+          {
+            label: "League Avg PF",
+            data: this.state.leaguePF,
+            fill: false,
+            lineTension: 0,
+            backgroundColor: "rgb(138, 43, 226)",
+            borderColor: "rgba(138, 43, 226)",
             yAxisID: "y2",
           },
         ],

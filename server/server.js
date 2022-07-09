@@ -49,8 +49,13 @@ app.get("/seasons", (req, res) => {
   queryDB(res, query);
 });
 
-app.get("/leagueAvgPF/:year", (req, res) => {
-  var query = `Select sum(Home_Score + Away_Score)/(Select count(distinct Home_Team) from Matchups where Year = ${req.params.year}) as points from Matchups where Year = ${req.params.year};`;
+app.get("/leagueAvgPF", (req, res) => {
+  var query = `
+    drop temporary table if exists totalPts;
+    create temporary table totalPts select sum(Home_Score + Away_Score) as points, Year from Matchups group by Year;
+        
+    Select round(points/(Select count(distinct Home_Team) from Matchups where Year = totalPts.Year), 2) as avg from totalPts;
+  `;
   queryDB(res, query);
 });
 
@@ -287,11 +292,6 @@ app.get("/records/lowSW/:condition", (req, res) => {
 //----------------------------------
 //  DRAFTS
 //----------------------------------
-app.get("/drafts", (req, res) => {
-  var query = `select distinct Year from Drafts order by Year desc`;
-  queryDB(res, query);
-});
-
 app.get("/drafts/:year", (req, res) => {
   var query = `select * from Drafts where Year = ${req.params.year}`;
   queryDB(res, query);

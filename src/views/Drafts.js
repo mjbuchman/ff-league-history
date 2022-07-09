@@ -13,9 +13,9 @@ class Drafts extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      seasons: yearsPlayed,
       currOwner: "All Owners",
-      currDate: yearsPlayed[yearsPlayed.length - 1],
-      seasons: [],
+      currDate: yearsPlayed[0],
       owners: [],
       draftData: [],
       validData: true,
@@ -31,7 +31,6 @@ class Drafts extends Component {
       ovrSuperlatives: { biggestSteal: [], biggestBust: [] },
     };
 
-    this.getDropdownValues = this.getDropdownValues.bind(this);
     this.updateTableData = this.updateTableData.bind(this);
     this.calculatePlayerValues = this.calculatePlayerValues.bind(this);
     this.getLetterGrade = this.getLetterGrade.bind(this);
@@ -43,7 +42,7 @@ class Drafts extends Component {
   }
 
   componentDidMount() {
-    this.getDropdownValues();
+    this.fetchData("owners", "/owners");
     this.updateTableData();
   }
 
@@ -60,12 +59,6 @@ class Drafts extends Component {
           this.setState({ [field]: rows }, this.calculatePlayerValues);
         else this.setState({ [field]: rows });
       });
-  }
-
-  // Queries database to find distinct seasons
-  getDropdownValues() {
-    this.fetchData("seasons", "/drafts");
-    this.fetchData("owners", "/owners");
   }
 
   updateTableData() {
@@ -328,8 +321,8 @@ class Drafts extends Component {
                   <select id="date-range" onChange={this.handleDateChange()}>
                     {this.state.seasons.map(function (season, i) {
                       return (
-                        <option value={season.Year} key={i}>
-                          {season.Year}
+                        <option value={season} key={i}>
+                          {season}
                         </option>
                       );
                     })}
