@@ -29,6 +29,7 @@ class Drafts extends Component {
         draftRank: [],
       },
       ovrSuperlatives: { biggestSteal: [], biggestBust: [] },
+      keepers: [],
     };
 
     this.updateTableData = this.updateTableData.bind(this);
@@ -63,6 +64,7 @@ class Drafts extends Component {
 
   updateTableData() {
     this.fetchData("draftData", `/drafts/${this.state.currDate}`);
+    this.fetchData("keepers", `drafts/keepers/${this.state.currDate}`);
   }
 
   calculatePlayerValues() {

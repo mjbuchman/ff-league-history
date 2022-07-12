@@ -297,6 +297,11 @@ app.get("/drafts/:year", (req, res) => {
   queryDB(res, query);
 });
 
+app.get("/drafts/keepers/:year", (req, res) => {
+  var query = `select * from Keepers where Year = ${req.params.year}`;
+  queryDB(res, query);
+});
+
 //----------------------------------
 //  ADMIN
 //----------------------------------
