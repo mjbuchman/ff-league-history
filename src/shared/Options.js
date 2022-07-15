@@ -503,25 +503,25 @@ export const powerRankingTableFields = [
   {
     name: "ranking",
     displayName: "Rank",
-    thClassName: "standings-th-header",
-    tdClassName: "standings-td",
+    thClassName: "power-th-header",
+    tdClassName: "power-td",
   },
   {
     name: "team",
     displayName: "Team",
-    thClassName: "standings-th-header",
-    tdClassName: "standings-td",
+    thClassName: "power-th-header",
+    tdClassName: "power-td",
   },
   {
     name: "name",
     displayName: "Name",
-    thClassName: "standings-th-header",
-    tdClassName: "standings-td",
+    thClassName: "power-th-header",
+    tdClassName: "power-td",
   },
   {
     name: "power",
     displayName: "Power Score",
-    thClassName: "standings-th-header",
-    tdClassName: "standings-td",
+    thClassName: "power-th-header",
+    tdClassName: "power-td",
   },
 ];

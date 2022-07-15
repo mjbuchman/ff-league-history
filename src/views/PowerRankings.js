@@ -3,20 +3,16 @@ import { Container, Row, Col } from "react-bootstrap";
 import "../css/power.css";
 import FilterableTable from "react-filterable-table";
 import { powerRankingTableFields } from "../shared/Options.js";
-import { yearsPlayed, yearsCompleted } from "../shared/Dicts.js";
+import { yearsCompleted } from "../shared/Dicts.js";
 
 export default function PowerRankings() {
   let [chosenYear, setChosenYear] = useState(2021);
   let [testData, setTestData] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-  let [seasons, setSeasons] = useState(yearsPlayed);
+  let [seasons, setSeasons] = useState(yearsCompleted);
 
   return (
     <Container fluid>
-      <Row>
-        <header>Power Rankings</header>
-      </Row>
-      <br></br>
-      <header>Current power rankings</header>
+      <header>Current Power Rankings</header>
       <Row>
         <Col xl={12}>
           <FilterableTable
@@ -32,7 +28,7 @@ export default function PowerRankings() {
         </Col>
       </Row>
       <br></br>
-      <header>{chosenYear} Power Rankings</header>
+      <header>Historic Power Rankings</header>
       <Row className="powerYearSelect">
         <Col xl={3}>
           <select
