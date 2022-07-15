@@ -493,3 +493,35 @@ export const draftRankOptions = [
     render: renderIconDrafts,
   },
 ];
+
+//----------------------------------------
+//  POWER RANKINGS
+//----------------------------------------
+// Need to figure out classnames for styling and the actual CSS file later
+// Or not, it just works if I leave them :)
+export const powerRankingTableFields = [
+  {
+    name: "ranking",
+    displayName: "Rank",
+    thClassName: "standings-th-header",
+    tdClassName: "standings-td",
+  },
+  {
+    name: "team",
+    displayName: "Team",
+    thClassName: "standings-th-header",
+    tdClassName: "standings-td",
+  },
+  {
+    name: "name",
+    displayName: "Name",
+    thClassName: "standings-th-header",
+    tdClassName: "standings-td",
+  },
+  {
+    name: "power",
+    displayName: "Power Score",
+    thClassName: "standings-th-header",
+    tdClassName: "standings-td",
+  },
+];
