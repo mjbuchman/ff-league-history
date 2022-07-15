@@ -26,7 +26,7 @@
 
 ul.navbar {
   height: auto;
-  width: 180px; /* Set the width of the sidebar */
+  width: 200px; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
@@ -120,7 +120,7 @@ ul.hamburger-navbar li a:hover {
   .content {
     background-color: #fff;
     padding: 0px;
-    margin-left: 180px;
+    margin-left: 200px;
     padding-top: 75px;
   }
 }

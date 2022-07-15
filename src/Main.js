@@ -11,7 +11,7 @@ import "./css/main.css";
 import Logo from "./images/logos/Wallerstein.png";
 import Pdf from "./docs/WFFL-Rules.pdf";
 import HamburgerMenu from "react-hamburger-menu";
-
+import PowerRankings from "./views/PowerRankings";
 class Main extends Component {
   constructor(props) {
     super(props);
@@ -89,6 +89,12 @@ class Main extends Component {
                 </NavLink>
               </li>
               <li>
+                <NavLink to="/powerrankings">
+                  <i className="material-icons">format_list_numbered</i>
+                  Power Rankings
+                </NavLink>
+              </li>
+              <li>
                 <NavLink to="/records" replace>
                   <i className="material-icons">bookmark_border</i>Records
                 </NavLink>
@@ -132,6 +138,11 @@ class Main extends Component {
               </NavLink>
             </li>
             <li>
+              <NavLink to="/powerrankings" replace onClick={this.handleClick}>
+                Power Rankings
+              </NavLink>
+            </li>
+            <li>
               <NavLink to="/records" replace onClick={this.handleClick}>
                 Records
               </NavLink>
@@ -166,6 +177,7 @@ class Main extends Component {
               <Route path="/drafts" element={<Drafts />} />
               <Route path="/trophyroom" element={<TrophyRoom />} />
               <Route path="/tools/admin" element={<Admin />} />
+              <Route path="/powerrankings" element={<PowerRankings />} />
             </Routes>
           </div>
         </div>
