@@ -1,6 +1,8 @@
 # FF-League-History
 
-This project is a React Web App database for records related to an ESPN Fantasy Football League
+This project is a React Web App database for records related to an ESPN Fantasy Football League.
+
+***NOTE: Some variables are currently hard-coded for my personal league***
 
 #### Project currently deployed at http://wallersteinffl.com
 
