@@ -53,8 +53,8 @@ class Overview extends Component {
   }
 
   componentDidMount() {
-    this.getOwners();
-    this.fetchData("leaguePF", "/leagueAvgPf");
+    //this.getOwners();
+    this.fetchData("leaguePF", `/getOverview/${this.state.currOwner}`);
   }
 
   /**
@@ -67,12 +67,7 @@ class Overview extends Component {
       .then((response) => response.json())
       .then((rows) => {
         if (field === "owners") {
-          // Inefficient, petty and entirely unneccessary sort to put me first :D
-          var bestOwner = "Michael Buchman";
-          rows.sort(function (x, y) {
-            return x.Owner === bestOwner ? -1 : y.Owner === bestOwner ? 1 : 0;
-          });
-          this.setState({ [field]: rows }, this.updateValues);
+          this.setState({ [field]: rows[0] }, this.updateValues);
         }
         // set on refresh, triggers the initial data update
         else if (field === "games")
@@ -287,7 +282,7 @@ class Overview extends Component {
           <Col sm={12} xl={5}>
             <Row>
               <Col>
-                <select id="owners" onChange={this.handleOwnerChange()}>
+                <select id="owners" value={this.state.currOwner} onChange={this.handleOwnerChange()}>
                   {this.state.owners.map(function (owner, i) {
                     return (
                       <option value={owner.Owner} key={i}>

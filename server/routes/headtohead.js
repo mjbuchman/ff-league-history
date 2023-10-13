@@ -1,10 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const queryDB = require("../connection/connection")
 
 router.get("/h2h/matchups/:owner1/:owner2", (req, res) => {
     var query = `select * from Matchups where (home_team = "${req.params.owner1}" OR home_team = "${req.params.owner2}") AND (away_team = "${req.params.owner1}" OR away_team = "${req.params.owner2}")`;
-    queryDB(res, query);
 });
 
 router.get("/h2h/matchups/:owner1/:owner2/:double/:type", (req, res) => {
@@ -28,7 +26,6 @@ router.get("/h2h/matchups/:owner1/:owner2/:double/:type", (req, res) => {
       (select year, week, ${req.params.type}(score) as score from h2h2) b
       on a.score = b.score;
       `;
-    queryDB(res, query);
 });
 
 module.exports = router;

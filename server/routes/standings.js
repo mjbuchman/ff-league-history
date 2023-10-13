@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-const queryDB = require("../connection/connection")
 
 router.get("/standings/:year/:regSeason/:playoff", (req, res) => {
     let dateClause = "";
@@ -36,12 +35,10 @@ router.get("/standings/:year/:regSeason/:playoff", (req, res) => {
           
           select 0 as placement, Points.owner as owner, win+loss AS gp, win, loss, 0 AS tie, win/(win+loss) AS pct, pf, pa from WinLoss inner join Points on (WinLoss.owner = Points.owner) ${exclude} order by pct desc, pf desc;
       `;
-    queryDB(res, query);
 });
   
 router.get("/standings/final", (req, res) => {
     var query = `select * from Final_Standings`;
-    queryDB(res, query);
 });
 
 module.exports = router;

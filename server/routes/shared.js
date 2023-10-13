@@ -1,15 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const queryDB = require("../connection/connection")
 
 router.get("/owners", (req, res) => {
-    var query = "Select * from Owners";
-    queryDB(res, query);
+    var query = "CALL getOwners()";
   });
   
 router.get("/seasons", (req, res) => {
     var query = "Select distinct Year from Matchups order by Year desc";
-    queryDB(res, query);
 });
 
 router.get("/leagueAvgPF", (req, res) => {
@@ -19,7 +16,6 @@ router.get("/leagueAvgPF", (req, res) => {
             
         Select round(points/(Select count(distinct Home_Team) from Matchups where Year = totalPts.Year), 2) as avg from totalPts;
     `;
-    queryDB(res, query);
 });
 
 module.exports = router;
