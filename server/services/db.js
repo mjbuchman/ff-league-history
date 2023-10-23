@@ -1,13 +1,13 @@
 const mysql = require("mysql");
-const config = require("../config");
+const dbConfig = require("../config");
 
-async function query(sql, params) {
-  const pool = await mysql.createPool(config.db);
-  const [results] = await pool.query(sql, params);
+var connection = mysql.createPool({
+  host: dbConfig.HOST,
+  user: dbConfig.USER,
+  password: dbConfig.PASSWORD,
+  database: dbConfig.DB,
+  connectTimeout: 60000,
+  multipleStatements: true,
+});
 
-  return results;
-}
-
-module.exports = {
-  query
-};
+module.exports = connection;
