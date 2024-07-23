@@ -14,10 +14,10 @@ app.use(express.static(buildPath));
 
 // database credentials
 const pool = mysql.createPool({
-  host: "y7g.h.filess.io",
+  host: "wallersteinffl.cp2eugwggx41.us-east-2.rds.amazonaws.com",
   user: process.env.REACT_APP_DB_USERNAME,
   password: process.env.REACT_APP_DB_PASSWORD,
-  database: "WallersteinFFL_buildsong",
+  database: "wallersteinffl",
   multipleStatements: true,
 });
 
