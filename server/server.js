@@ -19,6 +19,8 @@ const pool = mysql.createPool({
   password: process.env.REACT_APP_DB_PASSWORD,
   database: "wallersteinffl",
   port: '3306',
+  waitForConnections: true,
+  connectTimeout: 30000,
   multipleStatements: true,
 });
 
