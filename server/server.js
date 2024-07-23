@@ -18,6 +18,7 @@ const pool = mysql.createPool({
   user: process.env.REACT_APP_DB_USERNAME,
   password: process.env.REACT_APP_DB_PASSWORD,
   database: "wallersteinffl",
+  port: '3306',
   multipleStatements: true,
 });
 
