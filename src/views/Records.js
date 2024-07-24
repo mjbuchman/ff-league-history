@@ -13,7 +13,9 @@ class Records extends Component {
       playoffD: { val: false, id: "unclicked" },
       fullSeason: { val: false, id: "unclicked" },
       currDate: "All-Time",
+      recordType: "Highest Scores",
       seasons: [],
+      records: ["Highest Scores", "Lowest Scores", "Highest Victory Margins", "Lowest Victory Margins", "Most Combined Points", "Least Combined Points", "Highest Scores in a Loss", "Lowest Scores in a Win"],
       highScores: [],
       lowScores: [],
       highMOV: [],
@@ -26,6 +28,7 @@ class Records extends Component {
 
     this.handleButtonClick = this.handleButtonClick.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleTypeChange = this.handleTypeChange.bind(this);
     this.updateTables = this.updateTables.bind(this);
     this.getSeasons = this.getSeasons.bind(this);
     this.getHighLowScores = this.getHighLowScores.bind(this);
@@ -33,6 +36,7 @@ class Records extends Component {
     this.getCombinedPoints = this.getCombinedPoints.bind(this);
     this.getHSL = this.getHSL.bind(this);
     this.getLSW = this.getLSW.bind(this);
+    this.returnTable = this.returnTable.bind(this);
   }
 
   componentDidMount() {
@@ -105,6 +109,11 @@ class Records extends Component {
     this.setState({ currDate: event.target.value }, this.updateTables);
   };
 
+  // Handler for data changes which triggers data refresh
+  handleTypeChange = (val) => (event) => {
+    this.setState({ recordType: event.target.value }, this.updateTables);
+  };
+
   // Builds query for type of matchup specified and passes it on to each tables update method
   updateTables() {
     var whereClause;
@@ -121,11 +130,32 @@ class Records extends Component {
     if (this.state.currDate !== "All-Time")
       whereClause = whereClause.concat(` AND Year = ${this.state.currDate}`);
 
-    this.getHighLowScores(whereClause);
-    this.getMOV(whereClause);
-    this.getCombinedPoints(whereClause);
-    this.getHSL(whereClause);
-    this.getLSW(whereClause);
+    switch(this.state.recordType) {
+      case "Highest Scores": 
+        this.getHighLowScores(whereClause);
+        break;
+      case "Lowest Scores":
+        this.getHighLowScores(whereClause);
+        break;
+      case "Highest Victory Margins":
+        this.getMOV(whereClause);
+        break;
+      case "Lowest Victory Margins":
+        this.getMOV(whereClause);
+        break;
+      case "Most Combined Points":
+        this.getCombinedPoints(whereClause);
+        break;
+      case "Least Combined Points":
+        this.getCombinedPoints(whereClause);
+        break;
+      case "Highest Scores in a Loss":
+        this.getHSL(whereClause);
+        break;
+      case "Lowest Scores in a Win":
+        this.getLSW(whereClause);
+        break;
+    }
   }
 
   /**
@@ -202,6 +232,56 @@ class Records extends Component {
     });
   }
 
+  returnTable() {
+    let data = null;
+    let tableType = null;
+    switch(this.state.recordType) {
+      case "Highest Scores":
+        data = this.state.highScores;
+        tableType = recordTableOptions1;
+        break;
+      case "Lowest Scores":
+        data = this.state.lowScores;
+        tableType = recordTableOptions1;
+        break;
+      case "Highest Victory Margins":
+        data = this.state.highMOV;
+        tableType = recordTableOptions2;
+        break;
+      case "Lowest Victory Margins":
+        data = this.state.lowMOV;
+        tableType = recordTableOptions2;
+        break;
+      case "Most Combined Points":
+        data = this.state.highComb;
+        tableType = recordTableOptions2;
+        break;
+      case "Least Combined Points":
+        data = this.state.lowComb;
+        tableType = recordTableOptions2;
+        break;
+      case "Highest Scores in a Loss":
+        data = this.state.highSL;
+        tableType = recordTableOptions2;
+        break;
+      case "Lowest Scores in a Win":
+        data = this.state.lowSW;
+        tableType = recordTableOptions2;
+        break;
+    }
+    
+    return (<FilterableTable
+      namespace="People"
+      initialSort="rank"
+      data={data}
+      fields={tableType}
+      tableClassName="standings-table-header"
+      trClassName="standings-tr"
+      headerVisible={false}
+      pagersVisible={false}
+    />);
+  }
+
   render() {
     return (
       <Container fluid>
@@ -245,134 +325,20 @@ class Records extends Component {
                   );
                 })}
               </select>
+              <select id="date-range" onChange={this.handleTypeChange()}>
+                {this.state.records.map(function (record, i) {
+                  return (
+                    <option value={record} key={i}>
+                      {record}
+                    </option>
+                  );
+                })}
+              </select>
             </h4>
             <div id="box-scrollable">
               <Row>
-                <Col xl={6}>
-                  <div className="table-title">
-                    <h3 id="table-head">Highest Scores</h3>
-                  </div>
-                  <FilterableTable
-                    namespace="People"
-                    initialSort="rank"
-                    data={this.state.highScores}
-                    fields={recordTableOptions1}
-                    tableClassName="standings-table-header"
-                    trClassName="standings-tr"
-                    headerVisible={false}
-                    pagersVisible={false}
-                  />
-                </Col>
-                <Col xl={6}>
-                  <div className="table-title">
-                    <h3 id="table-head">Lowest Scores</h3>
-                  </div>
-                  <FilterableTable
-                    namespace="People"
-                    initialSort="rank"
-                    data={this.state.lowScores}
-                    fields={recordTableOptions1}
-                    tableClassName="standings-table-header"
-                    trClassName="standings-tr"
-                    headerVisible={false}
-                    pagersVisible={false}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col xl={6}>
-                  <div className="table-title">
-                    <h3 id="table-head">Highest Victory Margins</h3>
-                  </div>
-                  <FilterableTable
-                    namespace="People"
-                    initialSort="rank"
-                    data={this.state.highMOV}
-                    fields={recordTableOptions2}
-                    tableClassName="standings-table-header"
-                    trClassName="standings-tr"
-                    headerVisible={false}
-                    pagersVisible={false}
-                  />
-                </Col>
-                <Col xl={6}>
-                  <div className="table-title">
-                    <h3 id="table-head">Lowest Victory Margins</h3>
-                  </div>
-                  <FilterableTable
-                    namespace="People"
-                    initialSort="rank"
-                    data={this.state.lowMOV}
-                    fields={recordTableOptions2}
-                    tableClassName="standings-table-header"
-                    trClassName="standings-tr"
-                    headerVisible={false}
-                    pagersVisible={false}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col xl={6}>
-                  <div className="table-title">
-                    <h3 id="table-head">Most Combined Points</h3>
-                  </div>
-                  <FilterableTable
-                    namespace="People"
-                    initialSort="rank"
-                    data={this.state.highComb}
-                    fields={recordTableOptions2}
-                    tableClassName="standings-table-header"
-                    trClassName="standings-tr"
-                    headerVisible={false}
-                    pagersVisible={false}
-                  />
-                </Col>
-                <Col xl={6}>
-                  <div className="table-title">
-                    <h3 id="table-head">Least Combined Points</h3>
-                  </div>
-                  <FilterableTable
-                    namespace="People"
-                    initialSort="rank"
-                    data={this.state.lowComb}
-                    fields={recordTableOptions2}
-                    tableClassName="standings-table-header"
-                    trClassName="standings-tr"
-                    headerVisible={false}
-                    pagersVisible={false}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col xl={6}>
-                  <div className="table-title">
-                    <h3 id="table-head">Highest Scores in a Loss</h3>
-                  </div>
-                  <FilterableTable
-                    namespace="People"
-                    initialSort="rank"
-                    data={this.state.highSL}
-                    fields={recordTableOptions2}
-                    tableClassName="standings-table-header"
-                    trClassName="standings-tr"
-                    headerVisible={false}
-                    pagersVisible={false}
-                  />
-                </Col>
-                <Col xl={6}>
-                  <div className="table-title">
-                    <h3 id="table-head">Lowest Scores in a Win</h3>
-                  </div>
-                  <FilterableTable
-                    namespace="People"
-                    initialSort="rank"
-                    data={this.state.lowSW}
-                    fields={recordTableOptions2}
-                    tableClassName="standings-table-header"
-                    trClassName="standings-tr"
-                    headerVisible={false}
-                    pagersVisible={false}
-                  />
+                <Col xl={12}>
+                  {this.returnTable()}
                 </Col>
               </Row>
             </div>

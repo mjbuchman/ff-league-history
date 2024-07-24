@@ -219,9 +219,9 @@ app.get("/standings/:year/:regSeason/:playoff", (req, res) => {
 
     create temporary table WinLoss
         select owner, sum(win) as win, sum(loss) as loss from
-        (SELECT owner, COUNT(*) AS win, 0 as loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score > away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score > home_score AND (${clause})) AS innerWins GROUP BY owner
+        (SELECT owner, COUNT(*) AS win, 0 as loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score > away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score > home_score AND (${clause}) UNION ALL SELECT home_team AS owner FROM Matchups WHERE away_score = home_score AND tiebreak = 'H' AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score = home_score AND tiebreak = 'A' AND (${clause})) AS innerWins GROUP BY owner
         UNION ALL
-        SELECT owner, 0 as win, COUNT(*) AS loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score < away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score < home_score AND (${clause})) AS innerLosses GROUP BY owner) as WL group by owner;
+        SELECT owner, 0 as win, COUNT(*) AS loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score < away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score < home_score AND (${clause}) UNION ALL SELECT home_team AS owner FROM Matchups WHERE away_score = home_score AND tiebreak = 'A' AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score = home_score AND tiebreak = 'H' AND (${clause})) AS innerLosses GROUP BY owner) as WL group by owner;
         
         create temporary table Points
         Select * from (SELECT owner, SUM(pf) AS pf, SUM(pa) AS pa FROM (SELECT home_team AS owner, SUM(home_score) AS pf, SUM(away_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner UNION ALL SELECT away_team AS Owner, SUM(away_score) AS pf, SUM(home_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner) AS innerPoints GROUP BY owner) as OuterPoints;
@@ -240,32 +240,32 @@ app.get("/standings/final", (req, res) => {
 //  RECORDS
 //----------------------------------
 app.get("/records/highScores/:condition", (req, res) => {
-  var query = `SELECT * FROM (SELECT year, week, home_team as owner, home_score as score FROM Matchups ${req.params.condition} UNION SELECT year, week, away_team as owner, away_score as score FROM Matchups ${req.params.condition}) as scores order by score DESC LIMIT 10`;
+  var query = `SELECT * FROM (SELECT year, week, home_team as owner, home_score as score FROM Matchups ${req.params.condition} UNION SELECT year, week, away_team as owner, away_score as score FROM Matchups ${req.params.condition}) as scores order by score DESC LIMIT 25`;
   queryDB(res, query);
 });
 
 app.get("/records/lowScores/:condition", (req, res) => {
-  var query = `SELECT * FROM (SELECT year, week, home_team as owner, home_score as score FROM Matchups ${req.params.condition} UNION SELECT year, week, away_team as owner, away_score as score FROM Matchups ${req.params.condition}) as scores order by score ASC LIMIT 10`;
+  var query = `SELECT * FROM (SELECT year, week, home_team as owner, home_score as score FROM Matchups ${req.params.condition} UNION SELECT year, week, away_team as owner, away_score as score FROM Matchups ${req.params.condition}) as scores order by score ASC LIMIT 25`;
   queryDB(res, query);
 });
 
 app.get("/records/highMOV/:condition", (req, res) => {
-  var query = `SELECT year, week, CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, ABS(home_score-away_score) AS points FROM Matchups ${req.params.condition} ORDER BY (ABS(home_score-away_score)) DESC LIMIT 10`;
+  var query = `SELECT year, week, CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, ABS(home_score-away_score) AS points FROM Matchups ${req.params.condition} ORDER BY (ABS(home_score-away_score)) DESC LIMIT 25`;
   queryDB(res, query);
 });
 
 app.get("/records/lowMOV/:condition", (req, res) => {
-  var query = `SELECT year, week ,CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, ABS(home_score-away_score) AS points FROM Matchups ${req.params.condition} ORDER BY (ABS(home_score-away_score)) ASC LIMIT 10`;
+  var query = `SELECT year, week ,CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, ABS(home_score-away_score) AS points FROM Matchups ${req.params.condition} ORDER BY (ABS(home_score-away_score)) ASC LIMIT 25`;
   queryDB(res, query);
 });
 
 app.get("/records/highComb/:condition", (req, res) => {
-  var query = `SELECT year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, home_score+away_score AS points FROM Matchups ${req.params.condition} ORDER BY (home_score+away_score) DESC LIMIT 10`;
+  var query = `SELECT year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, home_score+away_score AS points FROM Matchups ${req.params.condition} ORDER BY (home_score+away_score) DESC LIMIT 25`;
   queryDB(res, query);
 });
 
 app.get("/records/lowComb/:condition", (req, res) => {
-  var query = `SELECT year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, home_score+away_score AS points FROM Matchups ${req.params.condition} ORDER BY (home_score+away_score) ASC LIMIT 10`;
+  var query = `SELECT year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, home_score+away_score AS points FROM Matchups ${req.params.condition} ORDER BY (home_score+away_score) ASC LIMIT 25`;
   queryDB(res, query);
 });
 
@@ -273,7 +273,7 @@ app.get("/records/highSL/:condition", (req, res) => {
   var query = `
     select year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, score AS points from \
     (select *, Away_Score as score from Matchups where home_score > away_score AND ${req.params.condition} UNION select *, Home_Score as score from Matchups where home_score < away_score AND ${req.params.condition}) as scores \
-    order by Points desc limit 10
+    order by Points desc LIMIT 25
     `;
   queryDB(res, query);
 });
@@ -282,7 +282,7 @@ app.get("/records/lowSW/:condition", (req, res) => {
   var query = `
     select year, week , CONCAT(home_team, ' - ', home_score, ' vs ', away_team, ' - ', away_score) as matchup, score AS points from \
     (select *, Home_Score as score from Matchups where home_score > away_score AND ${req.params.condition} UNION select *, Away_Score as score from Matchups where home_score < away_score AND ${req.params.condition}) as scores \
-    order by Points Asc limit 10
+    order by Points Asc LIMIT 25
   `;
   queryDB(res, query);
 });

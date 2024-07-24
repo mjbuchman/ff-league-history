@@ -18,9 +18,9 @@ def updateMatchups(year, startWeek, weeksToAdd, playoffs, doubleWeek, regSeason)
 			rawData.write('\n' +
 						str(year) + ',' +
 						str(week) + ',' +
-						matchup.home_team.owner + ',' +
+						matchup.home_team.owners[0]["firstName"] + ' ' + matchup.home_team.owners[0]["lastName"] + ',' +
 						str(matchup.home_score) + ',' +
-						matchup.away_team.owner + ',' +
+						matchup.away_team.owners[0]["firstName"] + ' ' + matchup.away_team.owners[0]["lastName"] + ',' +
 						str(matchup.away_score) + ',' +
 						playoffs.upper() + ',' +
 						doubleWeek.upper() + ',' +
@@ -30,9 +30,9 @@ def updateMatchups(year, startWeek, weeksToAdd, playoffs, doubleWeek, regSeason)
 			sqlData.write('\n\t(' +
 						str(year) + ',' +
 						str(week) + ',' +
-						'\'' + matchup.home_team.owner + '\',' +
+						'\'' + matchup.home_team.owners[0]["firstName"] + ' ' + matchup.home_team.owners[0]["lastName"] + '\',' +
 						str(matchup.home_score) + ',' +
-						'\'' + matchup.away_team.owner + '\',' +
+						'\'' + matchup.away_team.owners[0]["firstName"] + ' ' + matchup.away_team.owners[0]["lastName"] + '\',' +
 						str(matchup.away_score) + ',' +
 						'\'' + playoffs.upper() + '\',' +
 						'\'' + doubleWeek.upper() + '\',' +

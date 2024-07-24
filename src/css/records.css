@@ -9,8 +9,6 @@
 .standings-table-header {
     width: 100%;
     border: 3px solid #bbb;
-    margin-top: -80px;
-    margin-bottom: 20px;
     box-shadow: 5px 10px 10px 1px #696969;
     z-index: -1;
 }
@@ -18,7 +16,7 @@
 .standings-th-header {
     background-color: #304c89;
     padding: 15px;
-    padding-top: 100px;
+
     color: white;
     text-shadow: 1px 1px #000;
 }
