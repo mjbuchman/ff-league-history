@@ -218,6 +218,10 @@ class Overview extends Component {
           totalWins++;
           if (game.Regular_Season === "TRUE") rsWins++;
           if (game.Playoff === "TRUE") pWins++;
+        } else if (game.Home_Score == game.Away_Score && game.Tiebreak == 'H') {
+          totalWins++;
+          if (game.Regular_Season === "TRUE") rsWins++;
+          if (game.Playoff === "TRUE") pWins++;
         } else {
           totalLosses++;
           if (game.Regular_Season === "TRUE") rsLosses++;
@@ -225,6 +229,10 @@ class Overview extends Component {
         }
       } else {
         if (game.Away_Score > game.Home_Score) {
+          totalWins++;
+          if (game.Regular_Season === "TRUE") rsWins++;
+          if (game.Playoff === "TRUE") pWins++;
+        } else if (game.Home_Score == game.Away_Score && game.Tiebreak == 'A') {
           totalWins++;
           if (game.Regular_Season === "TRUE") rsWins++;
           if (game.Playoff === "TRUE") pWins++;
@@ -266,9 +274,11 @@ class Overview extends Component {
   };
 
   renderRings() {
-    return this.state.ownerVals.Championships === 0 ? null : (
-      <img id="ring-logo" src={imgDict["Ring"]} alt="Ring"></img>
-    );
+    let rings = [];
+    for (let i = 0; i < this.state.ownerVals.Championships; i++) {
+      rings.push(<img id="ring-logo" src={imgDict["Ring"]} alt="Ring"></img>);
+    }
+    return rings;
   }
 
   render() {
@@ -318,7 +328,7 @@ class Overview extends Component {
                     </Col>
                     <Col md={4} id="top-padded">
                       <h3>Record</h3>
-                      <h2>{`${this.state.recordData.totalWins}-${this.state.recordData.totalLosses}-0`}</h2>
+                      <h2>{`${this.state.recordData.totalWins}-${this.state.recordData.totalLosses}`}</h2>
                     </Col>
                   </Row>
                   <Row>
@@ -412,7 +422,7 @@ class Overview extends Component {
             {!this.state.refreshing && (
               <div id="box">
                 <Row>
-                  <Col lg={3} id="center-align">
+                  <Col lg={4} id="center-align">
                     <h5>Win Rate</h5>
                     <ReactSpeedometer
                       maxValue={1.0}
@@ -431,20 +441,15 @@ class Overview extends Component {
                       textColor="#777"
                     />
                   </Col>
-                  <Col sm={4} lg={3} id="center-align">
+                  <Col sm={4} lg={4} id="center-align">
                     <h5>Win</h5>
                     <hr></hr>
                     <h1>{this.state.recordData.rsWins}</h1>
                   </Col>
-                  <Col sm={4} lg={3} id="center-align">
+                  <Col sm={4} lg={4} id="center-align">
                     <h5>Loss</h5>
                     <hr></hr>
                     <h1>{this.state.recordData.rsLosses}</h1>
-                  </Col>
-                  <Col sm={4} lg={3} id="center-align">
-                    <h5>Tie</h5>
-                    <hr></hr>
-                    <h1>0</h1>
                   </Col>
                 </Row>
                 <Row>
@@ -511,7 +516,7 @@ class Overview extends Component {
             {!this.state.refreshing && (
               <div id="box">
                 <Row>
-                  <Col lg={3} id="center-align">
+                  <Col lg={4} id="center-align">
                     <h5>Win Rate</h5>
                     <ReactSpeedometer
                       maxValue={1.0}
@@ -530,20 +535,15 @@ class Overview extends Component {
                       textColor="#777"
                     />
                   </Col>
-                  <Col sm={4} lg={3} id="center-align">
+                  <Col sm={4} lg={4} id="center-align">
                     <h5>Win</h5>
                     <hr></hr>
                     <h1>{this.state.recordData.pWins}</h1>
                   </Col>
-                  <Col sm={4} lg={3} id="center-align">
+                  <Col sm={4} lg={4} id="center-align">
                     <h5>Loss</h5>
                     <hr></hr>
                     <h1>{this.state.recordData.pLosses}</h1>
-                  </Col>
-                  <Col sm={4} lg={3} id="center-align">
-                    <h5>Tie</h5>
-                    <hr></hr>
-                    <h1>0</h1>
                   </Col>
                 </Row>
                 <Row>

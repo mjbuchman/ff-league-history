@@ -21,7 +21,7 @@ def updateDrafts(year):
 				gp += 1
 		avgPts = round(player.total_points/gp, 2) if gp > 0 else 0
 		prk = 200 if player.posRank == 0 else player.posRank
-		draftPick = {"year": year, "round": pick.round_num, "pick": pick.round_pick, "name": player.name, "team": player.proTeam, "position": player.position, "owner": pick.team.owner, "prk": prk, "gp": gp, "fptsg": avgPts, "fpts": player.total_points}
+		draftPick = {"year": year, "round": pick.round_num, "pick": pick.round_pick, "name": player.name, "team": player.proTeam, "position": player.position, "owner": pick.team.owners[0]["firstName"] + " " + pick.team.owners[0]["lastName"], "prk": prk, "gp": gp, "fptsg": avgPts, "fpts": player.total_points}
 		rawData.write('\n' +
 			str(year) + ',' +
 			str(pick.round_num) + ',' +
@@ -29,11 +29,12 @@ def updateDrafts(year):
 			player.name + ',' +
 			player.proTeam + ',' +
 			player.position + ',' +
-			pick.team.owner + ',' +
+			pick.team.owners[0]["firstName"] + " " + pick.team.owners[0]["lastName"] + ',' +
 			str(prk) + ',' +
 			str(gp) + ',' +
 			str(avgPts) + ',' +
-			str(player.total_points)
+			str(player.total_points) + ',' +
+			'N'
 		)
 		sqlData.write('\n(' +
 			str(year) + ',' +
@@ -42,11 +43,12 @@ def updateDrafts(year):
 			'\'' + player.name + '\',' +
 			'\'' + player.proTeam + '\',' +
 			'\'' + player.position + '\',' +
-			'\'' + pick.team.owner + '\',' +
+			'\'' + pick.team.owners[0]["firstName"] + " " + pick.team.owners[0]["lastName"] + '\',' +
 			str(prk) + ',' +
 			str(gp) + ',' +
 			str(avgPts) + ',' +
-			str(player.total_points) + '),'
+			str(player.total_points) + ',' + 
+			'\'N\'' + '),'
 		)
 
 	fsize = get_size(sqlData)

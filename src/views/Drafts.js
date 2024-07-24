@@ -167,6 +167,11 @@ class Drafts extends Component {
       ownerDraftValues = {};
     for (var i = 0; i < this.state.draftData.length; i++) {
       draftPick = sortedData[i];
+
+      if (draftPick.Keeper == 'Y') {
+        draftPick.Player += ' (K)';
+      }
+
       if (
         i < 10 &&
         draftPick.Position !== "D/ST" &&
