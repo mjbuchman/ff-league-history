@@ -68,7 +68,7 @@ class Overview extends Component {
           // Inefficient, petty and entirely unneccessary sort to put me first :D
           var bestOwner = "Michael Buchman";
           rows.sort(function (x, y) {
-            return x.Owner === bestOwner ? -1 : y.Owner === bestOwner ? 1 : 0;
+            return x.owner === bestOwner ? -1 : y.owner === bestOwner ? 1 : 0;
           });
           this.setState({ [field]: rows }, this.updateValues);
         }
@@ -98,7 +98,7 @@ class Overview extends Component {
     var currOwner = this.state.currOwner;
     var index = 0;
     this.state.owners.forEach(function (owner, i) {
-      if (currOwner === owner.Owner) index = i;
+      if (currOwner === owner.owner) index = i;
     });
 
     this.setState({ ownerVals: this.state.owners[index] });
@@ -139,7 +139,7 @@ class Overview extends Component {
     var points = [0];
     this.state.games.forEach(function (game, i, games) {
       // Begin new season
-      if (i > 0 && game.Year !== games[i - 1].Year) {
+      if (i > 0 && game.year !== games[i - 1].year) {
         leagueWins[index] /= 2;
         leagueWins.push(0);
         wins.push(0);
@@ -147,7 +147,7 @@ class Overview extends Component {
         index++;
 
         // edge case handler to add a blank array value for years skipped i.e. Connor/Tyler 2020
-        if (i > 0 && game.Year - games[i - 1].Year !== 1) {
+        if (i > 0 && game.year - games[i - 1].year !== 1) {
           wins.push(0);
           points.push(0);
           index++;
@@ -156,12 +156,12 @@ class Overview extends Component {
 
       // Find wins and points scored accross all Matchup entries
       leagueWins[index] += 1;
-      if (game.Home_Team === currOwner) {
-        points[index] += game.Home_Score;
-        if (game.Home_Score > game.Away_Score) wins[index]++;
+      if (game.home_team === currOwner) {
+        points[index] += parseFloat(game.home_score);
+        if (game.home_score > game.away_score) wins[index]++;
       } else {
-        points[index] += game.Away_Score;
-        if (game.Home_Score < game.Away_Score) wins[index]++;
+        points[index] += parseFloat(game.away_score);
+        if (game.home_score < game.away_score) wins[index]++;
       }
     });
     leagueWins[index] /= 2;
@@ -213,33 +213,33 @@ class Overview extends Component {
     var currOwner = this.state.currOwner;
     this.state.games.forEach(function (game) {
       // determine what type of matchup this is and place result into the appropriate bucket
-      if (game.Home_Team === currOwner) {
-        if (game.Home_Score > game.Away_Score) {
+      if (game.home_team === currOwner) {
+        if (game.home_score > game.away_score) {
           totalWins++;
-          if (game.Regular_Season === "TRUE") rsWins++;
-          if (game.Playoff === "TRUE") pWins++;
-        } else if (game.Home_Score == game.Away_Score && game.Tiebreak == 'H') {
+          if (game.regular_season === "TRUE") rsWins++;
+          if (game.playoff === "TRUE") pWins++;
+        } else if (game.home_score === game.away_score && game.tiebreak === 'H') {
           totalWins++;
-          if (game.Regular_Season === "TRUE") rsWins++;
-          if (game.Playoff === "TRUE") pWins++;
+          if (game.regular_season === "TRUE") rsWins++;
+          if (game.playoff === "TRUE") pWins++;
         } else {
           totalLosses++;
-          if (game.Regular_Season === "TRUE") rsLosses++;
-          if (game.Playoff === "TRUE") pLosses++;
+          if (game.regular_season === "TRUE") rsLosses++;
+          if (game.playoff === "TRUE") pLosses++;
         }
       } else {
-        if (game.Away_Score > game.Home_Score) {
+        if (game.away_score > game.home_score) {
           totalWins++;
-          if (game.Regular_Season === "TRUE") rsWins++;
-          if (game.Playoff === "TRUE") pWins++;
-        } else if (game.Home_Score == game.Away_Score && game.Tiebreak == 'A') {
+          if (game.regular_season === "TRUE") rsWins++;
+          if (game.playoff === "TRUE") pWins++;
+        } else if (game.home_score === game.away_score && game.tiebreak === 'A') {
           totalWins++;
-          if (game.Regular_Season === "TRUE") rsWins++;
-          if (game.Playoff === "TRUE") pWins++;
+          if (game.regular_season === "TRUE") rsWins++;
+          if (game.playoff === "TRUE") pWins++;
         } else {
           totalLosses++;
-          if (game.Regular_Season === "TRUE") rsLosses++;
-          if (game.Playoff === "TRUE") pLosses++;
+          if (game.regular_season === "TRUE") rsLosses++;
+          if (game.playoff === "TRUE") pLosses++;
         }
       }
     });
@@ -275,7 +275,7 @@ class Overview extends Component {
 
   renderRings() {
     let rings = [];
-    for (let i = 0; i < this.state.ownerVals.Championships; i++) {
+    for (let i = 0; i < this.state.ownerVals.championships; i++) {
       rings.push(<img id="ring-logo" src={imgDict["Ring"]} alt="Ring"></img>);
     }
     return rings;
@@ -294,8 +294,8 @@ class Overview extends Component {
                 <select id="owners" onChange={this.handleOwnerChange()}>
                   {this.state.owners.map(function (owner, i) {
                     return (
-                      <option value={owner.Owner} key={i}>
-                        {owner.Owner}
+                      <option value={owner.owner} key={i}>
+                        {owner.owner}
                       </option>
                     );
                   })}
@@ -362,35 +362,35 @@ class Overview extends Component {
                   <Row>
                     <Col md={6} id="top-padded">
                       <h3>Highest Score - Regular Season</h3>
-                      <h2>{this.state.highScore[0].Score}</h2>
+                      <h2>{this.state.highScore[0].score}</h2>
                       <p>
-                        (Week {this.state.highScore[0].Week},{" "}
-                        {this.state.highScore[0].Year})
+                        (Week {this.state.highScore[0].week},{" "}
+                        {this.state.highScore[0].year})
                       </p>
                     </Col>
                     <Col md={6} id="top-padded">
                       <h3>Lowest Score - Regular Season</h3>
-                      <h2>{this.state.lowScore[0].Score}</h2>
+                      <h2>{this.state.lowScore[0].score}</h2>
                       <p>
-                        (Week {this.state.lowScore[0].Week},{" "}
-                        {this.state.lowScore[0].Year})
+                        (Week {this.state.lowScore[0].week},{" "}
+                        {this.state.lowScore[0].year})
                       </p>
                     </Col>
                   </Row>
                   <Row>
                     <Col md={6} id="top-padded">
                       <h3>Biggest Win Margin</h3>
-                      <h2>{this.state.bwm[0].Margin}</h2>
+                      <h2>{this.state.bwm[0].margin}</h2>
                       <p>
-                        (Week {this.state.bwm[0].Week}, {this.state.bwm[0].Year}
+                        (Week {this.state.bwm[0].week}, {this.state.bwm[0].year}
                         )
                       </p>
                     </Col>
                     <Col md={6} id="top-padded">
                       <h3>Smallest Win Margin</h3>
-                      <h2>{this.state.swm[0].Margin}</h2>
+                      <h2>{this.state.swm[0].margin}</h2>
                       <p>
-                        (Week {this.state.swm[0].Week}, {this.state.swm[0].Year}
+                        (Week {this.state.swm[0].week}, {this.state.swm[0].year}
                         )
                       </p>
                     </Col>
@@ -398,17 +398,17 @@ class Overview extends Component {
                   <Row>
                     <Col md={6} id="top-padded">
                       <h3>Biggest Loss Margin</h3>
-                      <h2>{this.state.blm[0].Margin}</h2>
+                      <h2>{this.state.blm[0].margin}</h2>
                       <p>
-                        (Week {this.state.blm[0].Week}, {this.state.blm[0].Year}
+                        (Week {this.state.blm[0].week}, {this.state.blm[0].year}
                         )
                       </p>
                     </Col>
                     <Col md={6} id="top-padded">
                       <h3>Smallest Loss Margin</h3>
-                      <h2>{this.state.slm[0].Margin}</h2>
+                      <h2>{this.state.slm[0].margin}</h2>
                       <p>
-                        (Week {this.state.slm[0].Week}, {this.state.slm[0].Year}
+                        (Week {this.state.slm[0].week}, {this.state.slm[0].year}
                         )
                       </p>
                     </Col>
@@ -458,7 +458,7 @@ class Overview extends Component {
                       <h6>Regular Season Champion</h6>
                       <div id="box">
                         <h1 id="small-mar">
-                          {this.state.ownerVals.RS_Champion}
+                          {this.state.ownerVals.rs_champion}
                         </h1>
                       </div>
                     </div>
@@ -468,7 +468,7 @@ class Overview extends Component {
                       <h6>Last Place Finishes</h6>
                       <div id="box">
                         <h1 id="small-mar">
-                          {this.state.ownerVals.Last_Place_RS}
+                          {this.state.ownerVals.last_place_rs}
                         </h1>
                       </div>
                     </div>
@@ -478,7 +478,7 @@ class Overview extends Component {
                       <h6>Best Placement</h6>
                       <div id="box">
                         <h1 id="small-mar">
-                          {placeDict[this.state.ownerVals.Best_Placement_RS]}
+                          {placeDict[this.state.ownerVals.best_placement_rs]}
                         </h1>
                       </div>
                     </div>
@@ -489,7 +489,7 @@ class Overview extends Component {
                     <div className="stats-box">
                       <h6>Season High Scorer</h6>
                       <div id="box">
-                        <h1 id="small-mar">{this.state.ownerVals.Season_HS}</h1>
+                        <h1 id="small-mar">{this.state.ownerVals.season_hs}</h1>
                       </div>
                     </div>
                   </Col>
@@ -512,7 +512,7 @@ class Overview extends Component {
                 </Row>
               </div>
             )}
-            <h4>Playoff Performance</h4>
+            <h4>playoff Performance</h4>
             {!this.state.refreshing && (
               <div id="box">
                 <Row>
@@ -549,7 +549,7 @@ class Overview extends Component {
                 <Row>
                   <Col md={4} id="center-align">
                     <div className="stats-box">
-                      <h6>Playoff Appearances</h6>
+                      <h6>playoff Appearances</h6>
                       <div id="box">
                         <h1 id="small-mar">{this.state.pApp[0].count}</h1>
                       </div>
@@ -560,7 +560,7 @@ class Overview extends Component {
                       <h6>Best Placement</h6>
                       <div id="box">
                         <h1 id="small-mar">
-                          {placeDict[this.state.ownerVals.Best_Placement_Final]}
+                          {placeDict[this.state.ownerVals.best_placement_final]}
                         </h1>
                       </div>
                     </div>
@@ -569,7 +569,7 @@ class Overview extends Component {
                     <div className="stats-box">
                       <h6>Championship Appearances</h6>
                       <div id="box">
-                        <h1 id="small-mar">{this.state.ownerVals.Champ_App}</h1>
+                        <h1 id="small-mar">{this.state.ownerVals.champ_app}</h1>
                       </div>
                     </div>
                   </Col>

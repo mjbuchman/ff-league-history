@@ -1,7 +1,7 @@
 const path = require("path");
 const express = require("express");
-const mysql = require("mysql");
 var bodyParser = require("body-parser");
+const pg = require('pg');
 
 const app = express();
 var jsonParser = bodyParser.json();
@@ -12,16 +12,28 @@ const port = process.env.PORT || 5000;
 const buildPath = path.join(__dirname, "..", "build");
 app.use(express.static(buildPath));
 
-// database credentials
-const pool = mysql.createPool({
-  host: "wallersteinffl.cp2eugwggx41.us-east-2.rds.amazonaws.com",
-  user: process.env.REACT_APP_DB_USERNAME,
-  password: process.env.REACT_APP_DB_PASSWORD,
-  database: "wallersteinffl",
-  port: '3306',
-  waitForConnections: true,
-  connectTimeout: 30000,
-  multipleStatements: true,
+const config = {
+    user: process.env.REACT_APP_DB_USERNAME,
+    password: process.env.REACT_APP_DB_PASSWORD,
+    host: "wallersteinffl-wallersteinffl-2024.l.aivencloud.com",
+    port: 27842,
+    database: "defaultdb",
+    ssl: {
+        rejectUnauthorized: false,
+    },
+};
+
+var pool = new pg.Pool(config);
+pool.on('error', (err, client) => {
+  console.error('Unexpected error on idle client', err)
+  process.exit(-1)
+})
+
+pool.connect(error => {
+  if (error) {
+    console.error(error);
+    process.exit(1);
+  }
 });
 
 // app connected and listening to outputted port
@@ -32,9 +44,10 @@ app.listen(port, () => {
 const queryDB = (res, query) => {
   pool.query(query, (err, rows) => {
     if (err) {
+      console.log(err)
       res.send(err);
     } else {
-      res.send(rows);
+      res.send(rows.rows);
     }
   });
 };
@@ -61,101 +74,101 @@ app.get("/leagueAvgPF/:year", (req, res) => {
 //  OVERVIEW
 //----------------------------------
 app.get("/overview/seasons/:owner", (req, res) => {
-  var query = `select count(distinct year) as count from Matchups where home_team = "${req.params.owner}" OR away_team = "${req.params.owner}"`;
+  var query = `select count(distinct year) as count from Matchups where home_team = '${req.params.owner}' OR away_team = '${req.params.owner}'`;
   queryDB(res, query);
 });
 
 app.get("/overview/gp/:owner", (req, res) => {
-  var query = `select count(*) as count from Matchups where home_team = "${req.params.owner}" OR away_team = "${req.params.owner}"`;
+  var query = `select count(*) as count from Matchups where home_team = '${req.params.owner}' OR away_team = '${req.params.owner}'`;
   queryDB(res, query);
 });
 
 app.get("/overview/games/:owner", (req, res) => {
-  var query = `select * from Matchups where home_team = "${req.params.owner}" OR away_team = "${req.params.owner}"`;
+  var query = `select * from Matchups where home_team = '${req.params.owner}' OR away_team = '${req.params.owner}'`;
   queryDB(res, query);
 });
 
 app.get("/overview/tpf/:owner", (req, res) => {
-  var query = `select sum(score) as tpf from (Select sum(Home_score) as score from Matchups where Home_Team = "${req.params.owner}" UNION Select sum(Away_score) as score from Matchups where Away_Team = "${req.params.owner}") as points`;
+  var query = `select sum(score) as tpf from (Select sum(Home_score) as score from Matchups where Home_Team = '${req.params.owner}' UNION Select sum(Away_score) as score from Matchups where Away_Team = '${req.params.owner}') as points`;
   queryDB(res, query);
 });
 
 app.get("/overview/tpa/:owner", (req, res) => {
-  var query = `select sum(score) as tpa from (Select sum(Away_score) as score from Matchups where Home_Team = "${req.params.owner}" UNION Select sum(Home_score) as score from Matchups where Away_Team = "${req.params.owner}") as points`;
+  var query = `select sum(score) as tpa from (Select sum(Away_score) as score from Matchups where Home_Team = '${req.params.owner}' UNION Select sum(Home_score) as score from Matchups where Away_Team = '${req.params.owner}') as points`;
   queryDB(res, query);
 });
 
 app.get("/overview/highScore/:owner", (req, res) => {
-  var query = `Select Year, Week, Score from (Select Year, Week, Home_score as Score from Matchups where Home_Team = "${req.params.owner}" AND Regular_Season = "TRUE" UNION Select Year, Week, Away_Score as Score from Matchups where Away_Team = "${req.params.owner}" AND Regular_Season = "TRUE") as scores order by Score DESC limit 1`;
+  var query = `Select Year, Week, Score from (Select Year, Week, Home_score as Score from Matchups where Home_Team = '${req.params.owner}' AND Regular_Season = 'TRUE' UNION Select Year, Week, Away_Score as Score from Matchups where Away_Team = '${req.params.owner}' AND Regular_Season = 'TRUE') as scores order by Score DESC limit 1`;
   queryDB(res, query);
 });
 
 app.get("/overview/lowScore/:owner", (req, res) => {
-  var query = `Select Year, Week, Score from (Select Year, Week, Home_score as Score from Matchups where Home_Team = "${req.params.owner}" AND Regular_Season = "TRUE" UNION Select Year, Week, Away_Score as Score from Matchups where Away_Team = "${req.params.owner}" AND Regular_Season = "TRUE") as scores order by Score ASC limit 1`;
+  var query = `Select Year, Week, Score from (Select Year, Week, Home_score as Score from Matchups where Home_Team = '${req.params.owner}' AND Regular_Season = 'TRUE' UNION Select Year, Week, Away_Score as Score from Matchups where Away_Team = '${req.params.owner}' AND Regular_Season = 'TRUE') as scores order by Score ASC limit 1`;
   queryDB(res, query);
 });
 
 app.get("/overview/bwm/:owner", (req, res) => {
-  var query = `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${req.params.owner}" AND Home_Score > Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${req.params.owner}" AND Away_Score > Home_Score) as margins order by Margin desc limit 1`;
+  var query = `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = '${req.params.owner}' AND Home_Score > Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = '${req.params.owner}' AND Away_Score > Home_Score) as margins order by Margin desc limit 1`;
   queryDB(res, query);
 });
 
 app.get("/overview/swm/:owner", (req, res) => {
-  var query = `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${req.params.owner}" AND Home_Score > Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${req.params.owner}" AND Away_Score > Home_Score) as margins order by Margin asc limit 1`;
+  var query = `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = '${req.params.owner}' AND Home_Score > Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = '${req.params.owner}' AND Away_Score > Home_Score) as margins order by Margin asc limit 1`;
   queryDB(res, query);
 });
 
 app.get("/overview/blm/:owner", (req, res) => {
-  var query = `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${req.params.owner}" AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${req.params.owner}" AND Away_Score < Home_Score) as margins order by Margin asc limit 1`;
+  var query = `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = '${req.params.owner}' AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = '${req.params.owner}' AND Away_Score < Home_Score) as margins order by Margin asc limit 1`;
   queryDB(res, query);
 });
 
 app.get("/overview/slm/:owner", (req, res) => {
-  var query = `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = "${req.params.owner}" AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = "${req.params.owner}" AND Away_Score < Home_Score) as margins order by Margin desc limit 1`;
+  var query = `select * from (Select Year, Week, Home_Score-Away_Score as Margin from Matchups where Home_Team = '${req.params.owner}' AND Home_Score < Away_Score UNION Select Year, Week, Away_Score-Home_Score as Margin from Matchups where Away_Team = '${req.params.owner}' AND Away_Score < Home_Score) as margins order by Margin desc limit 1`;
   queryDB(res, query);
 });
 
 app.get("/overview/playoffs/:owner", (req, res) => {
-  var query = `select count(distinct year) as count from Matchups where (home_team = "${req.params.owner}" OR away_team = "${req.params.owner}") AND Playoff = "TRUE"`;
+  var query = `select count(distinct year) as count from Matchups where (home_team = '${req.params.owner}' OR away_team = '${req.params.owner}') AND Playoff = 'TRUE'`;
   queryDB(res, query);
 });
 
 app.get("/overview/weekHS/:owner", (req, res) => {
   var query = ` 
-    drop temporary table if exists results;
-    drop temporary table if exists results2;
+    drop table if exists results;
+    drop table if exists results2;
     
-    Create temporary table results
+    Create table results as
     select year, week, home_team as owner, home_score as score from Matchups where Home_Score > Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score < Away_Score;
     
-    Create temporary table results2 select * from results;
+    Create table results2 as select * from results;
     
     select count(*) as count from 
     (select a.year, a.week, a.score, a.owner
     from results a
     inner join
     (select year, week, max(score) as score from results2 group by year, week) b
-    on a.year = b.year AND a.week = b.week AND a.score = b.score) as res where owner = "${req.params.owner}"
+    on a.year = b.year AND a.week = b.week AND a.score = b.score) as res where owner = '${req.params.owner}'
   `;
   queryDB(res, query);
 });
 
 app.get("/overview/weekLS/:owner", (req, res) => {
   var query = `
-    drop temporary table if exists results;
-    drop temporary table if exists results2;
+    drop table if exists results;
+    drop table if exists results2;
     
-    Create temporary table results
+    Create table results as
     select year, week, home_team as owner, home_score as score from Matchups where Home_Score < Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score > Away_Score;
     
-    Create temporary table results2 select * from results;
+    Create table results2 as select * from results;
     
     select count(*) as count from 
     (select a.year, a.week, a.score, a.owner
     from results a
     inner join
     (select year, week, min(score) as score from results2 group by year, week) b
-    on a.year = b.year AND a.week = b.week AND a.score = b.score) as res where owner = "${req.params.owner}"
+    on a.year = b.year AND a.week = b.week AND a.score = b.score) as res where owner = '${req.params.owner}'
   `;
   queryDB(res, query);
 });
@@ -164,23 +177,23 @@ app.get("/overview/weekLS/:owner", (req, res) => {
 //  HEAD TO HEAD
 //----------------------------------
 app.get("/h2h/matchups/:owner1/:owner2", (req, res) => {
-  var query = `select * from Matchups where (home_team = "${req.params.owner1}" OR home_team = "${req.params.owner2}") AND (away_team = "${req.params.owner1}" OR away_team = "${req.params.owner2}")`;
+  var query = `select * from Matchups where (home_team = '${req.params.owner1}' OR home_team = '${req.params.owner2}') AND (away_team = '${req.params.owner1}' OR away_team = '${req.params.owner2}')`;
   queryDB(res, query);
 });
 app.get("/h2h/matchups/:owner1/:owner2/:double/:type", (req, res) => {
   var query = `
-    drop temporary table if exists h2h;
-    drop temporary table if exists h2h2;
-    create temporary table h2h
+    drop table if exists h2h;
+    drop table if exists h2h2;
+    create table h2h as
         Select Year, Week, Home_Score as score from (
-            select * from Matchups where home_team = "${req.params.owner1}" AND away_team = "${req.params.owner2}" AND Two_Week = "${req.params.double}"
+            select * from Matchups where home_team = '${req.params.owner1}' AND away_team = '${req.params.owner2}' AND Two_Week = '${req.params.double}'
         ) as x
         UNION
         Select Year, Week, Away_Score as score from (
-            select * from Matchups where away_team = "${req.params.owner1}" AND home_team = "${req.params.owner2}" AND Two_Week = "${req.params.double}"
+            select * from Matchups where away_team = '${req.params.owner1}' AND home_team = '${req.params.owner2}' AND Two_Week = '${req.params.double}'
         ) as y;
         
-    create temporary table h2h2 select * from h2h;
+    create table h2h2 as select * from h2h;
     
     select a.year, a.week, a.score
     from h2h a
@@ -210,20 +223,20 @@ app.get("/standings/:year/:regSeason/:playoff", (req, res) => {
   } else {
     var regSeason = req.params.regSeason.toUpperCase();
     var playoff = req.params.playoff.toUpperCase();
-    var clause = `Regular_Season = "${regSeason}" AND Playoff = "${playoff}"${dateClause}`;
+    var clause = `Regular_Season = '${regSeason}' AND Playoff = '${playoff}'${dateClause}`;
   }
 
   var query = `
-    drop temporary table if exists WinLoss;
-    drop temporary table if exists Points;
+    drop table if exists WinLoss;
+    drop table if exists Points;
 
-    create temporary table WinLoss
+    create table WinLoss as
         select owner, sum(win) as win, sum(loss) as loss from
         (SELECT owner, COUNT(*) AS win, 0 as loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score > away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score > home_score AND (${clause}) UNION ALL SELECT home_team AS owner FROM Matchups WHERE away_score = home_score AND tiebreak = 'H' AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score = home_score AND tiebreak = 'A' AND (${clause})) AS innerWins GROUP BY owner
         UNION ALL
         SELECT owner, 0 as win, COUNT(*) AS loss FROM (SELECT home_team AS owner FROM Matchups WHERE home_score < away_score AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score < home_score AND (${clause}) UNION ALL SELECT home_team AS owner FROM Matchups WHERE away_score = home_score AND tiebreak = 'A' AND (${clause}) UNION ALL SELECT away_team AS owner FROM Matchups WHERE away_score = home_score AND tiebreak = 'H' AND (${clause})) AS innerLosses GROUP BY owner) as WL group by owner;
         
-        create temporary table Points
+        create table Points as
         Select * from (SELECT owner, SUM(pf) AS pf, SUM(pa) AS pa FROM (SELECT home_team AS owner, SUM(home_score) AS pf, SUM(away_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner UNION ALL SELECT away_team AS Owner, SUM(away_score) AS pf, SUM(home_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner) AS innerPoints GROUP BY owner) as OuterPoints;
         
         select 0 as placement, Points.owner as owner, win+loss AS gp, win, loss, 0 AS tie, win/(win+loss) AS pct, pf, pa from WinLoss inner join Points on (WinLoss.owner = Points.owner) ${exclude} order by pct desc, pf desc;
@@ -317,7 +330,7 @@ app.post("/updateMatchups", jsonParser, (req, res) => {
   var query = "INSERT INTO Matchups VALUES";
   query += req.body.matchups.map((week) => {
     return week.map((matchup) => {
-      return ` (\"${matchup.year}\", \"${matchup.week}\", \"${matchup.homeTeam}\", \"${matchup.homeScore}\", \"${matchup.awayTeam}\", \"${matchup.awayScore}\", \"${matchup.playoff}\", \"${matchup.twoWeek}\", \"${matchup.regularSeason}\") `;
+      return ` (\'${matchup.year}\", \'${matchup.week}\", \'${matchup.homeTeam}\", \'${matchup.homeScore}\", \'${matchup.awayTeam}\", \'${matchup.awayScore}\", \'${matchup.playoff}\", \'${matchup.twoWeek}\", \'${matchup.regularSeason}\") `;
     });
   });
   query = query.slice(0, -1) + ";";
@@ -327,7 +340,7 @@ app.post("/updateMatchups", jsonParser, (req, res) => {
 app.post("/updateDrafts", jsonParser, (req, res) => {
   var query = "INSERT INTO Drafts VALUES";
   query += req.body.draft.map((pick) => {
-    return ` (\"${pick.year}\", \"${pick.round}\", \"${pick.pick}\", \"${pick.name}\", \"${pick.team}\", \"${pick.position}\", \"${pick.owner}\", \"${pick.prk}\", \"${pick.gp}\", \"${pick.fptsg}\", \"${pick.fpts}\") `;
+    return ` (\'${pick.year}\", \'${pick.round}\", \'${pick.pick}\", \'${pick.name}\", \'${pick.team}\", \'${pick.position}\", \'${pick.owner}\", \'${pick.prk}\", \'${pick.gp}\", \'${pick.fptsg}\", \'${pick.fpts}\") `;
   });
   query = query.slice(0, -1) + ";";
   queryDB(res, query);
