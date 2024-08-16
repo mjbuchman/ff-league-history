@@ -43,7 +43,7 @@ class Standings extends Component {
       .then((response) => response.json())
       .then((rows) => {
         if (field === "standings") {
-          rows[4].forEach((row) => (row.pct = row.pct.toFixed(3)));
+          rows.forEach((row) => (row.pct = parseFloat(row.pct).toFixed(3)));
 
           // sets place values to final standings, else uses regular season standings
           if (
@@ -51,21 +51,21 @@ class Standings extends Component {
             yearsCompleted.includes(this.state.currDate) &&
             this.state.playoff.val
           ) {
-            rows[4].forEach((row) =>
+            rows.forEach((row) =>
               this.state.finalStandings.forEach((rowStandings) => {
                 if (
-                  rowStandings.Owner === row.owner &&
-                  rowStandings.Year === parseInt(this.state.currDate)
+                  rowStandings.owner === row.owner &&
+                  rowStandings.year === parseInt(this.state.currDate)
                 )
-                  row.placement = rowStandings.Place;
+                  row.placement = rowStandings.place;
               })
             );
           } else {
-            rows[4].forEach(function (row, i) {
+            rows.forEach(function (row, i) {
               row.placement = i + 1;
             });
           }
-          this.setState({ data: rows[4] });
+          this.setState({ data: rows });
         } else {
           this.setState({ [field]: rows });
         }

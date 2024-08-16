@@ -44,10 +44,13 @@ app.listen(port, () => {
 const queryDB = (res, query) => {
   pool.query(query, (err, rows) => {
     if (err) {
-      console.log(err)
       res.send(err);
     } else {
-      res.send(rows.rows);
+      if (rows.rows) {
+        res.send(rows.rows);
+      } else {
+        res.send(rows[rows.length-1].rows)
+      }
     }
   });
 };
@@ -135,40 +138,46 @@ app.get("/overview/playoffs/:owner", (req, res) => {
 
 app.get("/overview/weekHS/:owner", (req, res) => {
   var query = ` 
-    drop table if exists results;
-    drop table if exists results2;
-    
-    Create table results as
-    select year, week, home_team as owner, home_score as score from Matchups where Home_Score > Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score < Away_Score;
-    
-    Create table results2 as select * from results;
-    
-    select count(*) as count from 
-    (select a.year, a.week, a.score, a.owner
-    from results a
-    inner join
-    (select year, week, max(score) as score from results2 group by year, week) b
-    on a.year = b.year AND a.week = b.week AND a.score = b.score) as res where owner = '${req.params.owner}'
+     drop table if exists results;
+     drop table if exists results2;
+
+     Create table results as
+     select year, week, home_team as owner, home_score as score from Matchups where Home_Score > Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score < Away_Score;
+
+     Create table results2 as select * from results;
+
+    select count(*) from (
+        select year, week, score, owner from results
+    ) a
+     inner join
+    (
+     select year, week, min(score) as score from results2 group by year, week
+    ) b
+    on a.year = b.year AND a.week = b.week AND a.score = b.score 
+    where owner = '${req.params.owner}'
   `;
   queryDB(res, query);
 });
 
 app.get("/overview/weekLS/:owner", (req, res) => {
   var query = `
-    drop table if exists results;
-    drop table if exists results2;
-    
-    Create table results as
-    select year, week, home_team as owner, home_score as score from Matchups where Home_Score < Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score > Away_Score;
-    
-    Create table results2 as select * from results;
-    
-    select count(*) as count from 
-    (select a.year, a.week, a.score, a.owner
-    from results a
-    inner join
-    (select year, week, min(score) as score from results2 group by year, week) b
-    on a.year = b.year AND a.week = b.week AND a.score = b.score) as res where owner = '${req.params.owner}'
+     drop table if exists results;
+     drop table if exists results2;
+
+     Create table results as
+     select year, week, home_team as owner, home_score as score from Matchups where Home_Score < Away_Score UNION select year, week, away_team as owner, away_score as score from Matchups where Home_Score > Away_Score;
+
+     Create table results2 as select * from results;
+
+    select count(*) from (
+        select year, week, score, owner from results
+    ) a
+     inner join
+    (
+     select year, week, min(score) as score from results2 group by year, week
+    ) b
+    on a.year = b.year AND a.week = b.week AND a.score = b.score 
+    where owner = '${req.params.owner}'
   `;
   queryDB(res, query);
 });
@@ -194,12 +203,7 @@ app.get("/h2h/matchups/:owner1/:owner2/:double/:type", (req, res) => {
         ) as y;
         
     create table h2h2 as select * from h2h;
-    
-    select a.year, a.week, a.score
-    from h2h a
-    inner join
-    (select year, week, ${req.params.type}(score) as score from h2h2) b
-    on a.score = b.score;
+    select year, week, score from h2h2 where score = (select ${req.params.type}(score) from h2h2);
     `;
   queryDB(res, query);
 });
@@ -209,7 +213,7 @@ app.get("/h2h/matchups/:owner1/:owner2/:double/:type", (req, res) => {
 //----------------------------------
 app.get("/standings/:year/:regSeason/:playoff", (req, res) => {
   let dateClause = "";
-  let exclude = `where Points.owner != "Sal DiVita" AND Points.owner != "Zach Way"`; // INACTIVE LEAGUE MEMBERS
+  let exclude = `where Points.owner != 'Sal DiVita' AND Points.owner != 'Zach Way'`; // INACTIVE LEAGUE MEMBERS
 
   // add date to query if year is specified
   if (req.params.year !== "All-Time") {
@@ -239,7 +243,7 @@ app.get("/standings/:year/:regSeason/:playoff", (req, res) => {
         create table Points as
         Select * from (SELECT owner, SUM(pf) AS pf, SUM(pa) AS pa FROM (SELECT home_team AS owner, SUM(home_score) AS pf, SUM(away_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner UNION ALL SELECT away_team AS Owner, SUM(away_score) AS pf, SUM(home_score) AS pa FROM Matchups WHERE ${clause} GROUP BY Owner) AS innerPoints GROUP BY owner) as OuterPoints;
         
-        select 0 as placement, Points.owner as owner, win+loss AS gp, win, loss, 0 AS tie, win/(win+loss) AS pct, pf, pa from WinLoss inner join Points on (WinLoss.owner = Points.owner) ${exclude} order by pct desc, pf desc;
+        select 0 as placement, Points.owner as owner, win+loss AS gp, win, loss, win/(win+loss) AS pct, pf, pa from WinLoss inner join Points on (WinLoss.owner = Points.owner) ${exclude} order by pct desc, pf desc;
     `;
   queryDB(res, query);
 });

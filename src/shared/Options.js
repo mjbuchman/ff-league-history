@@ -330,7 +330,7 @@ export const renderIconDrafts = (props) => {
   return (
     <span>
       <img
-        src={gradeDict[props.record.Grade]}
+        src={gradeDict[props.record.grade]}
         alt="letter-icon"
         style={{ width: "50px" }}
       ></img>
@@ -340,67 +340,67 @@ export const renderIconDrafts = (props) => {
 
 export const fullDraftOptions = [
   {
-    name: "Round",
+    name: "round",
     displayName: "Round",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Pick",
+    name: "pick",
     displayName: "Pick",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Player",
+    name: "player",
     displayName: "Player",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Team",
+    name: "team",
     displayName: "Team",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Position",
+    name: "position",
     displayName: "Position",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Owner",
+    name: "owner",
     displayName: "Owner",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "PRK",
+    name: "prk",
     displayName: "PRK",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Games",
+    name: "games",
     displayName: "GP",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "FPTSG",
+    name: "fptsg",
     displayName: "FPTS/G",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "FPTS",
+    name: "fpts",
     displayName: "FPTS",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Grade",
+    name: "grade",
     displayName: "Grade",
     thClassName: "standings-th",
     tdClassName: "standings-td",
@@ -410,61 +410,61 @@ export const fullDraftOptions = [
 
 export const indvidualDraftOptions = [
   {
-    name: "Round",
+    name: "round",
     displayName: "Round",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Pick",
+    name: "pick",
     displayName: "Pick",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Player",
+    name: "player",
     displayName: "Player",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Team",
+    name: "team",
     displayName: "Team",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Position",
+    name: "position",
     displayName: "Position",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "PRK",
+    name: "prk",
     displayName: "PRK",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Games",
+    name: "games",
     displayName: "GP",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "FPTSG",
+    name: "fptsg",
     displayName: "FPTS/G",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "FPTS",
+    name: "fpts",
     displayName: "FPTS",
     thClassName: "standings-th",
     tdClassName: "standings-td",
   },
   {
-    name: "Grade",
+    name: "grade",
     displayName: "Grade",
     thClassName: "standings-th",
     tdClassName: "standings-td",
@@ -486,7 +486,7 @@ export const draftRankOptions = [
     tdClassName: "standings-td",
   },
   {
-    name: "Grade",
+    name: "grade",
     displayName: "Grade",
     thClassName: "standings-th",
     tdClassName: "standings-td",

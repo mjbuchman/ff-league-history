@@ -118,11 +118,11 @@ class Records extends Component {
   updateTables() {
     var whereClause;
     if (this.state.regSeason.val) {
-      whereClause = 'where Regular_Season = "TRUE"';
+      whereClause = `where Regular_Season = 'TRUE'`;
     } else if (this.state.playoffS.val) {
-      whereClause = 'where Playoff = "TRUE" AND Two_Week = "FALSE"';
+      whereClause = `where Playoff = 'TRUE' AND Two_Week = 'FALSE'`;
     } else if (this.state.playoffD.val) {
-      whereClause = 'where Playoff = "TRUE" AND Two_Week = "TRUE"';
+      whereClause = `where Playoff = 'TRUE' AND Two_Week = 'TRUE'`;
     } else {
       whereClause = "where true";
     }
@@ -319,8 +319,8 @@ class Records extends Component {
                 <option value="All-Time">All-Time</option>
                 {this.state.seasons.map(function (season, i) {
                   return (
-                    <option value={season.Year} key={i}>
-                      {season.Year}
+                    <option value={season.year} key={i}>
+                      {season.year}
                     </option>
                   );
                 })}

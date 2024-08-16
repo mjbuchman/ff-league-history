@@ -76,16 +76,17 @@ class Drafts extends Component {
     if (this.state.draftData == null) return;
 
     var updatedDraftData = [];
-    var sbValue, value;
+    var sbvalue, value;
     if (this.state.currDate !== String(new Date().getFullYear())) {
       this.state.draftData.forEach((draftPick) => {
-        sbValue = draftPick.Round - draftPick.PRK;
+        sbvalue = draftPick.round - draftPick.prk;
 
-        if (draftPick.Position === "QB")
-          value = draftPick.FPTS * 0.8 + 10 * draftPick.Round;
-        else value = draftPick.FPTS + 10 * draftPick.Round;
+        draftPick.fpts = parseFloat(draftPick.fpts)
+        if (draftPick.position === "QB")
+          value = draftPick.fpts * 0.8 + 10 * draftPick.round;
+        else value = draftPick.fpts + 10 * draftPick.round;
 
-        draftPick["sbValue"] = sbValue;
+        draftPick["sbvalue"] = sbvalue;
         draftPick["value"] = Math.round(value);
 
         updatedDraftData.push(draftPick);
@@ -99,15 +100,15 @@ class Drafts extends Component {
         length = updatedDraftData.length;
       for (var i = 0; i < length; i++) {
         draftPick = updatedDraftData[i];
-        draftPick.vPct = ((length - i) / length) * 100;
-        draftPick.Grade = this.getLetterGrade(draftPick.vPct, true);
+        draftPick.vpct = ((length - i) / length) * 100;
+        draftPick.grade = this.getLetterGrade(draftPick.vpct, true);
       }
 
       updatedDraftData.sort(function (a, b) {
-        return a.Pick - b.Pick;
+        return a.pick - b.pick;
       });
       updatedDraftData.sort(function (a, b) {
-        return a.Round - b.Round;
+        return a.round - b.round;
       });
 
       if (this.state.currOwner !== "All Owners") {
@@ -155,7 +156,7 @@ class Drafts extends Component {
     // sort draft picks on their steal/bust value
     var sortedData = [...this.state.draftData];
     sortedData.sort(function (a, b) {
-      return b.sbValue - a.sbValue;
+      return b.sbvalue - a.sbvalue;
     });
 
     biggestSteal = sortedData[0];
@@ -168,41 +169,41 @@ class Drafts extends Component {
     for (var i = 0; i < this.state.draftData.length; i++) {
       draftPick = sortedData[i];
 
-      if (draftPick.Keeper == 'Y') {
-        draftPick.Player += ' (K)';
+      if (draftPick.keeper == 'Y') {
+        draftPick.player += ' (K)';
       }
 
       if (
         i < 10 &&
-        draftPick.Position !== "D/ST" &&
-        draftPick.Position !== "K"
+        draftPick.position !== "D/ST" &&
+        draftPick.position !== "K"
       ) {
         if (
           !nonSkillPlayer &&
-          (draftPick.Position === "QB" || draftPick.Position === "TE")
+          (draftPick.position === "QB" || draftPick.position === "TE")
         )
           nonSkillPlayer = draftPick;
         if (
           !skillPlayer &&
-          (draftPick.Position === "RB" || draftPick.Position === "WR")
+          (draftPick.position === "RB" || draftPick.position === "WR")
         )
           nonSkillPlayer = draftPick;
       }
 
-      if (draftPick.sbValue <= -40) {
-        if (draftPick.Round < biggestBust.Round) {
+      if (draftPick.sbvalue <= -40) {
+        if (draftPick.round < biggestBust.round) {
           biggestBust = draftPick;
-        } else if (draftPick.Round === biggestBust.Round) {
+        } else if (draftPick.round === biggestBust.round) {
           biggestBust =
-            draftPick.Pick < biggestBust.Pick ? draftPick : biggestBust;
+            draftPick.pick < biggestBust.pick ? draftPick : biggestBust;
         } else {
         }
       }
 
-      if (!ownerDraftValues[draftPick.Owner])
-        ownerDraftValues[draftPick.Owner] = 0;
+      if (!ownerDraftValues[draftPick.owner])
+        ownerDraftValues[draftPick.owner] = 0;
 
-      ownerDraftValues[draftPick.Owner] += draftPick.value;
+      ownerDraftValues[draftPick.owner] += draftPick.value;
     }
     var sortedOwnerDraftValues =
       this.calculateOwnerDraftGrades(ownerDraftValues);
@@ -233,7 +234,7 @@ class Drafts extends Component {
     var maxValue =
       (300 - 15 * (numOwners - 10)) * (this.state.draftData.length / numOwners);
     sortedReturnArr.forEach((Owner) => {
-      Owner.Grade = this.getLetterGrade((Owner.value / maxValue) * 100, false);
+      Owner.grade = this.getLetterGrade((Owner.value / maxValue) * 100, false);
     });
 
     return sortedReturnArr;
@@ -241,7 +242,7 @@ class Drafts extends Component {
 
   setIndvSuperlatives() {
     var indvDraftData = this.state.draftData.filter(
-      (draftPick) => draftPick.Owner === this.state.currOwner
+      (draftPick) => draftPick.owner === this.state.currOwner
     );
 
     var bestPlayer = indvDraftData[0],
@@ -249,26 +250,26 @@ class Drafts extends Component {
       biggestSteal = indvDraftData[0],
       biggestBust = indvDraftData[0];
     indvDraftData.forEach((draftPick) => {
-      if (draftPick.FPTS > bestPlayer.FPTS) bestPlayer = draftPick;
+      if (draftPick.fpts > bestPlayer.fpts) bestPlayer = draftPick;
       if (
         draftPick.value > bestValue.value &&
-        draftPick.Round < 15 &&
-        draftPick.Position !== "D/ST" &&
-        draftPick.Position !== "K"
+        draftPick.round < 15 &&
+        draftPick.position !== "D/ST" &&
+        draftPick.position !== "K"
       )
         bestValue = draftPick;
       if (
-        draftPick.sbValue >= biggestSteal.sbValue &&
-        draftPick.Round < 15 &&
-        draftPick.Position !== "D/ST" &&
-        draftPick.Position !== "K"
+        draftPick.sbvalue >= biggestSteal.sbvalue &&
+        draftPick.round < 15 &&
+        draftPick.position !== "D/ST" &&
+        draftPick.position !== "K"
       )
         biggestSteal = draftPick;
       if (
-        draftPick.sbValue < biggestBust.sbValue &&
-        draftPick.Round < 7 &&
-        draftPick.Position !== "D/ST" &&
-        draftPick.Position !== "K"
+        draftPick.sbvalue < biggestBust.sbvalue &&
+        draftPick.round < 7 &&
+        draftPick.position !== "D/ST" &&
+        draftPick.position !== "K"
       )
         biggestBust = draftPick;
     });
@@ -278,7 +279,7 @@ class Drafts extends Component {
     for (var i = 0; i < this.state.sortedODV.length; i++) {
       if (this.state.sortedODV[i].owner === this.state.currOwner) {
         draftRank = i + 1;
-        draftGrade = this.state.sortedODV[i].Grade;
+        draftGrade = this.state.sortedODV[i].grade;
         break;
       }
     }
@@ -322,8 +323,8 @@ class Drafts extends Component {
                     <option value="All Owners">All Owners</option>
                     {this.state.owners.map(function (owner, i) {
                       return (
-                        <option value={owner.Owner} key={i}>
-                          {owner.Owner}
+                        <option value={owner.owner} key={i}>
+                          {owner.owner}
                         </option>
                       );
                     })}
@@ -333,8 +334,8 @@ class Drafts extends Component {
                   <select id="date-range" onChange={this.handleDateChange()}>
                     {this.state.seasons.map(function (season, i) {
                       return (
-                        <option value={season.Year} key={i}>
-                          {season.Year}
+                        <option value={season.year} key={i}>
+                          {season.year}
                         </option>
                       );
                     })}
@@ -372,17 +373,17 @@ class Drafts extends Component {
                         {this.state.validData ? (
                           <div id="box">
                             <h1 id="small-mar">
-                              {this.state.ovrSuperlatives.biggestSteal.Player}
+                              {this.state.ovrSuperlatives.biggestSteal.player}
                             </h1>
                             <h5 id="small-mar" style={{ color: "black" }}>
-                              {this.state.ovrSuperlatives.biggestSteal.Owner} -
-                              RD {this.state.ovrSuperlatives.biggestSteal.Round}
+                              {this.state.ovrSuperlatives.biggestSteal.owner} -
+                              RD {this.state.ovrSuperlatives.biggestSteal.round}
                               , PK{" "}
-                              {this.state.ovrSuperlatives.biggestSteal.Pick}
+                              {this.state.ovrSuperlatives.biggestSteal.pick}
                             </h5>
                             <p id="black">
-                              PRK: {this.state.ovrSuperlatives.biggestSteal.PRK}{" "}
-                              | {this.state.ovrSuperlatives.biggestSteal.FPTS}{" "}
+                              PRK: {this.state.ovrSuperlatives.biggestSteal.prk}{" "}
+                              | {this.state.ovrSuperlatives.biggestSteal.fpts}{" "}
                               Pts
                             </p>
                           </div>
@@ -399,16 +400,16 @@ class Drafts extends Component {
                         {this.state.validData ? (
                           <div id="box">
                             <h1 id="small-mar">
-                              {this.state.ovrSuperlatives.biggestBust.Player}
+                              {this.state.ovrSuperlatives.biggestBust.player}
                             </h1>
                             <h5 id="small-mar" style={{ color: "black" }}>
-                              {this.state.ovrSuperlatives.biggestBust.Owner} -
-                              RD {this.state.ovrSuperlatives.biggestBust.Round},
-                              PK {this.state.ovrSuperlatives.biggestBust.Pick}
+                              {this.state.ovrSuperlatives.biggestBust.owner} -
+                              RD {this.state.ovrSuperlatives.biggestBust.round},
+                              PK {this.state.ovrSuperlatives.biggestBust.pick}
                             </h5>
                             <p id="black">
-                              PRK: {this.state.ovrSuperlatives.biggestBust.PRK}{" "}
-                              | {this.state.ovrSuperlatives.biggestBust.FPTS}{" "}
+                              PRK: {this.state.ovrSuperlatives.biggestBust.prk}{" "}
+                              | {this.state.ovrSuperlatives.biggestBust.fpts}{" "}
                               Pts
                             </p>
                           </div>
@@ -428,7 +429,7 @@ class Drafts extends Component {
                               {this.state.sortedODV[0].owner}
                             </h1>
                             <h5 id="small-mar" style={{ color: "black" }}>
-                              Grade: {this.state.sortedODV[0].Grade}
+                              Grade: {this.state.sortedODV[0].grade}
                             </h5>
                             <p id="black">
                               Value-Based Metric Score:{" "}
@@ -459,7 +460,7 @@ class Drafts extends Component {
                               {
                                 this.state.sortedODV[
                                   this.state.sortedODV.length - 1
-                                ].Grade
+                                ].grade
                               }
                             </h5>
                             <p id="black">
@@ -505,7 +506,7 @@ class Drafts extends Component {
                         <div id="box">
                           <h1 id="small-mar">
                             {this.state.validData
-                              ? this.state.indvSuperlatives.bestPlayer.Player
+                              ? this.state.indvSuperlatives.bestPlayer.player
                               : "N/A"}
                           </h1>
                         </div>
@@ -517,7 +518,7 @@ class Drafts extends Component {
                         <div id="box">
                           <h1 id="small-mar">
                             {this.state.validData
-                              ? this.state.indvSuperlatives.bestValue.Player
+                              ? this.state.indvSuperlatives.bestValue.player
                               : "N/A"}
                           </h1>
                         </div>
@@ -529,7 +530,7 @@ class Drafts extends Component {
                         <div id="box">
                           <h1 id="small-mar">
                             {this.state.validData
-                              ? this.state.indvSuperlatives.biggestSteal.Player
+                              ? this.state.indvSuperlatives.biggestSteal.player
                               : "N/A"}
                           </h1>
                         </div>
@@ -543,7 +544,7 @@ class Drafts extends Component {
                         <div id="box">
                           <h1 id="small-mar">
                             {this.state.validData
-                              ? this.state.indvSuperlatives.biggestBust.Player
+                              ? this.state.indvSuperlatives.biggestBust.player
                               : "N/A"}
                           </h1>
                         </div>

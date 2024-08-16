@@ -213,6 +213,8 @@ class Overview extends Component {
     var currOwner = this.state.currOwner;
     this.state.games.forEach(function (game) {
       // determine what type of matchup this is and place result into the appropriate bucket
+      game.home_score = parseFloat(game.home_score)
+      game.away_score = parseFloat(game.away_score)
       if (game.home_team === currOwner) {
         if (game.home_score > game.away_score) {
           totalWins++;
@@ -497,7 +499,7 @@ class Overview extends Component {
                     <div className="stats-box">
                       <h6>Weekly High Scorer</h6>
                       <div id="box">
-                        <h1 id="small-mar">{this.state.weekHS[4][0].count}</h1>
+                        <h1 id="small-mar">{this.state.weekHS[0].count}</h1>
                       </div>
                     </div>
                   </Col>
@@ -505,7 +507,7 @@ class Overview extends Component {
                     <div className="stats-box">
                       <h6>Weekly Low Scorer</h6>
                       <div id="box">
-                        <h1 id="small-mar">{this.state.weekLS[4][0].count}</h1>
+                        <h1 id="small-mar">{this.state.weekLS[0].count}</h1>
                       </div>
                     </div>
                   </Col>

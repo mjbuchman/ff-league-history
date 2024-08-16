@@ -57,16 +57,8 @@ class HeadToHead extends Component {
       .then((rows) => {
         if (field === "matchups")
           this.setState({ [field]: rows }, this.updateValues);
-        else if (singleVal) {
-          // single values return different format and need a different setState implementation
-          if (rows[4].length === 0)
-            this.setState({
-              [field]: [{ year: null, week: null, score: null }],
-            });
-          else this.setState({ [field]: rows[4] });
-
-          if (field === "lsdw2") this.setState({ refreshing: false }); // last field to update, ends refresh period
-        } else this.setState({ [field]: rows });
+        else if (field === "lsdw2") this.setState({ [field]: rows, refreshing: false }); // last field to update, ends refresh period
+        else this.setState({ [field]: rows });
       });
   }
 
@@ -159,10 +151,12 @@ class HeadToHead extends Component {
     if (this.state.currOwner1 !== this.state.currOwner2) {
       var winCount = 0;
       this.state.matchups.forEach((matchup) => {
-        if (matchup.Home_Score > matchup.Away_Score) {
-          if (matchup.Home_Team === this.state.currOwner1) winCount++;
+        matchup.home_score = parseFloat(matchup.home_score)
+        matchup.away_score = parseFloat(matchup.away_score)
+        if (matchup.home_score > matchup.away_score) {
+          if (matchup.home_team === this.state.currOwner1) winCount++;
         } else {
-          if (matchup.Away_Team === this.state.currOwner1) winCount++;
+          if (matchup.away_team === this.state.currOwner1) winCount++;
         }
       });
       this.setState({
@@ -177,12 +171,12 @@ class HeadToHead extends Component {
     var o1Count = 0;
     var o2Count = 0;
     this.state.matchups.forEach((matchup) => {
-      if (matchup.Home_Team === this.state.currOwner1) {
-        o1Count += matchup.Home_Score;
-        o2Count += matchup.Away_Score;
+      if (matchup.home_team === this.state.currOwner1) {
+        o1Count += parseFloat(matchup.home_score);
+        o2Count += parseFloat(matchup.away_score);
       } else {
-        o1Count += matchup.Away_Score;
-        o2Count += matchup.Home_Score;
+        o1Count += parseFloat(matchup.away_score);
+        o2Count += parseFloat(matchup.home_score);
       }
     });
     this.setState({
@@ -224,23 +218,23 @@ class HeadToHead extends Component {
     var year, week;
 
     this.state.matchups.forEach((matchup) => {
-      if (matchup.Home_Score > matchup.Away_Score) {
+      if (matchup.home_score > matchup.away_score) {
         if (
-          matchup.Home_Team === owner &&
-          matchup.Home_Score - matchup.Away_Score > max
+          matchup.home_team === owner &&
+          parseFloat(matchup.home_score) - parseFloat(matchup.away_score) > max
         ) {
-          max = matchup.Home_Score - matchup.Away_Score;
-          year = matchup.Year;
-          week = matchup.Week;
+          max = parseFloat(matchup.home_score) - parseFloat(matchup.away_score);
+          year = matchup.year;
+          week = matchup.week;
         }
       } else {
         if (
-          matchup.Away_Team === owner &&
-          matchup.Away_Score - matchup.Home_Score > max
+          matchup.away_team === owner &&
+          parseFloat(matchup.away_score) - parseFloat(matchup.home_score) > max
         ) {
-          max = matchup.Away_Score - matchup.Home_Score;
-          year = matchup.Year;
-          week = matchup.Week;
+          max = parseFloat(matchup.away_score) - parseFloat(matchup.home_score);
+          year = matchup.year;
+          week = matchup.week;
         }
       }
     });
@@ -264,23 +258,23 @@ class HeadToHead extends Component {
     var year, week;
 
     this.state.matchups.forEach((matchup) => {
-      if (matchup.Home_Score > matchup.Away_Score) {
+      if (matchup.home_score > matchup.away_score) {
         if (
-          matchup.Home_Team === owner &&
-          matchup.Home_Score - matchup.Away_Score < min
+          matchup.home_team === owner &&
+          parseFloat(matchup.home_score) - parseFloat(matchup.away_score) < min
         ) {
-          min = matchup.Home_Score - matchup.Away_Score;
-          year = matchup.Year;
-          week = matchup.Week;
+          min = parseFloat(matchup.home_score) - parseFloat(matchup.away_score);
+          year = matchup.year;
+          week = matchup.week;
         }
       } else {
         if (
-          matchup.Away_Team === owner &&
-          matchup.Away_Score - matchup.Home_Score < min
+          matchup.away_team === owner &&
+          parseFloat(matchup.away_score) - parseFloat(matchup.home_score) < min
         ) {
-          min = matchup.Away_Score - matchup.Home_Score;
-          year = matchup.Year;
-          week = matchup.Week;
+          min = parseFloat(matchup.away_score) - parseFloat(matchup.home_score);
+          year = matchup.year;
+          week = matchup.week;
         }
       }
     });
@@ -335,8 +329,8 @@ class HeadToHead extends Component {
                   </option>
                   {this.state.owners.map(function (owner, i) {
                     return (
-                      <option value={owner.Owner} key={i}>
-                        {owner.Owner}
+                      <option value={owner.owner} key={i}>
+                        {owner.owner}
                       </option>
                     );
                   })}
@@ -363,8 +357,8 @@ class HeadToHead extends Component {
                   </option>
                   {this.state.owners.map(function (owner, i) {
                     return (
-                      <option value={owner.Owner} key={i}>
-                        {owner.Owner}
+                      <option value={owner.owner} key={i}>
+                        {owner.owner}
                       </option>
                     );
                   })}
@@ -590,11 +584,11 @@ class HeadToHead extends Component {
                       return (
                         <tr key={i}>
                           <td>
-                            Season {matchup.Year}, Week {matchup.Week}
+                            Season {matchup.year}, Week {matchup.week}
                           </td>
                           <td>
-                            {matchup.Home_Team} <b>{matchup.Home_Score}</b>,{" "}
-                            {matchup.Away_Team} <b>{matchup.Away_Score}</b>
+                            {matchup.home_team} <b>{matchup.home_score}</b>,{" "}
+                            {matchup.away_team} <b>{matchup.away_score}</b>
                           </td>
                         </tr>
                       );
