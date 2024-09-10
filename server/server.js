@@ -151,7 +151,7 @@ app.get("/overview/weekHS/:owner", (req, res) => {
     ) a
      inner join
     (
-     select year, week, min(score) as score from results2 group by year, week
+     select year, week, max(score) as score from results2 group by year, week
     ) b
     on a.year = b.year AND a.week = b.week AND a.score = b.score 
     where owner = '${req.params.owner}'
