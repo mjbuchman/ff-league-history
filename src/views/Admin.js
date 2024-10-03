@@ -63,13 +63,24 @@ class Admin extends Component {
           this.setState({ [field]: rows }, this.setMatchupTypes);
         else if (field === "draft")
           this.setState({ [field]: rows, loading: false });
-        else {
-          if (rows.errno) {
-            alert(`ERROR ${rows.errno}:\n${rows.sqlMessage}`);
+        else if (field === "luckBot") {
+          if (rows.code) {
+            alert(`ERROR: action failed`);
             console.log(rows);
           } else {
             alert(
               `SUCCESS:\nLuck Bot has run for Week ${this.state.currWeek} of ${this.state.currYear}`
+            );
+          }
+          this.setState({ loading: false });
+        }
+        else {
+          if (rows.code) {
+            alert(`ERROR: action failed`);
+            console.log(rows);
+          } else {
+            alert(
+              `SUCCESS:\nMatchup Bot has run for the current week`
             );
           }
           this.setState({ loading: false });
@@ -97,6 +108,7 @@ class Admin extends Component {
         matchup["regularSeason"] = "TRUE";
         matchup["playoff"] = "FALSE";
         matchup["twoWeek"] = "FALSE";
+        matchup["tiebreak"] = 'N';
       });
     });
     this.setState({ matchups: matchupData, loading: false });
@@ -116,8 +128,8 @@ class Admin extends Component {
     })
       .then((response) => response.json())
       .then((rows) => {
-        if (rows.errno) {
-          alert(`ERROR ${rows.errno}:\n${rows.sqlMessage}`);
+        if (rows.code) {
+          alert(`ERROR: action failed`);
           console.log(rows);
         } else {
           alert(
@@ -135,8 +147,8 @@ class Admin extends Component {
     )
       .then((response) => response.json())
       .then((rows) => {
-        if (rows.errno) {
-          alert(`ERROR ${rows.errno}:\n${rows.sqlMessage}`);
+        if (rows.code) {
+          alert(`ERROR: action failed`);
           console.log(rows);
         } else {
           alert(
@@ -172,11 +184,11 @@ class Admin extends Component {
     })
       .then((response) => response.json())
       .then((rows) => {
-        if (rows.errno) {
-          alert(`ERROR ${rows.errno}:\n${rows.sqlMessage}`);
+        if (rows.code) {
+          alert(`ERROR: Failed to update`);
           console.log(rows);
         } else {
-          alert(`SUCCESS:\n${this.state.currYear} Draft added`);
+          alert(`SUCCESS: Draft added`);
         }
         this.setState({ draft: [], loading: false });
       });
@@ -187,8 +199,8 @@ class Admin extends Component {
     fetch(`/deleteDrafts/${this.state.year}`)
       .then((response) => response.json())
       .then((rows) => {
-        if (rows.errno) {
-          alert(`ERROR ${rows.errno}:\n${rows.sqlMessage}`);
+        if (rows.code) {
+          alert(`ERROR: action failed`);
           console.log(rows);
         } else {
           alert(`SUCCESS:\n${this.state.year} Draft has been deleted`);
@@ -205,6 +217,17 @@ class Admin extends Component {
       new URLSearchParams({
         week: this.state.currWeek,
         year: this.state.currYear,
+      })
+    );
+  }
+
+  runMatchupBot() {
+    this.setState({ loading: true });
+    this.fetchAPI(
+      "matchupBot",
+      "/runPreviewBot?",
+      new URLSearchParams({
+        year: this.state.currYear
       })
     );
   }
@@ -325,6 +348,29 @@ class Admin extends Component {
                 }
                 disabled={this.state.loading}
                 onClick={this.runLuckBot}
+              >
+                Run
+              </button>
+            </Col>
+          </Row>
+        </Row>
+        <Row>
+          <header>Matchup Bot</header>
+          <Row>
+            <Col>
+              <select
+                className="admin-select"
+                id="currYear"
+                onChange={this.handleCurrYearChange()}
+              >
+                {yearOpts}
+              </select>
+              <button
+                className={
+                  this.state.loading ? "disabled-button" : "admin-button"
+                }
+                disabled={this.state.loading}
+                onClick={this.runMatchupBot}
               >
                 Run
               </button>

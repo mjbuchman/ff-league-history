@@ -1,3 +1,4 @@
+const getH2HOverview = require("../server/services/headtohead.js");
 const path = require("path");
 const express = require("express");
 var bodyParser = require("body-parser");
@@ -54,6 +55,25 @@ const queryDB = (res, query) => {
     }
   });
 };
+
+const sendH2HOverview = (res, query, owner1, owner2) => {
+  pool.query(query, (err, rows) => {
+    if (err) {
+      res.send(err);
+    } else {
+      overview = getH2HOverview(rows.rows, owner1, owner2);
+      res.send(overview); 
+    }
+  });
+};
+
+  // pool.query(query, (err, rows) => {
+  //   if (err) {
+  //     res.send(err);
+  //   } else {
+  //     res.send(overview);
+  //   }
+  // });
 
 //----------------------------------
 //  SHARED
@@ -208,6 +228,10 @@ app.get("/h2h/matchups/:owner1/:owner2/:double/:type", (req, res) => {
   queryDB(res, query);
 });
 
+app.get("/getH2HOverview/:owner1/:owner2", (req, res) => {
+  var query = `select * from Matchups where (home_team = '${req.params.owner1}' OR home_team = '${req.params.owner2}') AND (away_team = '${req.params.owner1}' OR away_team = '${req.params.owner2}')`;
+  sendH2HOverview(res, query, req.params.owner1, req.params.owner2);
+});
 //----------------------------------
 //  STANDINGS
 //----------------------------------
@@ -334,7 +358,7 @@ app.post("/updateMatchups", jsonParser, (req, res) => {
   var query = "INSERT INTO Matchups VALUES";
   query += req.body.matchups.map((week) => {
     return week.map((matchup) => {
-      return ` (\'${matchup.year}\", \'${matchup.week}\", \'${matchup.homeTeam}\", \'${matchup.homeScore}\", \'${matchup.awayTeam}\", \'${matchup.awayScore}\", \'${matchup.playoff}\", \'${matchup.twoWeek}\", \'${matchup.regularSeason}\") `;
+      return ` (\'${matchup.year}\', \'${matchup.week}\', \'${matchup.homeTeam}\', \'${matchup.homeScore}\', \'${matchup.awayTeam}\', \'${matchup.awayScore}\', \'${matchup.playoff}\', \'${matchup.twoWeek}\', \'${matchup.regularSeason}\', \'${matchup.tiebreak}\') `;
     });
   });
   query = query.slice(0, -1) + ";";
@@ -344,8 +368,10 @@ app.post("/updateMatchups", jsonParser, (req, res) => {
 app.post("/updateDrafts", jsonParser, (req, res) => {
   var query = "INSERT INTO Drafts VALUES";
   query += req.body.draft.map((pick) => {
-    return ` (\'${pick.year}\", \'${pick.round}\", \'${pick.pick}\", \'${pick.name}\", \'${pick.team}\", \'${pick.position}\", \'${pick.owner}\", \'${pick.prk}\", \'${pick.gp}\", \'${pick.fptsg}\", \'${pick.fpts}\") `;
+    return ` (\"${pick.year}\", \"${pick.round}\", \"${pick.pick}\", \"${pick.name}\", \"${pick.team}\", \"${pick.position}\", \"${pick.owner}\", \"${pick.prk}\", \"${pick.gp}\", \"${pick.fptsg}\", \"${pick.fpts}\") `;
   });
   query = query.slice(0, -1) + ";";
+  query = query.replaceAll("\'", "\'\'")
+  query = query.replaceAll("\"", "\'")
   queryDB(res, query);
 });
