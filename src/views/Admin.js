@@ -31,6 +31,7 @@ class Admin extends Component {
     this.postDrafts = this.postDrafts.bind(this);
     this.deleteDrafts = this.deleteDrafts.bind(this);
     this.runLuckBot = this.runLuckBot.bind(this);
+    this.runMatchupBot = this.runMatchupBot.bind(this);
     this.handleCurrWeekChange = this.handleCurrWeekChange.bind(this);
     this.handleCurrYearChange = this.handleCurrYearChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
