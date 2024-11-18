@@ -61,7 +61,7 @@ class Franchise extends Component {
             Tyler Brown
           </Col>
           <Col xs={2}>
-            1609
+            1859
           </Col>
         </Row>
         <Row id='bubble'>
@@ -83,7 +83,7 @@ class Franchise extends Component {
             Ryan Rasmussen
           </Col>
           <Col xs={2}>
-            1151
+            1251
           </Col>
         </Row>
         <Row id='bubble'>
@@ -132,7 +132,7 @@ class Franchise extends Component {
             Jonathan Setzke
           </Col>
           <Col xs={2}>
-            403
+            153
           </Col>
         </Row>
         <Row id='bubble-poverty'>
