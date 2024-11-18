@@ -1,0 +1,31 @@
+#bubble {
+    margin: 10px;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #999;
+}
+
+#bubble-king {
+    margin: 10px;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #0ac223;
+    background-color: #bdffc6;
+}
+
+#bubble-poverty {
+    margin: 10px;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #ff2323;
+    background-color: #ffbdbd;
+}
+
+#pLine {
+    color: #777;
+    margin: 0px 0px -15px 0px;
+}
+
+#first {
+    margin-left: -5px;
+}
