@@ -6,6 +6,7 @@ import Standings from "./views/Standings";
 import Records from "./views/Records";
 import Drafts from "./views/Drafts";
 import TrophyRoom from "./views/TrophyRoom";
+import Franchise from "./views/Franchise";
 import Admin from "./views/Admin";
 import "./css/main.css";
 import Logo from "./images/logos/Wallerstein.png";
@@ -104,6 +105,11 @@ class Main extends Component {
                 </NavLink>
               </li>
               <li>
+                <NavLink to="/fpi" replace>
+                  <i className="material-icons">list</i>FPI
+                </NavLink>
+              </li>
+              <li>
                 <a
                   href={Pdf}
                   target="_blank"
@@ -147,6 +153,11 @@ class Main extends Component {
               </NavLink>
             </li>
             <li>
+              <NavLink to="/fpi" replace onClick={this.handleClick}>
+                FPI
+              </NavLink>
+            </li>
+            <li>
               <a
                 href={Pdf}
                 target="_blank"
@@ -165,6 +176,7 @@ class Main extends Component {
               <Route path="/records" element={<Records />} />
               <Route path="/drafts" element={<Drafts />} />
               <Route path="/trophyroom" element={<TrophyRoom />} />
+              <Route path="/fpi" element={<Franchise />} />
               <Route path="/tools/admin" element={<Admin />} />
             </Routes>
           </div>
