@@ -121,7 +121,7 @@ class Franchise extends Component {
         </Row>
         <Row>
           <Col xs={12}>
-            <p id='pLine'>Poverty Line</p><hr></hr>
+            <p id='pLine'>Poverty Line (489)</p><hr></hr>
           </Col>
         </Row>
         <Row id='bubble-poverty'>
