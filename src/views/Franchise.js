@@ -50,7 +50,7 @@ class Franchise extends Component {
             Michael Buchman
           </Col>
           <Col xs={2}>
-            1998
+            1948
           </Col>
         </Row>
         <Row id='bubble'>
@@ -72,7 +72,7 @@ class Franchise extends Component {
             James Earley
           </Col>
           <Col xs={2}>
-            1475
+            1400
           </Col>
         </Row>
         <Row id='bubble'>
@@ -105,7 +105,7 @@ class Franchise extends Component {
             Connor DeYoung
           </Col>
           <Col xs={2}>
-            1005
+            955
           </Col>
         </Row>
         <Row id='bubble'>
@@ -116,7 +116,7 @@ class Franchise extends Component {
             Joe Perry
           </Col>
           <Col xs={2}>
-            759
+            809
           </Col>
         </Row>
         <Row>
@@ -132,7 +132,7 @@ class Franchise extends Component {
             Jonathan Setzke
           </Col>
           <Col xs={2}>
-            153
+            178
           </Col>
         </Row>
         <Row id='bubble-poverty'>
@@ -154,7 +154,7 @@ class Franchise extends Component {
             Nick Eufrasio
           </Col>
           <Col xs={2}>
-            27
+            127
           </Col>
         </Row>
       </Container>
